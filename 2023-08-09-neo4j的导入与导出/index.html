@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>neo4j的导入与导出 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="&amp;nbsp; &amp;nbsp;  本文主要介绍neo4j的导入（import,load）和导出（export）,基本是基于csv和dump文件格式。将会介绍在终端和使用apoc利用Cypher语言两种情况如何实现导入导出,同时也会大致讲讲所需的csv文件的格式。并且所有的导入导出操作都是在终端或neo4j浏览器界面，并未使用编程语言。  &amp;nbsp; 我的版本配置：   操作系统	:ubuntu22.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="neo4j的导入与导出">
+<meta property="og:url" content="http://example.com/2023-08-09-neo4j%E7%9A%84%E5%AF%BC%E5%85%A5%E4%B8%8E%E5%AF%BC%E5%87%BA/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="&amp;nbsp; &amp;nbsp;  本文主要介绍neo4j的导入（import,load）和导出（export）,基本是基于csv和dump文件格式。将会介绍在终端和使用apoc利用Cypher语言两种情况如何实现导入导出,同时也会大致讲讲所需的csv文件的格式。并且所有的导入导出操作都是在终端或neo4j浏览器界面，并未使用编程语言。  &amp;nbsp; 我的版本配置：   操作系统	:ubuntu22.">
+<meta property="og:locale">
+<meta property="og:image" content="https://s2.loli.net/2023/08/09/vNZE4nUGx9Ck3Ba.png">
+<meta property="og:image" content="https://s2.loli.net/2023/08/09/ZR2kAgm3IWtoMwj.png">
+<meta property="og:image" content="https://s2.loli.net/2023/08/09/RACvOsangpDluyX.png">
+<meta property="og:image" content="https://s2.loli.net/2023/08/09/unIXg3w9VOToxEN.png">
+<meta property="og:image" content="https://s2.loli.net/2023/08/09/pvPhyGdFDw8fBoT.png">
+<meta property="og:image" content="https://s2.loli.net/2023/08/09/Ln6vM7k2oIEURwm.png">
+<meta property="og:image" content="https://s2.loli.net/2023/08/09/XZM1UFAmkbGdew7.png">
+<meta property="og:image" content="https://s2.loli.net/2023/08/20/eAjxtrqD2yCGz68.png">
+<meta property="og:image" content="https://s2.loli.net/2023/08/20/KzAPO42uxgt8l3y.png">
+<meta property="og:image" content="https://s2.loli.net/2023/08/20/kazcpEDhY3Iu69P.png">
+<meta property="og:image" content="https://s2.loli.net/2023/08/20/Pgyr457X1MLF86Y.png">
+<meta property="article:published_time" content="2023-08-08T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-08-20T12:11:06.742Z">
+<meta property="article:author" content="一蓑烟雨">
+<meta property="article:tag" content="neo4j">
+<meta property="article:tag" content="数据库">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.loli.net/2023/08/09/vNZE4nUGx9Ck3Ba.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Suche"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Suche"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-2023-08-09-neo4j的导入与导出" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023-08-09-neo4j%E7%9A%84%E5%AF%BC%E5%85%A5%E4%B8%8E%E5%AF%BC%E5%87%BA/" class="article-date">
+  <time class="dt-published" datetime="2023-08-08T16:00:00.000Z" itemprop="datePublished">2023-08-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      neo4j的导入与导出
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>&nbsp;</p>
+<p>&nbsp;</p>
+<blockquote>
+<p>本文主要介绍neo4j的导入（import,load）和导出（export）,基本是基于csv和dump文件格式。将会介绍在终端和使用apoc利用Cypher语言两种情况如何实现导入导出,同时也会大致讲讲所需的csv文件的格式。并且所有的导入导出操作都是在终端或neo4j浏览器界面，并未使用编程语言。</p>
+</blockquote>
+<p>&nbsp;</p>
+<p>我的版本配置：</p>
+<blockquote>
+<ul>
+<li><strong>操作系统</strong>	:<strong>ubuntu22.04</strong></li>
+<li><strong>neo4j</strong>	<strong>server</strong>:<strong>5.10.0社区版</strong></li>
+<li><strong>apoc-core</strong>	:<strong>5.10.1</strong>(这是个neo4j插件，之后会讲到)</li>
+</ul>
+</blockquote>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2 id="1-终端下导入导出"><a href="#1-终端下导入导出" class="headerlink" title="1. 终端下导入导出"></a>1. 终端下导入导出</h2><p>（ubuntu ctrl +alt +T 打开终端）。</p>
+<p>与neo4j相关的命令基本是以<strong>neo4j</strong>,<strong>neo4j-admin</strong>或者<strong>neo4j-admin server</strong>开头，三者在后面添加 <code>-h</code>都可以查看其帮助文档。</p>
+<p><img src="https://s2.loli.net/2023/08/09/vNZE4nUGx9Ck3Ba.png"></p>
+<p>而我们需要的命令就是<strong>neo4j-admin database</strong></p>
+<p>我们使用 <code>neo4j-admin database -h</code>来查看<strong>neo4j-admin database</strong>的使用方法。</p>
+<p><img src="https://s2.loli.net/2023/08/09/ZR2kAgm3IWtoMwj.png"></p>
+<p>而我们要用的就是<strong>dump</strong>,<strong>load</strong>,<strong>import</strong></p>
+<p>&nbsp;</p>
+<h3 id="dump"><a href="#dump" class="headerlink" title="dump"></a><a target="_blank" rel="noopener" href="https://neo4j.com/docs/operations-manual/current/backup-restore/offline-backup/">dump</a></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 其中&lt;&gt;是必填选项其余的[]是非必填</span></span><br><span class="line"><span class="comment"># 可以使用neo4j-admin database dump -h查看各参数详细信息</span></span><br><span class="line"><span class="comment"># 效果是将neo4j的数据导出为一个dump文件，或者一个标准输出流进入类似load的命令</span></span><br><span class="line">neo4j-admin database dump [-h] [--expand-commands]</span><br><span class="line">                          [--verbose] [--overwrite-destination[=<span class="literal">true</span>|<span class="literal">false</span>]]</span><br><span class="line">                          [--additional-config=&lt;file&gt;]</span><br><span class="line">                          [--to-path=&lt;path&gt; | --to-stdout]</span><br><span class="line">                          &lt;database&gt;</span><br><span class="line">                  </span><br><span class="line"><span class="comment"># --verbose: 加上后会在执行过程中输出详细的过程，方便了解其过程查看可能的错误点</span></span><br><span class="line"><span class="comment"># --overwrite-destination: 如果做后dump文件位置存在同名文件，是否覆盖，默认是false</span></span><br><span class="line"><span class="comment"># --to-path=&lt;path&gt;： 指定输出文件夹地址。注意！path必须为文件夹地址</span></span><br><span class="line"><span class="comment"># --to-stdout: 让输出成为标准输出流而不是一个dump文件</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>&nbsp;</p>
+<p>其中，如果你命令中既没有 <code>--to-path</code>也没有 <code>--to-stdout</code>，那么，它将会采用Configuration文件（<a target="_blank" rel="noopener" href="https://neo4j.com/docs/operations-manual/current/configuration/file-locations/">各操作系统下的neo4j默认文件地址</a>）中的 <code>server.directories.dumps.root</code>设置。</p>
+<p>该设置值是一个文件路径，指dump文件存放的地址。</p>
+<p>如果是相对路径，则是以 <strong>neo4j主目录&#x2F;data&#x2F;<strong>为基准的相对路径。例如 <code>server.directories.dumps.root</code>的默认值就是</strong>dumps</strong>，即如果你命令中既没有 <code>--to-path</code>也没有 <code>--to-stdout</code>，该命令将会在 <strong>neo4j主目录&#x2F;data&#x2F;dumps&#x2F;</strong> 下生成一个dump文件。</p>
+<blockquote>
+<p><em>如果使用 <code>neo4j-admin database dump</code>来导出数据，要确保neo4j数据库处于stop状态</em></p>
+<p><em><code>neo4j status</code>查看当前neo4j运行状态</em></p>
+</blockquote>
+<p>&nbsp;</p>
+<h3 id="load"><a href="#load" class="headerlink" title="load"></a><a target="_blank" rel="noopener" href="https://neo4j.com/docs/operations-manual/current/backup-restore/restore-dump/">load</a></h3><p><strong>load</strong>方法主要就是将<strong>dump</strong>导出的 <em>dump文件</em> 或者 <em>标准输出流</em> 中的数据重新导入neo4j数据库中。所以，load+dump就可以实现neo4j的<strong>离线备份</strong>。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># load和dump的Options大同小异，</span></span><br><span class="line"><span class="comment"># 同样的，如果既没有--from-path，又没有--from-stdin，会采用server.directories.dumps.root</span></span><br><span class="line">neo4j-admin database load [-h] [--expand-commands] [--info] [--verbose]</span><br><span class="line">						[--overwrite-destination[=<span class="literal">true</span>|<span class="literal">false</span>]]</span><br><span class="line">						[--additional-config=&lt;file&gt;] [--from-path=&lt;path&gt; | --from-stdin] &lt;database&gt;</span><br><span class="line"><span class="comment"># 有一个特殊的Option --info</span></span><br><span class="line"><span class="comment"># 如果你加上了这个选项，那么这个命令将不会将数据导入到neo4j数据库中</span></span><br><span class="line"><span class="comment"># 而是打印出这个数据的详细信息</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># example</span></span><br><span class="line">$ sudo neo4j-admin database load --from-path=/home/mmy intelligentmedicine.db --verbose</span><br><span class="line"><span class="comment"># 这里由于没选覆盖选项是新建一个数据库为intelligentmedicine.db</span></span><br><span class="line"><span class="comment"># 注意！path只要写到dump文件所在的文件夹就行，dump文件必须是&lt;databasename&gt;.dump</span></span><br><span class="line"><span class="comment"># 这里就是 intelligentmedicine.db.dump</span></span><br></pre></td></tr></table></figure>
+
+<p>&nbsp;</p>
+<p><em>与dump有些不同的是，load支持neo4j在线和离线状态的导入（付费版），但是两种都有要注意的地方</em></p>
+<ol>
+<li>如果你打算覆盖原有的数据库，即–overwrite-destination设置成了true，那么你<strong>一定</strong>要先<strong>stop</strong>再执行load语句。</li>
+<li>如果你打算新建一个数据库来存储你load的数据，那么无需离线，但是在<strong>load之后一定要create一个新的database</strong>。</li>
+<li><strong>社区版</strong>的neo4j不支持在线导入，只能关闭服务后导入（付费版没试，但是官方文档说load支持online，应该是指付费版）</li>
+<li><strong>社区版</strong>的load不支持<strong>增量导入</strong>，即要么覆盖要么新建数据库，不能在原有数据上加入。（付费版没试，不知道行不行）</li>
+</ol>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://neo4j.com/docs/cypher-manual/current/administration/databases/">neo4j创建数据库官方文档</a></p>
+<p>ps: 社区版即免费的neo4j是<strong>只允许一个database</strong>，但是我们可以通过修改配置文件来实现<strong>多个</strong>database共存。但是也有缺点，每次切换数据库要restart，并且修改配置文件（这个简单，就加个#，删个#）。如果有空会分享一下。</p>
+</blockquote>
+<p>&nbsp;</p>
+<h3 id="import"><a href="#import" class="headerlink" title="import"></a><a target="_blank" rel="noopener" href="https://neo4j.com/docs/operations-manual/current/tutorial/neo4j-admin-import/">import</a></h3><blockquote>
+<p><em>The import command is used for loading large amounts of data from CSV files and supports full and incremental import into a running or stopped Neo4j DBMS.</em></p>
+<p>上述是官方原话，但是测试发现社区版import只支持全量导入（full）并且只能离线，可能付费才能增量与在线导入。</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Usage: neo4j-admin database import [-h] [COMMAND]</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># example</span></span><br><span class="line">$ sudo neo4j-admin database import full --verbose --overwrite-destination=<span class="literal">true</span> --nodes /home/mmy/forimport_movie_nodes.csv  --nodes /home/mmy/forimport_person_nodes.csv  --relationships /home/mmy/forimport_rels.csv  test.db</span><br></pre></td></tr></table></figure>
+
+<p> &nbsp;</p>
+<h4 id="csv格式"><a href="#csv格式" class="headerlink" title="csv格式"></a>csv格式</h4><p>import命令本身并没有什么好说的，我们来聊聊导入所需的csv文件格式。</p>
+<h5 id="a-存储nodes的csv文件"><a href="#a-存储nodes的csv文件" class="headerlink" title="a.存储nodes的csv文件"></a>a.存储nodes的csv文件</h5><p><strong>表头（header）</strong></p>
+<ul>
+<li>表头格式&lt;name&gt;:&lt;field_type&gt;</li>
+<li>label在表头并非必须，但是id一定要有</li>
+<li>如果你不想让id加入你的属性值，可以不给它属性名（name），即把下表的movieid去掉。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>movieid:ID</th>
+<th>year:int</th>
+<th>:LABEL</th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<ul>
+<li>但是如果是增量或者批量导入，规则就有点复杂。<strong>主键的属性必须是标签与属性的结合</strong></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>uuid:ID{label:Person}</th>
+<th>name:STRING{label:Person}</th>
+<th>email:STRING</th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>在这里，<strong>uuid</strong>和n<strong>ame共同做主键</strong>区分节点，并且指定节点导入的<strong>label</strong>为<strong>Person</strong></p>
+<p><strong>这一措施，主要是防止增量导入和批量导入时创建多个重复节点。</strong></p>
+<p>&nbsp;</p>
+<h5 id="b-存储relationship的csv文件"><a href="#b-存储relationship的csv文件" class="headerlink" title="b.存储relationship的csv文件"></a>b.存储relationship的csv文件</h5><p><strong>表头</strong></p>
+<p>存储关系的表头必须包含**:START_ID<strong>，</strong>:END_ID<strong>和</strong>:TYPE<strong>。其中前两个分别对应着关系的</strong>起始实体<strong>和</strong>结束实体<strong>的</strong>:ID<strong>，这就是为什么实体id是必须的。而</strong>:TYPE**是指明这个关系的类型。</p>
+<p>当然，关系也可以有属性，下图便是给关系增加了一个<strong>role</strong>属性</p>
+<table>
+<thead>
+<tr>
+<th>：START_ID</th>
+<th>:END_ID</th>
+<th>:TYPE</th>
+<th>role</th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>&nbsp;</p>
+<blockquote>
+<p><strong>总结</strong>：在社区版，如果使用终端的方法，我们都无法实现在线操作与增量导入。而官方其实还有一种方法，使用Cypher命令load csv可以实现在线导入数据，csv文件地址可以是url形式。(<a target="_blank" rel="noopener" href="https://neo4j.com/developer/guide-import-csv/)%E5%A4%A7%E5%AE%B6%E5%8F%AF%E4%BB%A5%E8%87%AA%E8%A1%8C%E6%9F%A5%E7%9C%8B%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%EF%BC%8C%E6%9C%89%E6%A0%B7%E4%BE%8B%E5%8D%81%E5%88%86%E8%AF%A6%E7%BB%86%E3%80%82">https://neo4j.com/developer/guide-import-csv/)大家可以自行查看官方文档，有样例十分详细。</a></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2 id="2-利用apoc插件在线导出"><a href="#2-利用apoc插件在线导出" class="headerlink" title="2. 利用apoc插件在线导出"></a>2. 利用apoc插件在线导出</h2><hr>
+<p><a target="_blank" rel="noopener" href="https://neo4j.com/docs/apoc/current/">apoc-core</a></p>
+<p><a target="_blank" rel="noopener" href="https://neo4j.com/labs/apoc/5/">apoc-extended</a></p>
+<p><a target="_blank" rel="noopener" href="https://neo4j.com/docs/apoc/current/export/">apoc_export</a></p>
+<p>apoc在neo4j 5.0之后分为apoc-core和apoc-extended两部分。前者是neo4j官方支持，后者由社区维护。</p>
+<p>而由于apoc-extended最新只有5.9版本，作者neo4j为5.10.x，所以下文只使用了apoc-core。而extended在导入导出方面增加了可使用exel导入导出，可以导入html格式的数据，多样化导入csv文件。</p>
+<p>apoc本质是一个插件，其内容十分丰富，远不止导入导出数据那么简单，大家如有需要可以查看上方的官方文档。</p>
+<p>&nbsp;</p>
+<h3 id="2-1-apoc的安装与配置"><a href="#2-1-apoc的安装与配置" class="headerlink" title="2.1 apoc的安装与配置"></a>2.1 apoc的安装与配置</h3><p>apoc默认状态下并未安装，所以我们要先安装。</p>
+<h4 id="apoc-core的安装"><a href="#apoc-core的安装" class="headerlink" title="apoc-core的安装"></a>apoc-core的安装</h4><p>这个十分简单，在**$NEO4J_HOME&#x2F;labs**文件夹（NEO4J_HOME表示neo4j主目录）中，你会找到一个jar文件。</p>
+<p><img src="https://s2.loli.net/2023/08/09/RACvOsangpDluyX.png" alt="image-20230808103615755"></p>
+<p>将这个文件复制到**$NEO4J_HOME&#x2F;plugins<strong>文件夹下，</strong>apoc-core**就算安装好了！</p>
+<h4 id="apoc-core配置"><a href="#apoc-core配置" class="headerlink" title="apoc-core配置"></a>apoc-core配置</h4><p>a.首先，找到你的neo4j配置文件<strong>neo4j.conf</strong>，neo4j各文件在各操作系统的地址官方文档给出了，链接在前文。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 寻找并修改以下设置，推荐复制粘贴原有的然后去掉注释的#，再修改，方便之后还原默认设置</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 放宽apoc权限</span><br><span class="line">dbms.security.procedures.unrestricted=apoc.*,algo.*</span><br><span class="line"># 将apoc的全部都加入allowlist</span><br><span class="line">dbms.security.procedures.allowlist=apoc.*,apoc.coll.*,apoc.load.*,gds.*</span><br></pre></td></tr></table></figure>
+
+<p>b.之后在neo4j.conf同文件夹下创建一个apoc.conf文件，这个是apoc的配置文件，是要自己手动创建的。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 加入下面三条设置</span><br><span class="line"></span><br><span class="line"># 开启文件导出功能</span><br><span class="line">apoc.export.file.enabled=true</span><br><span class="line"># 开启文件导入功能</span><br><span class="line">apoc.import.file.enabled=true</span><br><span class="line"># 指明是否使用 neo4j.conf 指定的相关（导入导出涉及的）目录(默认就是 true)</span><br><span class="line">apoc.import.file_use_neo4j_config=true</span><br></pre></td></tr></table></figure>
+
+<p>&nbsp;</p>
+<p>好了，接下来我们就可以使用apoc-core来导入导出了。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h3 id="2-2-导出为csv文件"><a href="#2-2-导出为csv文件" class="headerlink" title="2.2 导出为csv文件"></a>2.2 导出为csv文件</h3><p><strong>注意</strong>：这次启动方式<strong>不是neo4j start</strong>而是<strong>neo4j console</strong>，而只有这种启动才能顺利使用apoc</p>
+<p>neo4j官方只能导出数据为dump或stream，而apoc让我们有了更多选择。</p>
+<p><a target="_blank" rel="noopener" href="https://neo4j.com/docs/apoc/current/export/csv/">apoc.export.csv</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">CALL apoc.export.csv.all(&quot;movies.csv&quot;, &#123;&#125;)</span><br><span class="line">// 短短一句，就可将你的全部nodes和relationships导出成一个csv文件</span><br><span class="line">// 而由于我们在apoc.conf文件中第三条设置为TRUE，所以导出的文件将位于noe4j的import文件夹下</span><br><span class="line">// 当然你也可以将设置改为false，并且给出文件的绝对路径，来自定义文件的导出位置</span><br><span class="line">// 注意！！修改设置后noe4j可以在你电脑上任意位置输出文件，注意文件导出地址安全性，别写在不该写的地方！</span><br><span class="line">                 </span><br><span class="line">CALL apoc.export.csv.all(null, &#123;stream:true&#125;)</span><br><span class="line">// 这样你的文件将导出成一个stream</span><br><span class="line">                        </span><br><span class="line">MATCH (person:Person)</span><br><span class="line">WHERE person.name STARTS WITH &quot;L&quot;</span><br><span class="line">WITH collect(person) AS people</span><br><span class="line">CALL apoc.export.csv.data(people, [], &quot;movies-l.csv&quot;, &#123;&#125;)</span><br><span class="line">YIELD file, source, format, nodes, relationships, properties, time, rows, batchSize, batches, done, data</span><br><span class="line">RETURN file, source, format, nodes, relationships, properties, time, rows, batchSize, batches, done, data</span><br><span class="line">// 这样，我们就可以选择性的导出nodes</span><br><span class="line">// 同时，我们注意到 apoc.export.csv.data第一个参数为nodes，第二个其实是relationships</span><br><span class="line">// 而哪怕这里不导出关系，我们依旧要写一个[]保留位置，就和config参数的&#123;&#125;一样</span><br><span class="line">                  </span><br><span class="line">MATCH (person:Person)-[actedIn:ACTED_IN]-&gt;(movie:Movie)</span><br><span class="line">WITH collect(DISTINCT person) AS people, collect(DISTINCT movie) AS movies, collect(actedIn) AS actedInRels</span><br><span class="line">CALL apoc.export.csv.data(people + movies, actedInRels, &quot;movies-actedIn.csv&quot;, &#123;&#125;)</span><br><span class="line">YIELD file, source, format, nodes, relationships, properties, time, rows, batchSize, batches, done, data</span><br><span class="line">RETURN file, source, format, nodes, relationships, properties, time, rows, batchSize, batches, done, data</span><br><span class="line">// 我们选择性的导出了nodes和relationships</span><br><span class="line">   </span><br><span class="line">                          </span><br><span class="line">WITH &quot;MATCH path = (person:Person)-[:DIRECTED]-&gt;(movie)</span><br><span class="line">      RETURN person.name AS name, person.born AS born,</span><br><span class="line">             movie.title AS title, movie.tagline AS tagline, movie.released AS released&quot; AS query</span><br><span class="line">CALL apoc.export.csv.query(query, &quot;movies-directed.csv&quot;, &#123;&#125;)</span><br><span class="line">YIELD file, source, format, nodes, relationships, properties, time, rows, batchSize, batches, done, data</span><br><span class="line">RETURN file, source, format, nodes, relationships, properties, time, rows, batchSize, batches, done, data;</span><br><span class="line">//这是一个与之前不同的方法，在这里我们传入的不是nodes或relationships，而是一个语句，这样子看上去简单多了</span><br><span class="line">                  </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>大家或许注意到了，上述许多语句{}中的内容不是stream:true就是空的，其实，这里面可以设置很多配置</p>
+<p>如下所示：</p>
+<p><img src="https://s2.loli.net/2023/08/09/unIXg3w9VOToxEN.png" alt="image-20230808204348546"></p>
+<p><strong>但是</strong>，其中的<strong>bulkImport</strong>设置只有在all和graph情况下才能生效：</p>
+<p><img src="https://s2.loli.net/2023/08/09/pvPhyGdFDw8fBoT.png" alt="image-20230808204725076"></p>
+<p>&nbsp;</p>
+<h3 id="2-3导出为json文件"><a href="#2-3导出为json文件" class="headerlink" title="2.3导出为json文件"></a>2.3导出为json文件</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 基本与csv相同</span><br><span class="line">CALL apoc.export.json.all(&quot;all.json&quot;,&#123;useTypes:true&#125;)</span><br><span class="line"></span><br><span class="line">// useTypes参数表明输出时是否表明type类型是node还是relationship</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// out</span></span><br><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;node&quot;</span><span class="punctuation">,</span><span class="attr">&quot;id&quot;</span><span class="punctuation">:</span><span class="string">&quot;0&quot;</span><span class="punctuation">,</span><span class="attr">&quot;labels&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span><span class="string">&quot;User&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span><span class="attr">&quot;properties&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span><span class="attr">&quot;born&quot;</span><span class="punctuation">:</span><span class="string">&quot;2015-07-04T19:32:24&quot;</span><span class="punctuation">,</span><span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="string">&quot;Adam&quot;</span><span class="punctuation">,</span><span class="attr">&quot;place&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span><span class="attr">&quot;crs&quot;</span><span class="punctuation">:</span><span class="string">&quot;wgs-84&quot;</span><span class="punctuation">,</span><span class="attr">&quot;latitude&quot;</span><span class="punctuation">:</span><span class="number">13.1</span><span class="punctuation">,</span><span class="attr">&quot;longitude&quot;</span><span class="punctuation">:</span><span class="number">33.46789</span><span class="punctuation">,</span><span class="attr">&quot;height&quot;</span><span class="punctuation">:</span><span class="literal"><span class="keyword">null</span></span><span class="punctuation">&#125;</span><span class="punctuation">,</span><span class="attr">&quot;age&quot;</span><span class="punctuation">:</span><span class="number">42</span><span class="punctuation">,</span><span class="attr">&quot;male&quot;</span><span class="punctuation">:</span><span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span><span class="attr">&quot;kids&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span><span class="string">&quot;Sam&quot;</span><span class="punctuation">,</span><span class="string">&quot;Anna&quot;</span><span class="punctuation">,</span><span class="string">&quot;Grace&quot;</span><span class="punctuation">]</span><span class="punctuation">&#125;</span><span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;node&quot;</span><span class="punctuation">,</span><span class="attr">&quot;id&quot;</span><span class="punctuation">:</span><span class="string">&quot;1&quot;</span><span class="punctuation">,</span><span class="attr">&quot;labels&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span><span class="string">&quot;User&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span><span class="attr">&quot;properties&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span><span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="string">&quot;Jim&quot;</span><span class="punctuation">,</span><span class="attr">&quot;age&quot;</span><span class="punctuation">:</span><span class="number">42</span><span class="punctuation">&#125;</span><span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;node&quot;</span><span class="punctuation">,</span><span class="attr">&quot;id&quot;</span><span class="punctuation">:</span><span class="string">&quot;2&quot;</span><span class="punctuation">,</span><span class="attr">&quot;labels&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span><span class="string">&quot;User&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span><span class="attr">&quot;properties&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span><span class="attr">&quot;age&quot;</span><span class="punctuation">:</span><span class="number">12</span><span class="punctuation">&#125;</span><span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;id&quot;</span><span class="punctuation">:</span><span class="string">&quot;0&quot;</span><span class="punctuation">,</span><span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;relationship&quot;</span><span class="punctuation">,</span><span class="attr">&quot;label&quot;</span><span class="punctuation">:</span><span class="string">&quot;KNOWS&quot;</span><span class="punctuation">,</span><span class="attr">&quot;properties&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span><span class="attr">&quot;bffSince&quot;</span><span class="punctuation">:</span><span class="string">&quot;P5M1DT12H&quot;</span><span class="punctuation">,</span><span class="attr">&quot;since&quot;</span><span class="punctuation">:</span><span class="number">1993</span><span class="punctuation">&#125;</span><span class="punctuation">,</span><span class="attr">&quot;start&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span><span class="attr">&quot;id&quot;</span><span class="punctuation">:</span><span class="string">&quot;0&quot;</span><span class="punctuation">,</span><span class="attr">&quot;labels&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span><span class="string">&quot;User&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span><span class="attr">&quot;properties&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span><span class="attr">&quot;born&quot;</span><span class="punctuation">:</span><span class="string">&quot;2015-07-04T19:32:24&quot;</span><span class="punctuation">,</span><span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="string">&quot;Adam&quot;</span><span class="punctuation">,</span><span class="attr">&quot;place&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span><span class="attr">&quot;crs&quot;</span><span class="punctuation">:</span><span class="string">&quot;wgs-84&quot;</span><span class="punctuation">,</span><span class="attr">&quot;latitude&quot;</span><span class="punctuation">:</span><span class="number">13.1</span><span class="punctuation">,</span><span class="attr">&quot;longitude&quot;</span><span class="punctuation">:</span><span class="number">33.46789</span><span class="punctuation">,</span><span class="attr">&quot;height&quot;</span><span class="punctuation">:</span><span class="literal"><span class="keyword">null</span></span><span class="punctuation">&#125;</span><span class="punctuation">,</span><span class="attr">&quot;age&quot;</span><span class="punctuation">:</span><span class="number">42</span><span class="punctuation">,</span><span class="attr">&quot;male&quot;</span><span class="punctuation">:</span><span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span><span class="attr">&quot;kids&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span><span class="string">&quot;Sam&quot;</span><span class="punctuation">,</span><span class="string">&quot;Anna&quot;</span><span class="punctuation">,</span><span class="string">&quot;Grace&quot;</span><span class="punctuation">]</span><span class="punctuation">&#125;</span><span class="punctuation">&#125;</span><span class="punctuation">,</span><span class="attr">&quot;end&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span><span class="attr">&quot;id&quot;</span><span class="punctuation">:</span><span class="string">&quot;1&quot;</span><span class="punctuation">,</span><span class="attr">&quot;labels&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span><span class="string">&quot;User&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span><span class="attr">&quot;properties&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span><span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="string">&quot;Jim&quot;</span><span class="punctuation">,</span><span class="attr">&quot;age&quot;</span><span class="punctuation">:</span><span class="number">42</span><span class="punctuation">&#125;</span><span class="punctuation">&#125;</span><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>&nbsp;</p>
+<h3 id="2-4导出为Cypher语句"><a href="#2-4导出为Cypher语句" class="headerlink" title="2.4导出为Cypher语句"></a>2.4导出为Cypher语句</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CALL apoc.export.cypher.schema()</span><br><span class="line">YIELD format, time, cypherStatements</span><br><span class="line">RETURN format, time, cypherStatements;</span><br><span class="line"></span><br><span class="line">// 也与csv大同小异，多了一个schema，这个就支持导出索引以及所有的限制条件的建立，而不仅仅是一些数据</span><br></pre></td></tr></table></figure>
+
+<p>&nbsp;</p>
+<h3 id="2-5导出为graphml文件"><a href="#2-5导出为graphml文件" class="headerlink" title="2.5导出为graphml文件"></a>2.5导出为graphml文件</h3><blockquote>
+<p><em>The export GraphML procedures export data into a format that’s used by other tools like Gephi and CytoScape to read graph data.</em></p>
+<p>主要是导出给Gephi 使用</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// example</span><br><span class="line">call apoc.export.graphml.query(&#x27;MATCH (start:Foo)-[:KNOWS]-&gt;(:Bar) RETURN start&#x27;, &#x27;queryNodesFoo.graphml&#x27;, &#123;useTypes: true&#125;);          </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- out --&gt;</span></span><br><span class="line"><span class="meta">&lt;?xml version=&#x27;1.0&#x27; encoding=&#x27;UTF-8&#x27;?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">graphml</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://graphml.graphdrawing.org/xmlns&quot;</span> <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">key</span> <span class="attr">id</span>=<span class="string">&quot;born&quot;</span> <span class="attr">for</span>=<span class="string">&quot;node&quot;</span> <span class="attr">attr.name</span>=<span class="string">&quot;born&quot;</span> <span class="attr">attr.type</span>=<span class="string">&quot;string&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">key</span> <span class="attr">id</span>=<span class="string">&quot;name&quot;</span> <span class="attr">for</span>=<span class="string">&quot;node&quot;</span> <span class="attr">attr.name</span>=<span class="string">&quot;name&quot;</span> <span class="attr">attr.type</span>=<span class="string">&quot;string&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">key</span> <span class="attr">id</span>=<span class="string">&quot;place&quot;</span> <span class="attr">for</span>=<span class="string">&quot;node&quot;</span> <span class="attr">attr.name</span>=<span class="string">&quot;place&quot;</span> <span class="attr">attr.type</span>=<span class="string">&quot;string&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">key</span> <span class="attr">id</span>=<span class="string">&quot;labels&quot;</span> <span class="attr">for</span>=<span class="string">&quot;node&quot;</span> <span class="attr">attr.name</span>=<span class="string">&quot;labels&quot;</span> <span class="attr">attr.type</span>=<span class="string">&quot;string&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">graph</span> <span class="attr">id</span>=<span class="string">&quot;G&quot;</span> <span class="attr">edgedefault</span>=<span class="string">&quot;directed&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">node</span> <span class="attr">id</span>=<span class="string">&quot;n0&quot;</span> <span class="attr">labels</span>=<span class="string">&quot;:Foo:Foo0:Foo2&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">data</span> <span class="attr">key</span>=<span class="string">&quot;labels&quot;</span>&gt;</span>:Foo:Foo0:Foo2<span class="tag">&lt;/<span class="name">data</span>&gt;</span><span class="tag">&lt;<span class="name">data</span> <span class="attr">key</span>=<span class="string">&quot;born&quot;</span>&gt;</span>2018-10-10<span class="tag">&lt;/<span class="name">data</span>&gt;</span><span class="tag">&lt;<span class="name">data</span> <span class="attr">key</span>=<span class="string">&quot;name&quot;</span>&gt;</span>foo<span class="tag">&lt;/<span class="name">data</span>&gt;</span><span class="tag">&lt;<span class="name">data</span> <span class="attr">key</span>=<span class="string">&quot;place&quot;</span>&gt;</span>&#123;&quot;crs&quot;:&quot;wgs-84-3d&quot;,&quot;latitude&quot;:12.78,&quot;longitude&quot;:56.7,&quot;height&quot;:100.0&#125;<span class="tag">&lt;/<span class="name">data</span>&gt;</span><span class="tag">&lt;/<span class="name">node</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">node</span> <span class="attr">id</span>=<span class="string">&quot;n3&quot;</span> <span class="attr">labels</span>=<span class="string">&quot;:Foo&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">data</span> <span class="attr">key</span>=<span class="string">&quot;labels&quot;</span>&gt;</span>:Foo<span class="tag">&lt;/<span class="name">data</span>&gt;</span><span class="tag">&lt;<span class="name">data</span> <span class="attr">key</span>=<span class="string">&quot;name&quot;</span>&gt;</span>zzz<span class="tag">&lt;/<span class="name">data</span>&gt;</span><span class="tag">&lt;/<span class="name">node</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">node</span> <span class="attr">id</span>=<span class="string">&quot;n5&quot;</span> <span class="attr">labels</span>=<span class="string">&quot;:Foo&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">data</span> <span class="attr">key</span>=<span class="string">&quot;labels&quot;</span>&gt;</span>:Foo<span class="tag">&lt;/<span class="name">data</span>&gt;</span><span class="tag">&lt;<span class="name">data</span> <span class="attr">key</span>=<span class="string">&quot;name&quot;</span>&gt;</span>aaa<span class="tag">&lt;/<span class="name">data</span>&gt;</span><span class="tag">&lt;/<span class="name">node</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">graph</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">graphml</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<blockquote>
+<p>apoc-extended 的导入还支持导入excel文件，但是不能是最新的5.10版本的neo4j。</p>
+</blockquote>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2 id="3-利用apoc在线导入"><a href="#3-利用apoc在线导入" class="headerlink" title="3.利用apoc在线导入"></a>3.利用apoc在线导入</h2><hr>
+<p><a target="_blank" rel="noopener" href="https://neo4j.com/docs/apoc/current/">apoc-core</a></p>
+<p><a target="_blank" rel="noopener" href="https://neo4j.com/labs/apoc/5/">apoc-extended</a></p>
+<h3 id="3-1-从Web-APIs导入"><a href="#3-1-从Web-APIs导入" class="headerlink" title="3.1 从Web-APIs导入"></a>3.1 从Web-APIs导入</h3><blockquote>
+<p><em>As <code>apoc.import.file.use_neo4j_config</code> is enabled, the procedures check whether file system access is allowed and possibly constrained to a specific directory by reading the two configuration parameters <code>dbms.security.allow_csv_import_from_file_urls</code> and <code>server.directories.import</code> respectively. If you want to remove these constraints please set <code>apoc.import.file.use_neo4j_config=false</code></em></p>
+</blockquote>
+<p>如果 <code>apoc.import.file.use_neo4j_config</code>设置为true，文件写入可能会有所限制。可以设为false，但是要注意安全性。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// example，可以用url导入数据</span><br><span class="line">CALL apoc.load.xml(&#x27;http://example.com/test.xml&#x27;, [&#x27;xPath&#x27;], [config]) YIELD value as doc CREATE (p:Person) SET p.name = doc.name</span><br><span class="line">  </span><br><span class="line">// 还可以从google cloud storage导入数据导入数据，但是要另外加一堆插件</span><br></pre></td></tr></table></figure>
+
+<p>&nbsp;</p>
+<h3 id="3-2-load-csv文件"><a href="#3-2-load-csv文件" class="headerlink" title="3.2 load csv文件"></a>3.2 load csv文件</h3><p>这是需安装apoc-extended，比较实用，提一下。</p>
+<blockquote>
+<ul>
+<li>provide a line number</li>
+<li>provide both a map and a list representation of each line</li>
+<li>automatic data conversion (including split into arrays)</li>
+<li>option to keep the original string formatted values</li>
+<li>ignoring fields (makes it easier to assign a full line as properties)</li>
+<li>headerless files</li>
+<li>replacing certain values with null</li>
+</ul>
+</blockquote>
+<p> 上述便是apoc在load csv方面相对官方方法的改进</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">CALL apoc.load.csv(&#x27;test.csv&#x27;)</span><br><span class="line">YIELD lineNo, map, list</span><br><span class="line">RETURN *;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">CALL apoc.load.csv(&#123;url&#125;) yield map as row return row</span><br><span class="line">CREATE (p:Person) SET p = row</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>多种配置任你选择：</p>
+<p><img src="https://s2.loli.net/2023/08/09/Ln6vM7k2oIEURwm.png" alt="image-20230809102037522"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">CALL apoc.load.csv(&#x27;test.csv&#x27;, &#123;skip:1, limit:1, header:true, ignore:[&#x27;name&#x27;],</span><br><span class="line">   mapping:&#123;</span><br><span class="line">     age: &#123;type:&#x27;int&#x27;&#125;,</span><br><span class="line">     beverage: &#123;array:true, arraySep:&#x27;;&#x27;, name:&#x27;drinks&#x27;&#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;)</span><br><span class="line">YIELD lineNo, map, list</span><br><span class="line">RETURN *;</span><br><span class="line">// 其中地一个设置是针对文件的，第二个是针对读入的map</span><br></pre></td></tr></table></figure>
+
+<p>&nbsp;</p>
+<h3 id="3-3-导入excel文件"><a href="#3-3-导入excel文件" class="headerlink" title="3.3 导入excel文件"></a>3.3 导入excel文件</h3><p>这个是在安装apoc-extended基础下的，因为比较常用了，稍微提一下。但是因为支持该功能的文件太大了，所以apoc将其分离出去了，你需另外下载支持文件安装到plugins文件夹下。</p>
+<blockquote>
+<p>For loading XLS we’re using the Apache POI library, which works well with old and new Excel formats, but is quite large. That’s why we decided not to include it into the apoc jar, but make it an optional dependency.</p>
+<p>These dependencies are included in <a target="_blank" rel="noopener" href="https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/5.9.0/apoc-xls-dependencies-5.9.0-all.jar">apoc-xls-dependencies-5.9.0-all.jar</a>, which can be downloaded from the <a target="_blank" rel="noopener" href="https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/tag/5.9.0">releases page</a>. Once that file is downloaded, it should be placed in the <code>plugins</code> directory and the Neo4j Server restarted.</p>
+<p><strong>Alternatively</strong>, you can download these jars from Maven Repository (putting them into <code>plugins</code> directory as well):</p>
+<p>For XLS files:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://repo1.maven.org/maven2/org/apache/poi/poi/5.1.0/poi-5.1.0.jar">poi-5.1.0.jar</a></li>
+</ul>
+<p>Additional for XLSX files:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://repo1.maven.org/maven2/org/apache/commons/commons-collections4/4.4/commons-collections4-4.4.jar">commons-collections4-4.4.jar</a></li>
+<li><a target="_blank" rel="noopener" href="https://repo1.maven.org/maven2/org/apache/poi/poi-ooxml/5.1.0/poi-ooxml-5.1.0.jar">poi-ooxml-5.1.0.jar</a></li>
+<li><a target="_blank" rel="noopener" href="https://repo1.maven.org/maven2/org/apache/poi/poi-ooxml-lite/5.1.0/poi-ooxml-lite-5.1.0.jar">poi-ooxml-lite-5.1.0.jar</a></li>
+<li><a target="_blank" rel="noopener" href="https://repo1.maven.org/maven2/org/apache/xmlbeans/xmlbeans/5.0.2/xmlbeans-5.0.2.jar">xmlbeans-5.0.2.jar</a></li>
+<li><a target="_blank" rel="noopener" href="https://repo1.maven.org/maven2/com/github/virtuald/curvesapi/1.06/curvesapi-1.06.jar">curvesapi-1.06.jar</a></li>
+</ul>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 同样简单明了</span><br><span class="line">CALL apoc.load.xls(&#123;url&#125;, &#123;Name of sheet&#125;, &#123;config&#125;)</span><br><span class="line">   </span><br><span class="line">// 这里是&#x27;Full&#x27;,整个文件全导入</span><br><span class="line">CALL apoc.load.xls(&#x27;file:///path/to/file.xls&#x27;,&#x27;Full&#x27;,&#123;mapping:&#123;Integer:&#123;type:&#x27;int&#x27;&#125;, Array:&#123;type:&#x27;int&#x27;,array:true,arraySep:&#x27;;&#x27;&#125;&#125;&#125;)</span><br><span class="line">                                                                 </span><br><span class="line">// 至于导入后再怎么处理，其实就和导入csv后处理一样，官方文档看一下load csv相关文档即可</span><br></pre></td></tr></table></figure>
+
+<p>config格式如下：</p>
+<p><img src="https://s2.loli.net/2023/08/09/XZM1UFAmkbGdew7.png" alt="image-20230809103254865"></p>
+<p>&nbsp;</p>
+<h3 id="3-4-import-csv文件"><a href="#3-4-import-csv文件" class="headerlink" title="3.4 import csv文件"></a>3.4 import csv文件</h3><p>在apoc中，<strong>load</strong>和<strong>import</strong>其实是有一定区别的。</p>
+<p><strong>load</strong>是导入neo4j类似缓存中，可以做后续操作后再导入neo4j数据库中（当然，也可以不导入）</p>
+<p><strong>import</strong>是运行后就将数据存储入数据库中。</p>
+<p>&nbsp;</p>
+<p>而在apoc-core官方文档中提到：只要是满足apoc的csv文件格式规则的，就可以使用<code>apoc.import.csv</code>来导入数据，但是对于大型数据，他们更推荐官方的import方式。（就是上文提到的终端下的<code>neo4j-admin database import</code>）</p>
+<p>&nbsp;</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">// apoc.import.csv(&lt;nodes&gt;, &lt;relationships&gt;, &lt;config&gt;)</span><br><span class="line"></span><br><span class="line">// 其中nodes和relationships都是以list，即[]的形式传入</span><br><span class="line">// 而list中单个node或relationship又以map的形式传入</span><br><span class="line"></span><br><span class="line">// &lt;nodes&gt;: [&#123;fileName: &#x27;file:/persons.csv&#x27;, labels: [&#x27;Teacher&#x27;,&#x27;Student&#x27;]&#125;]</span><br><span class="line">// 传入文件，以及文件中所含的标签</span><br><span class="line"></span><br><span class="line">// &lt;relationships&gt;: [&#123;fileName:&#x27;file:/...&#x27;,type:&#x27;KNOWS&#x27;&#125;]</span><br><span class="line">// 传入文件以及关系的type</span><br><span class="line"></span><br><span class="line">//注意！！map的关键字（key）一定要严格按照上方写，fileName写成filename就会出错！！</span><br><span class="line"></span><br><span class="line">// example</span><br><span class="line">CALL apoc.import.csv(</span><br><span class="line">  [&#123;fileName: &#x27;file:/persons.csv&#x27;, labels: [&#x27;Person&#x27;]&#125;],</span><br><span class="line">  [&#123;fileName: &#x27;file:/knows.csv&#x27;, type: &#x27;KNOWS&#x27;&#125;],</span><br><span class="line">  &#123;delimiter: &#x27;|&#x27;, arrayDelimiter: &#x27;,&#x27;, stringIds: false&#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>config中可选配置如下：</p>
+<p><img src="https://s2.loli.net/2023/08/20/eAjxtrqD2yCGz68.png" alt="image-20230812113109487"></p>
+<p>&nbsp;</p>
+<h3 id="3-5-导入json文件"><a href="#3-5-导入json文件" class="headerlink" title="3.5 导入json文件"></a>3.5 导入json文件</h3><ul>
+<li><strong>apoc.load.json()</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">apoc.load.json(urlOrKeyOrBinary :: ANY?, path =  :: STRING?, config = &#123;&#125; :: MAP?) :: (value :: MAP?)</span><br><span class="line">// apoc.load.json</span><br><span class="line">// 其中的path可以使用jsonPath，来指定导入内容</span><br><span class="line"></span><br><span class="line">//example</span><br><span class="line">CALL apoc.load.json(&quot;file:///person.json&quot;)</span><br><span class="line">YIELD value</span><br><span class="line">MERGE (p:Person &#123;name: value.name&#125;)</span><br><span class="line">SET p.age = value.age</span><br><span class="line">WITH p, value</span><br><span class="line">UNWIND value.children AS child</span><br><span class="line">MERGE (c:Person &#123;name: child&#125;)</span><br><span class="line">MERGE (c)-[:CHILD_OF]-&gt;(p);</span><br></pre></td></tr></table></figure>
+
+<p>config:</p>
+<p><img src="https://s2.loli.net/2023/08/20/KzAPO42uxgt8l3y.png" alt="image-20230815205853386"></p>
+<ul>
+<li><strong>apoc.import.json()</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">apoc.import.json(urlOrBinaryFile Any, config Map&lt;String, Any&gt;)</span><br><span class="line">// import和load不一样，load后是要将数据进行后续操作，不一定保存到数据库中</span><br><span class="line">// import的作用就是将数据导入</span><br><span class="line">// 而通过观察import的signature我们可以发现，它不接受path参数，</span><br><span class="line">// 这意味着import只能整个文件导入，那么这个文件要求保持一定格式规范，最好是通过apoc导出的json文件</span><br></pre></td></tr></table></figure>
+
+<p>导入的json文件样例:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;node&quot;</span><span class="punctuation">,</span><span class="attr">&quot;id&quot;</span><span class="punctuation">:</span><span class="string">&quot;0&quot;</span><span class="punctuation">,</span><span class="attr">&quot;labels&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span><span class="string">&quot;User&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span><span class="attr">&quot;properties&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span><span class="attr">&quot;born&quot;</span><span class="punctuation">:</span><span class="string">&quot;2015-07-04T19:32:24&quot;</span><span class="punctuation">,</span><span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="string">&quot;Adam&quot;</span><span class="punctuation">,</span><span class="attr">&quot;place&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span><span class="attr">&quot;crs&quot;</span><span class="punctuation">:</span><span class="string">&quot;wgs-84&quot;</span><span class="punctuation">,</span><span class="attr">&quot;latitude&quot;</span><span class="punctuation">:</span><span class="number">13.1</span><span class="punctuation">,</span><span class="attr">&quot;longitude&quot;</span><span class="punctuation">:</span><span class="number">33.46789</span><span class="punctuation">,</span><span class="attr">&quot;height&quot;</span><span class="punctuation">:</span><span class="literal"><span class="keyword">null</span></span><span class="punctuation">&#125;</span><span class="punctuation">,</span><span class="attr">&quot;age&quot;</span><span class="punctuation">:</span><span class="number">42</span><span class="punctuation">,</span><span class="attr">&quot;male&quot;</span><span class="punctuation">:</span><span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span><span class="attr">&quot;kids&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span><span class="string">&quot;Sam&quot;</span><span class="punctuation">,</span><span class="string">&quot;Anna&quot;</span><span class="punctuation">,</span><span class="string">&quot;Grace&quot;</span><span class="punctuation">]</span><span class="punctuation">&#125;</span><span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;node&quot;</span><span class="punctuation">,</span><span class="attr">&quot;id&quot;</span><span class="punctuation">:</span><span class="string">&quot;1&quot;</span><span class="punctuation">,</span><span class="attr">&quot;labels&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span><span class="string">&quot;User&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span><span class="attr">&quot;properties&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span><span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="string">&quot;Jim&quot;</span><span class="punctuation">,</span><span class="attr">&quot;age&quot;</span><span class="punctuation">:</span><span class="number">42</span><span class="punctuation">&#125;</span><span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;node&quot;</span><span class="punctuation">,</span><span class="attr">&quot;id&quot;</span><span class="punctuation">:</span><span class="string">&quot;2&quot;</span><span class="punctuation">,</span><span class="attr">&quot;labels&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span><span class="string">&quot;User&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span><span class="attr">&quot;properties&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span><span class="attr">&quot;age&quot;</span><span class="punctuation">:</span><span class="number">12</span><span class="punctuation">&#125;</span><span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;id&quot;</span><span class="punctuation">:</span><span class="string">&quot;0&quot;</span><span class="punctuation">,</span><span class="attr">&quot;type&quot;</span><span class="punctuation">:</span><span class="string">&quot;relationship&quot;</span><span class="punctuation">,</span><span class="attr">&quot;label&quot;</span><span class="punctuation">:</span><span class="string">&quot;KNOWS&quot;</span><span class="punctuation">,</span><span class="attr">&quot;properties&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span><span class="attr">&quot;bffSince&quot;</span><span class="punctuation">:</span><span class="string">&quot;P5M1DT12H&quot;</span><span class="punctuation">,</span><span class="attr">&quot;since&quot;</span><span class="punctuation">:</span><span class="number">1993</span><span class="punctuation">&#125;</span><span class="punctuation">,</span><span class="attr">&quot;start&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span><span class="attr">&quot;id&quot;</span><span class="punctuation">:</span><span class="string">&quot;0&quot;</span><span class="punctuation">,</span><span class="attr">&quot;labels&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span><span class="string">&quot;User&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span><span class="attr">&quot;properties&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span><span class="attr">&quot;born&quot;</span><span class="punctuation">:</span><span class="string">&quot;2015-07-04T19:32:24&quot;</span><span class="punctuation">,</span><span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="string">&quot;Adam&quot;</span><span class="punctuation">,</span><span class="attr">&quot;place&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span><span class="attr">&quot;crs&quot;</span><span class="punctuation">:</span><span class="string">&quot;wgs-84&quot;</span><span class="punctuation">,</span><span class="attr">&quot;latitude&quot;</span><span class="punctuation">:</span><span class="number">13.1</span><span class="punctuation">,</span><span class="attr">&quot;longitude&quot;</span><span class="punctuation">:</span><span class="number">33.46789</span><span class="punctuation">,</span><span class="attr">&quot;height&quot;</span><span class="punctuation">:</span><span class="literal"><span class="keyword">null</span></span><span class="punctuation">&#125;</span><span class="punctuation">,</span><span class="attr">&quot;age&quot;</span><span class="punctuation">:</span><span class="number">42</span><span class="punctuation">,</span><span class="attr">&quot;male&quot;</span><span class="punctuation">:</span><span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span><span class="attr">&quot;kids&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span><span class="string">&quot;Sam&quot;</span><span class="punctuation">,</span><span class="string">&quot;Anna&quot;</span><span class="punctuation">,</span><span class="string">&quot;Grace&quot;</span><span class="punctuation">]</span><span class="punctuation">&#125;</span><span class="punctuation">&#125;</span><span class="punctuation">,</span><span class="attr">&quot;end&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span><span class="attr">&quot;id&quot;</span><span class="punctuation">:</span><span class="string">&quot;1&quot;</span><span class="punctuation">,</span><span class="attr">&quot;labels&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span><span class="string">&quot;User&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span><span class="attr">&quot;properties&quot;</span><span class="punctuation">:</span><span class="punctuation">&#123;</span><span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="string">&quot;Jim&quot;</span><span class="punctuation">,</span><span class="attr">&quot;age&quot;</span><span class="punctuation">:</span><span class="number">42</span><span class="punctuation">&#125;</span><span class="punctuation">&#125;</span><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>config：</p>
+<p><img src="https://s2.loli.net/2023/08/20/kazcpEDhY3Iu69P.png" alt="image-20230819083810885"></p>
+<p><img src="https://s2.loli.net/2023/08/20/Pgyr457X1MLF86Y.png" alt="image-20230819083839427"></p>
+<p>&nbsp;</p>
+<p>apoc-core还支持导入<strong>xml</strong>文件和<strong>graphml</strong>，与前面的json等基本一致，这里就不介绍了，大家可以看一下官方文档。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2 id="4-复制数据库秘籍——复制文件夹大法"><a href="#4-复制数据库秘籍——复制文件夹大法" class="headerlink" title="4. 复制数据库秘籍——复制文件夹大法"></a>4. 复制数据库秘籍——复制文件夹大法</h2><p>当我们要将海量的数据从一个neo4j数据库导入另一台计算机的neo4j数据库时，如果采用上述的办法，或许要等非常长的时间。此时我们就可以直接复制文件。</p>
+<p>具体步骤如下：</p>
+<ol>
+<li>假设我们<strong>被复制</strong>的数据库的名字为<strong>Data.db</strong>。</li>
+<li>打开需要复制数据的电脑（即数据源）的 <strong>neo4j主目录&#x2F;data&#x2F;</strong> ，在其目录下有两个文件夹，<strong>databases</strong>和<strong>transactions</strong>。在这两个数据夹下各有一个<strong>Data.db</strong>文件夹，这就是neo4j的<strong>Data.db</strong>数据库存储的数据。</li>
+<li>拷贝这两个文件夹到需要导入的电脑，放置在同样的目录下。<em><strong>注意！</strong></em>一定要放在同样的目录下，由于两个文件夹是同名的，所以注意别放错了地方。</li>
+<li>新建database，我推荐是和<strong>被复制</strong>的数据库同名，即<strong>Data.db</strong>。这个我个人试过，肯定没问题。你也可以试试建一个<strong>myData.db</strong>，然后把那两个文件夹重命名为<strong>myData.db</strong>。</li>
+</ol>
+<p>提示：可能会在复制粘贴文件夹时提示无权限修改或权限不足一类的，linux操作系统可以在终端中使用<code>sudo mv -i 所需复制的文件 目的地</code></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023-08-09-neo4j%E7%9A%84%E5%AF%BC%E5%85%A5%E4%B8%8E%E5%AF%BC%E5%87%BA/" data-id="cllqo7zbg0001f5377y9f0u7e" data-title="neo4j的导入与导出" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/neo4j/" rel="tag">neo4j</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag">数据库</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/hello-world/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Neuer</strong>
+      <div class="article-nav-title">
+        
+          Hello World
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2023-07-30-ubuntu%E4%B8%AD%E7%9A%84n%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E5%8F%8A%E8%A7%A3%E5%86%B3/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Älter</strong>
+      <div class="article-nav-title">Ubuntu（22.04）中的常见问题及解决</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/neo4j/" rel="tag">neo4j</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ubuntu/" rel="tag">ubuntu</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag">数据库</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/neo4j/" style="font-size: 10px;">neo4j</a> <a href="/tags/ubuntu/" style="font-size: 10px;">ubuntu</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" style="font-size: 10px;">数据库</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archiv</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">August 2023</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">letzter Beitrag</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2023-08-09-neo4j%E7%9A%84%E5%AF%BC%E5%85%A5%E4%B8%8E%E5%AF%BC%E5%87%BA/">neo4j的导入与导出</a>
+          </li>
+        
+          <li>
+            <a href="/2023-07-30-ubuntu%E4%B8%AD%E7%9A%84n%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E5%8F%8A%E8%A7%A3%E5%86%B3/">Ubuntu（22.04）中的常见问题及解决</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2023 一蓑烟雨<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
