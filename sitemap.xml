@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.naughtyfox.top/typescript%E7%BB%84%E4%BB%B6%E4%B8%AD%E7%9A%84%E9%BB%98%E8%AE%A4%E5%B1%9E%E6%80%A7/</loc>
+    
+    <lastmod>2024-03-18</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.naughtyfox.top/ubuntu%E4%B8%AD%E7%9A%84n%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E5%8F%8A%E8%A7%A3%E5%86%B3/</loc>
     
     <lastmod>2023-08-26</lastmod>
@@ -40,7 +49,7 @@
 
   <url>
     <loc>https://blog.naughtyfox.top/</loc>
-    <lastmod>2023-09-03</lastmod>
+    <lastmod>2024-03-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -48,21 +57,35 @@
   
   <url>
     <loc>https://blog.naughtyfox.top/tags/neo4j/</loc>
-    <lastmod>2023-09-03</lastmod>
+    <lastmod>2024-03-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.naughtyfox.top/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/</loc>
-    <lastmod>2023-09-03</lastmod>
+    <lastmod>2024-03-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.naughtyfox.top/tags/ubuntu/</loc>
-    <lastmod>2023-09-03</lastmod>
+    <lastmod>2024-03-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.naughtyfox.top/tags/react/</loc>
+    <lastmod>2024-03-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.naughtyfox.top/tags/typescript/</loc>
+    <lastmod>2024-03-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>

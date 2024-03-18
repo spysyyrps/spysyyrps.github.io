@@ -1,3 +1,4 @@
+https://blog.naughtyfox.top/typescript%E7%BB%84%E4%BB%B6%E4%B8%AD%E7%9A%84%E9%BB%98%E8%AE%A4%E5%B1%9E%E6%80%A7/
 https://blog.naughtyfox.top/ubuntu%E4%B8%AD%E7%9A%84n%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E5%8F%8A%E8%A7%A3%E5%86%B3/
 https://blog.naughtyfox.top/neo4j%E7%9A%84%E5%AF%BC%E5%85%A5%E4%B8%8E%E5%AF%BC%E5%87%BA/
 https://blog.naughtyfox.top/about/index.html
@@ -6,3 +7,5 @@ https://blog.naughtyfox.top/
 https://blog.naughtyfox.top/tags/neo4j/
 https://blog.naughtyfox.top/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/
 https://blog.naughtyfox.top/tags/ubuntu/
+https://blog.naughtyfox.top/tags/react/
+https://blog.naughtyfox.top/tags/typescript/
