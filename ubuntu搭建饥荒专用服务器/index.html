@@ -1,0 +1,952 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="一蓑烟雨">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="&amp;nbsp;  游戏：饥荒联机版（Steam） 测试服务器：Ubuntu22.04 2核2G内存 3M带宽（京东云） 本次搭建是在完全纯净的ubuntu22.04系统上进行的，所以如果您保持一致，按照步骤即可搭建。 本文主要讲解搭建饥荒服务器，为了文章不臃肿，如何ssh连接远程服务器请自行前往浏览器或者b站学习，一般都有十分方便的软件。 本文中有不少链接，如果您对某一部分（例如steamcmd或者">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ubuntu搭建饥荒专用服务器教程">
+<meta property="og:url" content="https://blog.naughtyfox.top/ubuntu%E6%90%AD%E5%BB%BA%E9%A5%A5%E8%8D%92%E4%B8%93%E7%94%A8%E6%9C%8D%E5%8A%A1%E5%99%A8/index.html">
+<meta property="og:site_name" content="一蓑烟雨的博客">
+<meta property="og:description" content="&amp;nbsp;  游戏：饥荒联机版（Steam） 测试服务器：Ubuntu22.04 2核2G内存 3M带宽（京东云） 本次搭建是在完全纯净的ubuntu22.04系统上进行的，所以如果您保持一致，按照步骤即可搭建。 本文主要讲解搭建饥荒服务器，为了文章不臃肿，如何ssh连接远程服务器请自行前往浏览器或者b站学习，一般都有十分方便的软件。 本文中有不少链接，如果您对某一部分（例如steamcmd或者">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://s2.loli.net/2024/06/16/BeHwJFo1kXscL8R.png">
+<meta property="og:image" content="https://s2.loli.net/2024/06/16/NZ4FoVL7zXkMlqx.png">
+<meta property="og:image" content="https://s2.loli.net/2024/06/16/5DdJU3qxfeSWP4m.png">
+<meta property="og:image" content="https://s2.loli.net/2024/06/16/PvAmNjRlWqE6dzb.png">
+<meta property="article:published_time" content="2024-06-15T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-06-16T09:45:54.214Z">
+<meta property="article:author" content="一蓑烟雨">
+<meta property="article:tag" content="ubuntu">
+<meta property="article:tag" content="游戏">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://s2.loli.net/2024/06/16/BeHwJFo1kXscL8R.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>ubuntu搭建饥荒专用服务器教程 - 一蓑烟雨的博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"blog.naughtyfox.top","root":"/","version":"1.9.5-a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>一蓑烟雨</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="ubuntu搭建饥荒专用服务器教程"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-06-16 00:00" pubdate>
+          2024年6月16日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          40 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">ubuntu搭建饥荒专用服务器教程</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2024年6月16日 下午
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <p>&nbsp;</p>
+<blockquote>
+<p>游戏：饥荒联机版（Steam）</p>
+<p>测试服务器：Ubuntu22.04 2核2G内存 3M带宽（京东云）</p>
+<p>本次搭建是在完全纯净的ubuntu22.04系统上进行的，所以如果您保持一致，按照步骤即可搭建。</p>
+<p>本文主要讲解搭建饥荒服务器，为了文章不臃肿，如何ssh连接远程服务器请自行前往浏览器或者b站学习，一般都有十分方便的软件。</p>
+<p>本文中有不少链接，如果您对某一部分（例如steamcmd或者tmux）困惑或者感兴趣可以点击跳转，但是可能由于版本老旧存在问题，<strong>请勿盲目相信任何文章</strong>，例如steamcmd链接内容全面但是在安装方面<strong>lib32gcc1</strong>已经弃用但是文章未更新。</p>
+<p>！！由于steamcmd目前需要32位依赖，本次搭建需要添加i386架构，如果服务器用于重要业务，请谨慎操作！！</p>
+</blockquote>
+<p>&nbsp;</p>
+<h2 id="一、服务器配置"><a href="#一、服务器配置" class="headerlink" title="一、服务器配置"></a>一、服务器配置</h2><blockquote>
+<p>由于我只测试了 <strong>2核2G内存3M带宽</strong> 服务器配置，所以在配置选择方面我主要是根据在本服务器上的体验和其他教程博客得到的估计总结，如果您想知道您需求下的准确配置，可以私信询问b站的各位饥荒区up主。</p>
+</blockquote>
+<p>我采用 <strong>2核2G内存3M带宽</strong> 配置，地面大小为中，洞穴大小为中，添加了八个史诗血量，Show Me，全球定位等辅助型mod，未添加大型内容方面的mod。</p>
+<p>当服务器中人数为3人时，服务器性能显示大多为黄色，有时为绿色，网络大多数时候均为绿色，偶尔有一人为黄色，整体体验有时会有点点小卡顿，但是并不特别影响游戏体验。3人时内存使用率为**80%<strong>，cpu使用率为</strong>60%**。</p>
+<p>但是本次测试只运行到第一个冬季初，后期可能内存占用率等会上升。因此，对于想要不添加许多大型mod或者只有五六人的小型服务器，推荐配置 <strong>2核4G内存</strong> （618京东云价格在250左右一年）。</p>
+<h2 id="二、搭建"><a href="#二、搭建" class="headerlink" title="二、搭建"></a>二、搭建</h2><h3 id="1-安装-steamcmd"><a href="#1-安装-steamcmd" class="headerlink" title="1.安装 steamcmd"></a>1.安装 steamcmd</h3><blockquote>
+<p><strong><a target="_blank" rel="noopener" href="https://developer.valvesoftware.com/wiki/SteamCMD:zh-cn#Linux_Game_Server_Managers">steamcmd</a></strong> 是一个命令行版本的 Steam 客户端。它的主要用途是在一个命令行界面的 Steam 客户端上安装及更新各种可用的专用服务端。</p>
+</blockquote>
+<p>通过ssh连接服务器后，在服务器终端以root身份执行以下命令（# 带头的都是注释，不是要执行的命令）：</p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"> <span class="token function">sudo</span> add-apt-repository multiverse
+ <span class="token function">sudo</span> dpkg --add-architecture i386
+ <span class="token function">sudo</span> <span class="token function">apt</span> update
+ <span class="token function">sudo</span> <span class="token function">apt</span> <span class="token function">install</span> lib32gcc-s1 steamcmd 
+<span class="token comment"># 如果您的服务器是64位，先要按照上述指令添加 multiverse</span>
+<span class="token comment"># 如果是32位直接sudo apt update后sudo apt install steamcmd </span>
+<span class="token comment"># 此时可能会要求你输入密码，如果发现输入时终端无显示请不要慌张，这是正常的，为了保护密码的内容和长度信息</span>
+<span class="token comment"># 中间出现红色页面，ok和选择agree回车即可</span>
+
+<span class="token function">sudo</span> <span class="token function">apt</span> remove libcurl4-gnutls-dev
+<span class="token function">sudo</span> <span class="token function">apt</span> <span class="token function">install</span> libcurl4-gnutls-dev:i386
+<span class="token comment"># 因为两个包存在冲突，如果您已经下载libcurl4-gnutls-dev需要卸载安装i386版本</span>
+
+/usr/games/steamcmd
+<span class="token comment"># 这会花费一段时间安装</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+
+<p>出现以下内容便说明安装好了</p>
+<p><img src="https://s2.loli.net/2024/06/16/BeHwJFo1kXscL8R.png" srcset="/img/loading.gif" lazyload alt="image-20240616114059249"></p>
+<h3 id="2-安装-dontstarvetogether-dedicated-server"><a href="#2-安装-dontstarvetogether-dedicated-server" class="headerlink" title="2.安装 dontstarvetogether_dedicated_server"></a>2.安装 dontstarvetogether_dedicated_server</h3><p>在steamcmd中运行以下命令，如果您已经退出，在终端执行 <code>steamcmd</code> 即可进入：</p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">login anonymous
+<span class="token comment"># 此为匿名登录，可能会因为网络问题出现失败（国内裸连steam抽风是正常的），你可以在服务器上设置代理，也可以多试几次（我试了两次就登上了）</span>
+
+force_install_dir ./dontstarvetogether_dedicated_server
+
+app_update <span class="token number">343050</span> validate
+<span class="token comment"># 安装，这会花费一段时间，请耐心等待</span>
+<span class="token comment"># 安装过程中可能出现 Error! App '343050' state is 0x402 after update job. 错误</span>
+<span class="token comment"># 这是网络不稳定，磁盘大小不足，缓存不足等多种问题导致的</span>
+<span class="token comment"># 如果是网络不稳定，可以重新执行该命令或者退出steamcmd后重新进入重新按序执行</span>
+
+quit
+<span class="token comment"># 安装完成后退出steamcmd</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+
+<p>目前饥荒服务器底层部分安装完毕，相当于打好了地基</p>
+<h3 id="3-导入地图配置"><a href="#3-导入地图配置" class="headerlink" title="3.导入地图配置"></a>3.导入地图配置</h3><ol>
+<li>在创建游戏创建一个新世界（配置什么的按你正常玩来）</li>
+</ol>
+<p>&nbsp;</p>
+<ol start="2">
+<li>在成功进入游戏后退出，在文件管理系统中找到该地图存档的文件夹，如果这个存档是第一个创建的文件夹名就是 <strong>Cluster_1</strong> ，第二个就是 <strong>Cluster_2</strong> ，以此类推。</li>
+</ol>
+<p>如果你的电脑有全局搜索工具，搜对应的文件夹名称即可，我的是ubuntu系统，文件夹在 <code>~/.kelei/DoNotStarveTogether/1231618362/</code> 下</p>
+<p><img src="https://s2.loli.net/2024/06/16/NZ4FoVL7zXkMlqx.png" srcset="/img/loading.gif" lazyload alt="image-20240616125015816"></p>
+<ol start="3">
+<li>将找到的 <strong>Cluster_n</strong> 这个文件夹通过 <strong>SFTP</strong> 等方法上传至服务器</li>
+</ol>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">mkdir</span> <span class="token parameter variable">-p</span> ~/.klei/DoNotStarveTogether
+<span class="token comment"># 创建~/.klei/DoNotStarveTogether文件夹</span>
+
+<span class="token function">cp</span> <span class="token parameter variable">-R</span> Cluster_1/ ~/.klei/DoNotStarveTogether
+<span class="token comment"># 将上传的Cluster_1文件夹拷贝一份到~/.klei/DoNotStarveTogether文件夹下</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+
+
+
+<ol start="3">
+<li>在饥荒游戏主界面点击左下角的 <strong>帐号</strong> ，进入 <strong>Klei Account</strong> 界面后点击上方栏中的 <strong>游戏</strong></li>
+</ol>
+<p><img src="https://s2.loli.net/2024/06/16/5DdJU3qxfeSWP4m.png" srcset="/img/loading.gif" lazyload alt="image-20240616125709025"></p>
+<p>点击 <strong>《饥荒：联机版》的游戏服务器</strong> 按钮，复制服务器的序列号（如果没有请先添加新服务器）</p>
+<ol start="5">
+<li>添加序列号</li>
+</ol>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">cd</span> ~/.klei/DoNotStarveTogether/Cluster_1
+<span class="token comment"># 进入你上传的Cluster文件夹，~/.klei/DoNotStarveTogether/Cluster_1替换为你自己的文件夹位置</span>
+
+<span class="token function">vim</span> cluster_token.txt
+<span class="token comment"># 这是通过vim编辑器编辑cluster_token.txt文件，如果没有会自动创建</span>
+<span class="token comment"># 如果报错说没有安装vim,就执行 sudo apt install vim 安装，也可使用其他文本编辑器</span>
+
+<span class="token comment"># 此时你进入了一个新的界面，若不熟悉vim请勿乱动</span>
+<span class="token comment"># 1.如果你鼠标右键有Paste或者粘贴等字样请直接将序列号粘贴</span>
+<span class="token comment"># 2.若没有，请按a（注意是否大写锁定！！）进入编辑模式，然后像正常文本编辑器一样将你的序列号手动输入，完成后按 Esc 退出编辑模式</span>
+
+<span class="token comment"># 至此，你的第一行应该是一串序列号</span>
+<span class="token comment"># 键盘输入 :wq 这三个字符然后回车，保存文件并退出至终端</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+
+<p>ps：如果序列号是从玩家a复制的，那么<strong>玩家a</strong>就默认是<strong>管理员</strong></p>
+<ol start="6">
+<li>编写执行脚本</li>
+</ol>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">cd</span>
+<span class="token comment"># 返回主文件夹</span>
+
+<span class="token function">vim</span> start.sh
+<span class="token comment"># 创建并编辑start.sh文件</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+
+<p>以下是 <strong>start.sh</strong> 文件中的内容，您要注意的只是最前面的四个赋值语句</p>
+<p><strong>steamcmd_dir</strong> steamcmd可执行文件所在的位置</p>
+<p><strong>install_dir</strong> 安装dontstarvetogether_dedicated_server的位置</p>
+<p><strong>cluster_name</strong> 保存地图内容的文件夹名</p>
+<p><strong>dontstarve_dir</strong> 保存地图内容的文件夹的保存位置，即 <strong>parent_path</strong> </p>
+<blockquote>
+<p>如果不知道位置，可以用 <code>find / -name &quot;file_or_dir_name&quot;</code> 搜索</p>
+</blockquote>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shebang important">#!/bin/bash</span>
+
+<span class="token assign-left variable">steamcmd_dir</span><span class="token operator">=</span><span class="token string">"/usr/games/steamcmd"</span>
+<span class="token assign-left variable">install_dir</span><span class="token operator">=</span><span class="token string">"/root/.local/share/Steam/steamcmd/dontstarvetogether_dedicated_server"</span>
+<span class="token assign-left variable">cluster_name</span><span class="token operator">=</span><span class="token string">"Cluster_1"</span>
+<span class="token assign-left variable">dontstarve_dir</span><span class="token operator">=</span><span class="token string">"<span class="token environment constant">$HOME</span>/.klei/DoNotStarveTogether"</span>
+
+<span class="token keyword">function</span> <span class="token function-name function">fail</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token builtin class-name">echo</span> Error: <span class="token string">"<span class="token variable">$@</span>"</span> <span class="token operator">></span><span class="token file-descriptor important">&amp;2</span>
+    <span class="token builtin class-name">exit</span> <span class="token number">1</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">function</span> <span class="token function-name function">check_for_file</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">[</span> <span class="token operator">!</span> <span class="token parameter variable">-e</span> <span class="token string">"<span class="token variable">$1</span>"</span> <span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token keyword">then</span>
+    fail <span class="token string">"Missing file: <span class="token variable">$1</span>"</span>
+    <span class="token keyword">fi</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token builtin class-name">cd</span> <span class="token string">"<span class="token variable">$steamcmd_dir</span>"</span> <span class="token operator">||</span> fail <span class="token string">"Missing <span class="token variable">$steamcmd_dir</span> directory!"</span>
+
+check_for_file <span class="token string">"steamcmd.sh"</span>
+check_for_file <span class="token string">"<span class="token variable">$dontstarve_dir</span>/<span class="token variable">$cluster_name</span>/cluster.ini"</span>
+check_for_file <span class="token string">"<span class="token variable">$dontstarve_dir</span>/<span class="token variable">$cluster_name</span>/cluster_token.txt"</span>
+check_for_file <span class="token string">"<span class="token variable">$dontstarve_dir</span>/<span class="token variable">$cluster_name</span>/Master/server.ini"</span>
+check_for_file <span class="token string">"<span class="token variable">$dontstarve_dir</span>/<span class="token variable">$cluster_name</span>/Caves/server.ini"</span>
+check_for_file <span class="token string">"<span class="token variable">$install_dir</span>/bin"</span>
+
+<span class="token builtin class-name">cd</span> <span class="token string">"<span class="token variable">$install_dir</span>/bin"</span> <span class="token operator">||</span> fail
+
+<span class="token assign-left variable">run_shared</span><span class="token operator">=</span><span class="token punctuation">(</span>./dontstarve_dedicated_server_nullrenderer<span class="token punctuation">)</span>
+<span class="token assign-left variable">run_shared</span><span class="token operator">+=</span><span class="token punctuation">(</span>-console<span class="token punctuation">)</span>
+<span class="token assign-left variable">run_shared</span><span class="token operator">+=</span><span class="token punctuation">(</span>-cluster <span class="token string">"<span class="token variable">$cluster_name</span>"</span><span class="token punctuation">)</span>
+<span class="token assign-left variable">run_shared</span><span class="token operator">+=</span><span class="token punctuation">(</span>-monitor_parent_process <span class="token variable">$$</span><span class="token punctuation">)</span>
+<span class="token assign-left variable">run_shared</span><span class="token operator">+=</span><span class="token punctuation">(</span>-shard<span class="token punctuation">)</span>
+
+<span class="token string">"<span class="token variable">$&#123;run_shared<span class="token punctuation">[</span>@<span class="token punctuation">]</span>&#125;</span>"</span> Caves <span class="token operator">|</span> <span class="token function">sed</span> <span class="token string">'s/^/Caves: /'</span> <span class="token operator">&amp;</span>
+<span class="token string">"<span class="token variable">$&#123;run_shared<span class="token punctuation">[</span>@<span class="token punctuation">]</span>&#125;</span>"</span> Master <span class="token operator">|</span> <span class="token function">sed</span> <span class="token string">'s/^/Master: /'</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+
+<p>保存退出后执行</p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">chmod</span> <span class="token parameter variable">-R</span> <span class="token number">777</span> /root/.local/share/Steam/steamcmd/dontstarvetogether_dedicated_server
+<span class="token function">sudo</span> <span class="token function">chmod</span> <span class="token number">777</span> start.sh
+<span class="token comment"># 更改文件权限</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre></div></figure>
+
+
+
+<p>此时，你若在终端执行 <code>./start.sh</code> ，即运行 <strong>start.sh</strong> 脚本，待加载完毕，你就可以在大厅搜索到你的房间了！！！！</p>
+<p><strong>但是</strong>，还是不够的，因为你会发现房间是纯净档，mod不见了？！并且当你关闭ssh连接，运行的脚本会被强制中断！！服务器将断开连接！！</p>
+<p>同时，如何添加管理员？如何设置白名单？如何禁止投票？</p>
+<p>别急，都会在后文讲到</p>
+<h2 id="三、添加mod"><a href="#三、添加mod" class="headerlink" title="三、添加mod"></a>三、添加mod</h2><p>如果你创建时勾选了mod,在 <strong>Cluster_n</strong> 文件夹（就是上文上传的那个文件夹）的 <strong>Master</strong> 文件夹下有个 <strong>modoverrides.lua</strong> 文件，其中内容类似：</p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-lua" data-language="lua"><code class="language-lua"><span class="token keyword">return</span> <span class="token punctuation">&#123;</span>
+  <span class="token punctuation">[</span><span class="token string">"workshop-1185229307"</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token punctuation">&#123;</span>
+    <span class="token punctuation">[</span><span class="token string">"configuration_options"</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token punctuation">&#123;</span>
+      <span class="token punctuation">[</span><span class="token string">"CAMERA"</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token keyword">true</span><span class="token punctuation">,</span>
+      <span class="token punctuation">[</span><span class="token string">"DAMAGE_NUMBERS"</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token keyword">true</span><span class="token punctuation">,</span>
+      <span class="token punctuation">[</span><span class="token string">"DAMAGE_RESISTANCE"</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token keyword">true</span><span class="token punctuation">,</span>
+      <span class="token punctuation">[</span><span class="token string">"FRAME_PHASES"</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token keyword">true</span><span class="token punctuation">,</span>
+      <span class="token punctuation">[</span><span class="token string">"GLOBAL"</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token keyword">false</span><span class="token punctuation">,</span>
+      <span class="token punctuation">[</span><span class="token string">"GLOBAL_NUMBERS"</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token keyword">false</span><span class="token punctuation">,</span>
+      <span class="token punctuation">[</span><span class="token string">"HEADER_CLIENT"</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token keyword">false</span><span class="token punctuation">,</span>
+      <span class="token punctuation">[</span><span class="token string">"HEADER_SERVER"</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token keyword">false</span><span class="token punctuation">,</span>
+      <span class="token punctuation">[</span><span class="token string">"HORIZONTAL_OFFSET"</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span>
+      <span class="token punctuation">[</span><span class="token string">"TAG"</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token string">"EPIC"</span><span class="token punctuation">,</span>
+      <span class="token punctuation">[</span><span class="token string">"TRANSLATOR"</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token keyword">false</span><span class="token punctuation">,</span>
+      <span class="token punctuation">[</span><span class="token string">"WETNESS_METER"</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token keyword">false</span> 
+    <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[</span><span class="token string">"enabled"</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token keyword">true</span> 
+  <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+  <span class="token punctuation">[</span><span class="token string">"workshop-1418746242"</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token punctuation">&#123;</span>
+    <span class="token punctuation">[</span><span class="token string">"configuration_options"</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token punctuation">&#123;</span> <span class="token punctuation">[</span><span class="token string">"clearfont"</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token keyword">true</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token string">"eventplus"</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token keyword">true</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token string">"extratrans"</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token keyword">true</span> <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[</span><span class="token string">"enabled"</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token keyword">true</span> 
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+
+<p>这个是你勾选的mod的配置文件，例如第一个 <strong>workshop-1185229307</strong> ，实际就是史诗血量mod，而 <strong>1185229307</strong> 就是该mod的ID号。</p>
+<p><strong>接下来</strong> ，将进行添加mod操作：</p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 首先，如果你还在运行start.sh脚本，请 Ctrl+c 中止</span>
+<span class="token builtin class-name">cd</span> /root/.local/share/Steam/steamcmd/dontstarvetogether_dedicated_server/mods
+
+<span class="token function">vim</span> dedicated_server_mods_setup.lua
+<span class="token comment"># 此时打住，先别动</span>
+<span class="token comment"># 阅读文件中的注释就知道，我们需要ServerModSetup或ServerModCollectionSetup函数来初始化我们的mod,即告诉服务器应该下载哪些mod,前者用于初始化单个mod,后者用于合集</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+
+<p>接下来，打开你本地电脑的记事本，新建一个txt文件，对照着你的modoverrides.lua内容，一行一个ServerModSetup函数，函数内为mod的ID号。</p>
+<p>比如我上文的lua内容，我的txt文件内容应该为：</p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">ServerModSetup(&quot;1185229307&quot;)
+ServerModSetup(&quot;1418746242&quot;)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></div></figure>
+
+<p>lua中有两个mod,我勾选了两个mod,那么这就是两个ServerModSetup函数。</p>
+<p><strong>接着</strong>，复制txt文件内容，粘贴至刚刚打开的dedicated_server_mods_setup.lua文件</p>
+<p>形如：</p>
+<p><img src="https://s2.loli.net/2024/06/16/PvAmNjRlWqE6dzb.png" srcset="/img/loading.gif" lazyload alt="image-20240616165324100"></p>
+<p>接着同样的，按 <strong>:wq 回车</strong> 保存退出</p>
+<p>此时，若再去运行start.sh脚本，等待加载（由于要下载mod这次加载时间会较长），大厅搜索发现房间的mod加上了！</p>
+<blockquote>
+<p>如果出现显示mod只有部分，那是因为下载mod失败（依旧是网络问题。。），重新运行脚本即可（一次不行就多几次），下载好了以后运行就不用这么麻烦了。</p>
+</blockquote>
+<h2 id="四、后台运行"><a href="#四、后台运行" class="headerlink" title="四、后台运行"></a>四、后台运行</h2><p>还有一个困扰，如果我们关闭ssh连接，由于终端被关闭，运行在终端的start.sh脚本也被杀死，服务器强行退出。但是我们总不能一直连着ssh吧？为此，我们可以采用 <strong>tmux</strong> 这一命令行工具实现脚本的后台运行。（只要能后台运行即可，tmux使用方便，所以用它）</p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">apt</span> update
+<span class="token function">sudo</span> <span class="token function">apt</span> <span class="token function">install</span> tmux
+<span class="token comment"># 如果未安装先安装tmux</span>
+
+tmux new <span class="token parameter variable">-s</span> game_server
+<span class="token comment"># 创建一个session,game_server是session的名字，可自取，最好英文</span>
+
+<span class="token comment"># 接下来你会进入一个新终端（运行在背景的终端）</span>
+<span class="token comment"># 在该终端下启动start.sh脚本</span>
+<span class="token comment"># 检查没有问题后先按 ctrl+b 后按 d 退出这个终端（实际上是隐藏，它依旧在运行）</span>
+<span class="token comment"># 此时，你若断开ssh连接，服务器依旧运行！</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+
+<p><a target="_blank" rel="noopener" href="https://www.ruanyifeng.com/blog/2019/10/tmux.html">tmux更多内容</a></p>
+<h2 id="五、额外配置"><a href="#五、额外配置" class="headerlink" title="五、额外配置"></a>五、额外配置</h2><blockquote>
+<p>更改以下配置最好先终止脚本，关闭服务器</p>
+</blockquote>
+<h3 id="1-用户Id"><a href="#1-用户Id" class="headerlink" title="1.用户Id"></a>1.用户Id</h3><p>在配置之前，我们先了解如何获得<strong>Klei用户ID</strong></p>
+<p>在饥荒联机版游戏中，点击左下角 <strong>帐号</strong> ，点击 弹出窗口上方 <strong>用户信息</strong> ，你就可以看到你的 <strong>Klei用户ID</strong> 了</p>
+<h3 id="2-管理员"><a href="#2-管理员" class="headerlink" title="2.管理员"></a>2.管理员</h3><figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">cd</span> ~/.klei/DoNotStarveTogether/Cluster_1
+<span class="token comment"># 来到Cluster_1文件夹</span>
+
+<span class="token function">vim</span> adminlist.txt
+<span class="token comment"># 创建或编辑adminlist.txt文件</span>
+
+<span class="token comment"># 将所有管理员的Klei用户ID粘贴进去，一行一个</span>
+
+<span class="token comment"># 保存退出</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+
+<h3 id="3-白名单"><a href="#3-白名单" class="headerlink" title="3.白名单"></a>3.白名单</h3><p>我开了一个服务器，有6个位置，但是每次我自己都挤不进去，这时就需要<strong>白名单</strong>了</p>
+<p>打开 <strong>Cluster_n</strong> 下的 <strong>cluster.ini</strong> 文件，这个就是该档的基础配置文件，内容大致如下：</p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-ini" data-language="ini"><code class="language-ini"><span class="token section"><span class="token punctuation">[</span><span class="token section-name selector">GAMEPLAY</span><span class="token punctuation">]</span></span>
+<span class="token key attr-name">game_mode</span> <span class="token punctuation">=</span> <span class="token value attr-value">survival //endless无尽模式 survival生存 wilderness荒野</span>
+<span class="token key attr-name">max_players</span> <span class="token punctuation">=</span> <span class="token value attr-value">6 //人数</span>
+<span class="token key attr-name">pvp</span> <span class="token punctuation">=</span> <span class="token value attr-value">false //PVP玩家互怼,true开,false关</span>
+<span class="token key attr-name">pause_when_empty</span> <span class="token punctuation">=</span> <span class="token value attr-value">true //没人的时候暂停,true开,false关</span>
+
+
+<span class="token section"><span class="token punctuation">[</span><span class="token section-name selector">NETWORK</span><span class="token punctuation">]</span></span>
+<span class="token key attr-name">cluster_description</span> <span class="token punctuation">=</span> <span class="token value attr-value">abababa //服务器描述</span>
+<span class="token key attr-name">cluster_name</span> <span class="token punctuation">=</span> <span class="token value attr-value">某某某的世界 //服务器名字</span>
+<span class="token key attr-name">cluster_intention</span> <span class="token punctuation">=</span> <span class="token value attr-value">cooperative //服务器分类,默认可以不用修改</span>
+<span class="token key attr-name">cluster_password</span> <span class="token punctuation">=</span> <span class="token value attr-value">123 // 服务器进入密码</span>
+
+
+<span class="token section"><span class="token punctuation">[</span><span class="token section-name selector">MISC</span><span class="token punctuation">]</span></span>
+<span class="token key attr-name">console_enabled</span> <span class="token punctuation">=</span> <span class="token value attr-value">true //服务器能否使用控制台,true开,false关</span>
+
+
+<span class="token section"><span class="token punctuation">[</span><span class="token section-name selector">SHARD</span><span class="token punctuation">]</span></span>
+<span class="token key attr-name">shard_enabled</span> <span class="token punctuation">=</span> <span class="token value attr-value">true //启用分层世界,true开,false关默认即可,关闭不可用洞穴</span>
+<span class="token key attr-name">bind_ip</span> <span class="token punctuation">=</span> <span class="token value attr-value">127.0.0.1 //分层世界绑定连接地址,默认即可</span>
+<span class="token key attr-name">master_ip</span> <span class="token punctuation">=</span> <span class="token value attr-value">127.0.0.1 //分层世界主世界地址,默认即可</span>
+<span class="token key attr-name">master_port</span> <span class="token punctuation">=</span> <span class="token value attr-value">10889 //分层世界连接端口,可根据你有几个世界修改</span>
+<span class="token key attr-name">cluster_key</span> <span class="token punctuation">=</span> <span class="token value attr-value">supersecretkey //分层世界相互连接的密码,这个一定得改,改成自己的</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+
+<p>在 <strong>NETWORK</strong> 部分加入以下内容：</p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-ini" data-language="ini"><code class="language-ini"><span class="token key attr-name">whitelist_slots</span><span class="token punctuation">=</span> <span class="token value attr-value">1 //白名单功能 设置成2 就是留2个位置，3就是留3个位置</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div></figure>
+
+<p>保存退出后，创建 <strong>whitelist.txt</strong> 文件，和管理员一样，你想给谁预留位置就一人一行他的科雷Id。</p>
+<h3 id="4-禁止投票"><a href="#4-禁止投票" class="headerlink" title="4.禁止投票"></a>4.禁止投票</h3><p>在 <strong>cluster.ini</strong> 文件的 <strong>GAMEPLAY</strong> 部分添加：</p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-ini" data-language="ini"><code class="language-ini"><span class="token key attr-name">vote_enabled</span> <span class="token punctuation">=</span> <span class="token value attr-value">false //投票功能,true开,false关</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div></figure>
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>至此，便是Ubuntu服务器搭建饥荒联机服务器的全部内容了，祝大家游戏愉快，欢迎指正和补充讨论！</p>
+<p>&nbsp;</p>
+<blockquote>
+<p>参考文章：</p>
+<p><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/forum/topic/0204144946165984055?fid=0101592429757310384">教你用Ubuntu快速搭建饥荒服务器</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.xiongtianqi.cn/thread-301238-1-1.html">饥荒服务器配置</a></p>
+</blockquote>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/ubuntu/" class="print-no-link">#ubuntu</a>
+      
+        <a href="/tags/%E6%B8%B8%E6%88%8F/" class="print-no-link">#游戏</a>
+      
+    </div>
+  
+</div>
+
+
+              
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/typescript%E7%BB%84%E4%BB%B6%E4%B8%AD%E7%9A%84%E9%BB%98%E8%AE%A4%E5%B1%9E%E6%80%A7/" title="typescript组件中的默认属性">
+                        <span class="hidden-mobile">typescript组件中的默认属性</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'spysyyrps/spysyyrps.github.io');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', '指正错误，分享知识，讨论问题！');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script  src="https://lib.baomitu.com/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js" ></script>
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
