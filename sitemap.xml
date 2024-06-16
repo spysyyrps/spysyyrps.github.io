@@ -79,13 +79,6 @@
   </url>
   
   <url>
-    <loc>https://blog.naughtyfox.top/tags/ubuntu/</loc>
-    <lastmod>2024-06-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://blog.naughtyfox.top/tags/react/</loc>
     <lastmod>2024-06-16</lastmod>
     <changefreq>weekly</changefreq>
@@ -94,6 +87,13 @@
   
   <url>
     <loc>https://blog.naughtyfox.top/tags/typescript/</loc>
+    <lastmod>2024-06-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.naughtyfox.top/tags/ubuntu/</loc>
     <lastmod>2024-06-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
