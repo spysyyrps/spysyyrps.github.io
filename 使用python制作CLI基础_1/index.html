@@ -1,0 +1,997 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="一蓑烟雨">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="简单介绍sys.argv,argparse和click三种解析命令行参数的方式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用python制作CLI基础_1">
+<meta property="og:url" content="https://blog.naughtyfox.top/%E4%BD%BF%E7%94%A8python%E5%88%B6%E4%BD%9CCLI%E5%9F%BA%E7%A1%80_1/index.html">
+<meta property="og:site_name" content="一蓑烟雨的博客">
+<meta property="og:description" content="简单介绍sys.argv,argparse和click三种解析命令行参数的方式">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-02-04T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-02-05T09:24:21.496Z">
+<meta property="article:author" content="一蓑烟雨">
+<meta property="article:tag" content="python">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>使用python制作CLI基础_1 - 一蓑烟雨的博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"blog.naughtyfox.top","root":"/","version":"1.9.5-a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>一蓑烟雨</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="使用python制作CLI基础_1"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-02-05 00:00" pubdate>
+          2025年2月5日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          6.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          35 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">使用python制作CLI基础_1</h1>
+            
+              <p class="note note-info">
+                
+                  
+                    本文最后更新于：2025年2月5日 下午
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <p>主要学习使用python制作CLI两个主要方面的内容：</p>
+<ol>
+<li>利用toml文件打包python项目 </li>
+<li>python中的命令行参数解析 <strong>（本篇内容）</strong></li>
+</ol>
+<p>&nbsp;</p>
+<p>本文主要介绍三种较为流行的命令行解析方式，分别为：</p>
+<ul>
+<li><code>sys.argv</code></li>
+<li><code>argparse</code></li>
+<li><code>click</code></li>
+</ul>
+<p>三者各有优劣且已经能够满足绝大部分人的需要</p>
+<p>以下内容均假设python项目已经被打包为名为 <strong>mycli</strong> 的命令行</p>
+<p>&nbsp;</p>
+<h2 id="一、sys-argv"><a href="#一、sys-argv" class="headerlink" title="一、sys.argv"></a>一、sys.argv</h2><p><strong>sys</strong> 库是python自带的一个库，不需要额外安装</p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> sys
+args <span class="token operator">=</span> sys<span class="token punctuation">.</span>argv
+
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Argument List:"</span><span class="token punctuation">,</span> <span class="token builtin">str</span><span class="token punctuation">(</span>args<span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+
+<p>在上述代码的前提下，假设我们在终端输入是</p>
+<p><code>mycli input.txt -o test.txt --verbose</code> </p>
+<p>代码的输出结果即为</p>
+<p><code>[&quot;mycli&quot;, &quot;input.txt&quot;, &quot;-o&quot;, &quot;test.txt&quot;, &quot;--verbose&quot;]</code></p>
+<p><strong>sys.argv</strong> 即为获取终端命令行的全部输入并且采用 <code>split</code> 使用空格分割为list</p>
+<p>&nbsp;</p>
+<p><strong>优点：</strong> </p>
+<ul>
+<li>简洁方便，不需要太多代码即可解析获取参数</li>
+<li>不用额外安装</li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li>参数以list形式解析获取，代码后续处理会较为复杂，需要重新挑选类型检查等</li>
+<li>返回的每个元素固定是 <strong>str</strong> ，可能需要强制类型转换</li>
+<li>功能较少，没有默认值设置等能力</li>
+</ul>
+<p>&nbsp;</p>
+<h2 id="二、argparse"><a href="#二、argparse" class="headerlink" title="二、argparse"></a>二、argparse</h2><p><code>argparse</code> 是十分实用且流行的用于解析命令行参数的包</p>
+<p>它的功能十分强大，可以设置默认值也可以进行类型转化与判断</p>
+<p>同时，利用它，还可以实现 <code>git clone</code> 一样的子命令的功能</p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> argparse
+
+<span class="token keyword">def</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment"># 1. 创建解析器对象，设置描述信息</span>
+    parser <span class="token operator">=</span> argparse<span class="token punctuation">.</span>ArgumentParser<span class="token punctuation">(</span>
+        description<span class="token operator">=</span><span class="token string">"示例：演示 argparse 的常用功能"</span><span class="token punctuation">,</span>
+        epilog<span class="token operator">=</span><span class="token string">"更多用法请参考官方文档: https://docs.python.org/3/library/argparse.html"</span>
+    <span class="token punctuation">)</span>
+
+    <span class="token comment"># 2. 添加通用参数 ---------------------------------------------</span>
+    
+    <span class="token comment"># 位置参数（必须提供的参数）</span>
+    parser<span class="token punctuation">.</span>add_argument<span class="token punctuation">(</span>
+        <span class="token string">"filename"</span><span class="token punctuation">,</span>  <span class="token comment"># 参数名称（位置参数不需要前缀）</span>
+        <span class="token builtin">type</span><span class="token operator">=</span><span class="token builtin">str</span><span class="token punctuation">,</span>    <span class="token comment"># 参数类型</span>
+        <span class="token builtin">help</span><span class="token operator">=</span><span class="token string">"输入文件的路径"</span>  <span class="token comment"># 帮助信息</span>
+    <span class="token punctuation">)</span>
+
+    <span class="token comment"># 可选参数（短选项和长选项）</span>
+    parser<span class="token punctuation">.</span>add_argument<span class="token punctuation">(</span>
+        <span class="token string">"-v"</span><span class="token punctuation">,</span> <span class="token string">"--verbose"</span><span class="token punctuation">,</span>  <span class="token comment"># 短选项和长选项,如果两者同时存在，默认情况下后续使用长选项即verbose访问</span>
+        action<span class="token operator">=</span><span class="token string">"store_true"</span><span class="token punctuation">,</span>  <span class="token comment"># 存储为布尔值（存在则为 True，不存在则为 False）</span>
+        <span class="token builtin">help</span><span class="token operator">=</span><span class="token string">"启用详细输出模式"</span>
+    <span class="token punctuation">)</span>
+
+    <span class="token comment"># 带类型的参数 + 默认值</span>
+    parser<span class="token punctuation">.</span>add_argument<span class="token punctuation">(</span>
+        <span class="token string">"--num"</span><span class="token punctuation">,</span>
+        <span class="token builtin">type</span><span class="token operator">=</span><span class="token builtin">int</span><span class="token punctuation">,</span>
+        default<span class="token operator">=</span><span class="token number">10</span><span class="token punctuation">,</span>
+        choices<span class="token operator">=</span><span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">,</span>  <span class="token comment"># 限制取值范围</span>
+        <span class="token builtin">help</span><span class="token operator">=</span><span class="token string">"指定一个数字 (默认: %(default)s)"</span>
+    <span class="token punctuation">)</span>
+
+    <span class="token comment"># 互斥参数组（不能同时使用的参数）</span>
+    group <span class="token operator">=</span> parser<span class="token punctuation">.</span>add_mutually_exclusive_group<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    group<span class="token punctuation">.</span>add_argument<span class="token punctuation">(</span>
+        <span class="token string">"--start"</span><span class="token punctuation">,</span>
+        action<span class="token operator">=</span><span class="token string">"store_true"</span><span class="token punctuation">,</span>
+        <span class="token builtin">help</span><span class="token operator">=</span><span class="token string">"启动服务"</span>
+    <span class="token punctuation">)</span>
+    group<span class="token punctuation">.</span>add_argument<span class="token punctuation">(</span>
+        <span class="token string">"--stop"</span><span class="token punctuation">,</span>
+        action<span class="token operator">=</span><span class="token string">"store_true"</span><span class="token punctuation">,</span>
+        <span class="token builtin">help</span><span class="token operator">=</span><span class="token string">"停止服务"</span>
+    <span class="token punctuation">)</span>
+
+    <span class="token comment"># 多值参数（接受多个值）</span>
+    parser<span class="token punctuation">.</span>add_argument<span class="token punctuation">(</span>
+        <span class="token string">"--values"</span><span class="token punctuation">,</span>
+        nargs<span class="token operator">=</span><span class="token string">"+"</span><span class="token punctuation">,</span>  <span class="token comment"># 接受至少一个值</span>
+        <span class="token builtin">type</span><span class="token operator">=</span><span class="token builtin">float</span><span class="token punctuation">,</span>
+        <span class="token builtin">help</span><span class="token operator">=</span><span class="token string">"传入多个浮点数（例如 1.1 2.2 3.3）"</span>
+    <span class="token punctuation">)</span>
+
+    <span class="token comment"># 版本参数（固定格式）</span>
+    parser<span class="token punctuation">.</span>add_argument<span class="token punctuation">(</span>
+        <span class="token string">"-V"</span><span class="token punctuation">,</span> <span class="token string">"--version"</span><span class="token punctuation">,</span>
+        action<span class="token operator">=</span><span class="token string">"version"</span><span class="token punctuation">,</span>
+        version<span class="token operator">=</span><span class="token string">"%(prog)s 1.0"</span> 
+    <span class="token punctuation">)</span>
+
+    <span class="token comment"># 3. 添加子命令 ---------------------------------------------</span>
+    subparsers <span class="token operator">=</span> parser<span class="token punctuation">.</span>add_subparsers<span class="token punctuation">(</span>
+        title<span class="token operator">=</span><span class="token string">"子命令"</span><span class="token punctuation">,</span>  <span class="token comment"># 子命令标题</span>
+        dest<span class="token operator">=</span><span class="token string">"command"</span><span class="token punctuation">,</span>  <span class="token comment"># 存储子命令名称的属性</span>
+        <span class="token builtin">help</span><span class="token operator">=</span><span class="token string">"可用子命令"</span>
+    <span class="token punctuation">)</span>
+
+    <span class="token comment"># 子命令 1: process</span>
+    parser_process <span class="token operator">=</span> subparsers<span class="token punctuation">.</span>add_parser<span class="token punctuation">(</span>
+        <span class="token string">"process"</span><span class="token punctuation">,</span>
+        <span class="token builtin">help</span><span class="token operator">=</span><span class="token string">"处理文件"</span>
+    <span class="token punctuation">)</span>
+    parser_process<span class="token punctuation">.</span>add_argument<span class="token punctuation">(</span>
+        <span class="token string">"--output"</span><span class="token punctuation">,</span>
+        required<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span>  <span class="token comment"># 必选参数</span>
+        <span class="token builtin">help</span><span class="token operator">=</span><span class="token string">"输出文件路径"</span>
+    <span class="token punctuation">)</span>
+    parser_process<span class="token punctuation">.</span>add_argument<span class="token punctuation">(</span>
+        <span class="token string">"--force"</span><span class="token punctuation">,</span>
+        action<span class="token operator">=</span><span class="token string">"store_true"</span><span class="token punctuation">,</span>
+        <span class="token builtin">help</span><span class="token operator">=</span><span class="token string">"覆盖已存在的文件"</span>
+    <span class="token punctuation">)</span>
+
+    <span class="token comment"># 子命令 2: clean</span>
+    parser_clean <span class="token operator">=</span> subparsers<span class="token punctuation">.</span>add_parser<span class="token punctuation">(</span>
+        <span class="token string">"clean"</span><span class="token punctuation">,</span>
+        <span class="token builtin">help</span><span class="token operator">=</span><span class="token string">"清理文件"</span>
+    <span class="token punctuation">)</span>
+    parser_clean<span class="token punctuation">.</span>add_argument<span class="token punctuation">(</span>
+        <span class="token string">"--recursive"</span><span class="token punctuation">,</span>
+        action<span class="token operator">=</span><span class="token string">"store_true"</span><span class="token punctuation">,</span>
+        <span class="token builtin">help</span><span class="token operator">=</span><span class="token string">"递归清理子目录"</span>
+    <span class="token punctuation">)</span>
+    parser_clean<span class="token punctuation">.</span>add_argument<span class="token punctuation">(</span>
+        <span class="token string">"--dry-run"</span><span class="token punctuation">,</span>
+        action<span class="token operator">=</span><span class="token string">"store_true"</span><span class="token punctuation">,</span>
+        <span class="token builtin">help</span><span class="token operator">=</span><span class="token string">"模拟运行（不实际删除）"</span>
+    <span class="token punctuation">)</span>
+
+    <span class="token comment"># 4. 解析参数并处理结果 --------------------------------------</span>
+    args <span class="token operator">=</span> parser<span class="token punctuation">.</span>parse_args<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">#默认获取sys.argv[1:]进行处理</span>
+
+    <span class="token comment"># 打印所有参数（演示用）</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"\n解析后的参数:"</span><span class="token punctuation">)</span>
+    <span class="token keyword">for</span> key<span class="token punctuation">,</span> value <span class="token keyword">in</span> <span class="token builtin">vars</span><span class="token punctuation">(</span>args<span class="token punctuation">)</span><span class="token punctuation">.</span>items<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"</span><span class="token interpolation"><span class="token punctuation">&#123;</span>key<span class="token punctuation">:</span><span class="token format-spec">>10</span><span class="token punctuation">&#125;</span></span><span class="token string">: </span><span class="token interpolation"><span class="token punctuation">&#123;</span>value<span class="token punctuation">&#125;</span></span><span class="token string">"</span></span><span class="token punctuation">)</span>
+
+    <span class="token comment"># 示例逻辑分支</span>
+    <span class="token keyword">if</span> args<span class="token punctuation">.</span>command <span class="token operator">==</span> <span class="token string">"process"</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"\n处理文件: </span><span class="token interpolation"><span class="token punctuation">&#123;</span>args<span class="token punctuation">.</span>filename<span class="token punctuation">&#125;</span></span><span class="token string"> -> </span><span class="token interpolation"><span class="token punctuation">&#123;</span>args<span class="token punctuation">.</span>output<span class="token punctuation">&#125;</span></span><span class="token string">"</span></span><span class="token punctuation">)</span>
+        <span class="token keyword">if</span> args<span class="token punctuation">.</span>force<span class="token punctuation">:</span>
+            <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"警告：已启用强制覆盖模式"</span><span class="token punctuation">)</span>
+    <span class="token keyword">elif</span> args<span class="token punctuation">.</span>command <span class="token operator">==</span> <span class="token string">"clean"</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"\n清理文件: </span><span class="token interpolation"><span class="token punctuation">&#123;</span>args<span class="token punctuation">.</span>filename<span class="token punctuation">&#125;</span></span><span class="token string">"</span></span><span class="token punctuation">)</span>
+        <span class="token keyword">if</span> args<span class="token punctuation">.</span>recursive<span class="token punctuation">:</span>
+            <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"递归清理子目录"</span><span class="token punctuation">)</span>
+
+<span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">"__main__"</span><span class="token punctuation">:</span>
+    main<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+
+<p>以上样例代码包含了 <code>argparse</code> 比较常用的各种参数情形</p>
+<p>并且，当你输入 <code>--help</code> 或者 <code>-h</code> 时，它还会自动根据 <strong>help</strong> 的相关内容生成帮助文档显示在终端</p>
+<p>从上述代码可以看出，<code>argparse</code> 功能十分强大，已经基本满足了开发者的需求</p>
+<p><code>argparse</code> 解析参数的步骤也十分清晰</p>
+<ol>
+<li>使用 <code>argparse.ArgumentParser</code> 创建解析器</li>
+<li>利用 <code>add_argument</code> , <code>add_subparsers</code> ,<code>add_parser</code> 等命令对解析器进行添加参数，子命令集合，子命令等操作</li>
+<li>解析器调用 <code>parser_args</code> 进行解析</li>
+<li>解析结果通过与之前添加的参数名字一一对应进行调用</li>
+</ol>
+<p>&nbsp;</p>
+<p><strong>优点：</strong></p>
+<ul>
+<li>自带，无需额外下载</li>
+<li>功能强大，逻辑清晰</li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li>对于嵌套命令实现还是比较混乱与复杂</li>
+</ul>
+<p>&nbsp;</p>
+<h2 id="三、click"><a href="#三、click" class="headerlink" title="三、click"></a>三、<a target="_blank" rel="noopener" href="https://click.palletsprojects.com/en/stable/#documentation">click</a></h2><p>其实 <code>argparse</code> 已经是满足绝大部分人的需求了，代码方面也并不复杂。</p>
+<p>而 <code>click</code> 则是更加强大的用于制作命令行的工具，它不仅通过装饰器使得代码更加易懂，还支持彩色输出，prompt，文件类型检查等其他功能。</p>
+<p>但与此同时，更强大的功能也就带来了更加昂贵的学习成本，所幸 <code>click</code> 的官方文档十分条理清晰，<strong>下文只是极其简单的小引子，更多功能学习请参考官方文档</strong>。</p>
+<blockquote>
+<p>与前两者不同，click 是第三方库因此使用前需要pip install安装</p>
+</blockquote>
+<h3 id="1-无参数命令"><a href="#1-无参数命令" class="headerlink" title="1.无参数命令"></a>1.无参数命令</h3><figure><div class="code-wrapper"><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> click
+
+<span class="token decorator annotation punctuation">@click<span class="token punctuation">.</span>command</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">hello</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    click<span class="token punctuation">.</span>echo<span class="token punctuation">(</span><span class="token string">'Hello World!'</span><span class="token punctuation">)</span> <span class="token comment">#echo函数效果等同于print,但是对环境更加包容且更加健壮</span>
+    
+<span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">'__main__'</span><span class="token punctuation">:</span>
+    hello<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+
+<p>此时当我们调用 <code>mycli</code> ，假设设置程序入口为 <code>hello()</code> </p>
+<p>终端应该输出 <code>Hello World！</code></p>
+<h3 id="2-嵌套命令"><a href="#2-嵌套命令" class="headerlink" title="2.嵌套命令"></a>2.嵌套命令</h3><h4 id="2-1-采用add-command与自定义子命令名称"><a href="#2-1-采用add-command与自定义子命令名称" class="headerlink" title="2.1 采用add_command与自定义子命令名称"></a>2.1 采用add_command与自定义子命令名称</h4><figure><div class="code-wrapper"><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token decorator annotation punctuation">@click<span class="token punctuation">.</span>group</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">cli</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    click<span class="token punctuation">.</span>echo<span class="token punctuation">(</span><span class="token string">"Welcome!"</span><span class="token punctuation">)</span>
+
+<span class="token decorator annotation punctuation">@click<span class="token punctuation">.</span>command</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">initDb</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    click<span class="token punctuation">.</span>echo<span class="token punctuation">(</span><span class="token string">'Initialized the database'</span><span class="token punctuation">)</span>
+
+<span class="token decorator annotation punctuation">@click<span class="token punctuation">.</span>command</span><span class="token punctuation">(</span>name<span class="token operator">=</span><span class="token string">"drop"</span><span class="token punctuation">)</span> <span class="token comment">#通过name指定子命令为drop,默认情况下为全部小写的函数名</span>
+<span class="token keyword">def</span> <span class="token function">dropdb</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    click<span class="token punctuation">.</span>echo<span class="token punctuation">(</span><span class="token string">'Dropped the database'</span><span class="token punctuation">)</span>
+
+cli<span class="token punctuation">.</span>add_command<span class="token punctuation">(</span>initdb<span class="token punctuation">)</span>
+cli<span class="token punctuation">.</span>add_command<span class="token punctuation">(</span>dropdb<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+
+<p>此时当我们调用 <code>mycli</code> ，假设程序入口为 <code>cli()</code> </p>
+<table>
+<thead>
+<tr>
+<th>终端输入</th>
+<th>终端输出</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>mycli</td>
+<td>click自动生成的help界面</td>
+</tr>
+<tr>
+<td>mycli initdb</td>
+<td>Welcome！<br />Initialized the database</td>
+</tr>
+<tr>
+<td>mycli drop</td>
+<td>Welcome！<br />Dropped the database</td>
+</tr>
+</tbody></table>
+<p>在此情况下，可以先写子命令的实现函数再指定父命令入口，即 <code>initDb</code> 或者 <code>dropdb</code> 函数可以定义在 <code>cli</code> 函数之前</p>
+<h4 id="2-2-不使用add-command与激活父命令"><a href="#2-2-不使用add-command与激活父命令" class="headerlink" title="2.2 不使用add_command与激活父命令"></a>2.2 不使用add_command与激活父命令</h4><p>在 2.1 的代码情况下，我们发现只输入 <code>mycli</code> 是只会显示help界面，哪怕里面有逻辑操作</p>
+<p>这是 <strong>click</strong> 的默认设置，但有时我们也希望只输入父命令时进行一些操作，我们可以通过设置 <strong>invoke_without_command&#x3D;True</strong> </p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> click
+
+<span class="token decorator annotation punctuation">@click<span class="token punctuation">.</span>group</span><span class="token punctuation">(</span>invoke_without_command<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span> <span class="token comment"># 在此设置下父命令单独输入也会执行该函数内容</span>
+<span class="token decorator annotation punctuation">@click<span class="token punctuation">.</span>pass_context</span>
+<span class="token keyword">def</span> <span class="token function">mycli</span><span class="token punctuation">(</span>ctx<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token triple-quoted-string string">"""Main command."""</span>
+    <span class="token comment"># 判断是否跟着子命令</span>
+    <span class="token keyword">if</span> ctx<span class="token punctuation">.</span>invoked_subcommand <span class="token keyword">is</span> <span class="token boolean">None</span><span class="token punctuation">:</span>
+        click<span class="token punctuation">.</span>echo<span class="token punctuation">(</span><span class="token string">"Running default behavior of mycli"</span><span class="token punctuation">)</span>
+
+<span class="token decorator annotation punctuation">@mycli<span class="token punctuation">.</span>command</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment"># 注意这里不是click.command,这样就不需要后续调用add_command函数</span>
+<span class="token keyword">def</span> <span class="token function">init</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token triple-quoted-string string">"""Initialize something."""</span>
+    click<span class="token punctuation">.</span>echo<span class="token punctuation">(</span><span class="token string">"Initialized the database"</span><span class="token punctuation">)</span>
+
+<span class="token decorator annotation punctuation">@mycli<span class="token punctuation">.</span>command</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">end</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token triple-quoted-string string">"""End something."""</span>
+    click<span class="token punctuation">.</span>echo<span class="token punctuation">(</span><span class="token string">"Ended the process"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+
+<table>
+<thead>
+<tr>
+<th>终端输入</th>
+<th>终端输出</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>mycli</td>
+<td>Running default behavior of mycli</td>
+</tr>
+<tr>
+<td>mycli init</td>
+<td>Initialized the database</td>
+</tr>
+<tr>
+<td>mycli end</td>
+<td>Ended the process</td>
+</tr>
+</tbody></table>
+<h3 id="3-添加参数"><a href="#3-添加参数" class="headerlink" title="3.添加参数"></a>3.添加参数</h3><figure><div class="code-wrapper"><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> click
+
+<span class="token decorator annotation punctuation">@click<span class="token punctuation">.</span>command</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token decorator annotation punctuation">@click<span class="token punctuation">.</span>argument</span><span class="token punctuation">(</span><span class="token string">'input_file'</span><span class="token punctuation">,</span> <span class="token builtin">type</span><span class="token operator">=</span>click<span class="token punctuation">.</span>Path<span class="token punctuation">(</span>exists<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span class="token punctuation">)</span>  <span class="token comment"># 位置参数，必须存在该文件</span>
+<span class="token comment"># click.Path参数可以对文件各方面检查，例如必须存在，可写入，不可以是目录等</span>
+														
+<span class="token decorator annotation punctuation">@click<span class="token punctuation">.</span>option</span><span class="token punctuation">(</span><span class="token string">'--output'</span><span class="token punctuation">,</span> <span class="token string">'-o'</span><span class="token punctuation">,</span> default<span class="token operator">=</span><span class="token string">'output.txt'</span><span class="token punctuation">,</span>  <span class="token comment"># 选项参数，短参数和长参数形式</span>
+              <span class="token builtin">help</span><span class="token operator">=</span><span class="token string">'输出文件路径，默认为output.txt'</span><span class="token punctuation">)</span>
+<span class="token decorator annotation punctuation">@click<span class="token punctuation">.</span>option</span><span class="token punctuation">(</span><span class="token string">'--processes'</span><span class="token punctuation">,</span> <span class="token string">'-p'</span><span class="token punctuation">,</span> <span class="token builtin">type</span><span class="token operator">=</span><span class="token builtin">int</span><span class="token punctuation">,</span> default<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span>  <span class="token comment"># 类型转换和默认值</span>
+              <span class="token builtin">help</span><span class="token operator">=</span><span class="token string">'并发进程数，默认为1'</span><span class="token punctuation">)</span>
+<span class="token decorator annotation punctuation">@click<span class="token punctuation">.</span>option</span><span class="token punctuation">(</span><span class="token string">'--verbose'</span><span class="token punctuation">,</span> <span class="token string">'-v'</span><span class="token punctuation">,</span> is_flag<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span>  <span class="token comment"># 布尔标志参数</span>
+              <span class="token builtin">help</span><span class="token operator">=</span><span class="token string">'启用详细输出模式'</span><span class="token punctuation">)</span>
+<span class="token decorator annotation punctuation">@click<span class="token punctuation">.</span>option</span><span class="token punctuation">(</span><span class="token string">'--enable-feature'</span><span class="token punctuation">,</span> <span class="token string">'feature_flag'</span><span class="token punctuation">,</span>  <span class="token comment"># 参数别名映射到变量名</span>
+              flag_value<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span> default<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span>
+              <span class="token builtin">help</span><span class="token operator">=</span><span class="token string">'启用某个功能'</span><span class="token punctuation">)</span>
+<span class="token decorator annotation punctuation">@click<span class="token punctuation">.</span>option</span><span class="token punctuation">(</span><span class="token string">'--color'</span><span class="token punctuation">,</span> <span class="token builtin">type</span><span class="token operator">=</span>click<span class="token punctuation">.</span>Choice<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'red'</span><span class="token punctuation">,</span> <span class="token string">'green'</span><span class="token punctuation">,</span> <span class="token string">'blue'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span>  <span class="token comment"># 限定可选值</span>
+              <span class="token builtin">help</span><span class="token operator">=</span><span class="token string">'颜色选择（red/green/blue）'</span><span class="token punctuation">)</span>
+<span class="token decorator annotation punctuation">@click<span class="token punctuation">.</span>option</span><span class="token punctuation">(</span><span class="token string">'--debug/--no-debug'</span><span class="token punctuation">,</span> default<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span>  <span class="token comment"># 互斥选项</span>
+              <span class="token builtin">help</span><span class="token operator">=</span><span class="token string">'启用或禁用调试模式'</span><span class="token punctuation">)</span>
+<span class="token decorator annotation punctuation">@click<span class="token punctuation">.</span>option</span><span class="token punctuation">(</span><span class="token string">'--hidden-option'</span><span class="token punctuation">,</span> hidden<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span>  <span class="token comment"># 隐藏参数（不在帮助信息显示）</span>
+              <span class="token builtin">help</span><span class="token operator">=</span><span class="token string">'这是一个隐藏参数'</span><span class="token punctuation">)</span>
+<span class="token decorator annotation punctuation">@click<span class="token punctuation">.</span>option</span><span class="token punctuation">(</span><span class="token string">'--sizes'</span><span class="token punctuation">,</span> nargs<span class="token operator">=</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token builtin">type</span><span class="token operator">=</span><span class="token builtin">int</span><span class="token punctuation">,</span>  <span class="token comment"># 接收多个参数值（这里固定3个整数）</span>
+              <span class="token builtin">help</span><span class="token operator">=</span><span class="token string">'输入三个尺寸，例如：--sizes 10 20 30'</span><span class="token punctuation">)</span>
+<span class="token decorator annotation punctuation">@click<span class="token punctuation">.</span>option</span><span class="token punctuation">(</span><span class="token string">'--threshold'</span><span class="token punctuation">,</span> required<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span> <span class="token builtin">type</span><span class="token operator">=</span><span class="token builtin">float</span><span class="token punctuation">,</span>  <span class="token comment"># 必填参数</span>
+              <span class="token builtin">help</span><span class="token operator">=</span><span class="token string">'必须提供的阈值参数'</span><span class="token punctuation">)</span>
+<span class="token keyword">def</span> <span class="token function">main</span><span class="token punctuation">(</span>input_file<span class="token punctuation">,</span> output<span class="token punctuation">,</span> processes<span class="token punctuation">,</span> verbose<span class="token punctuation">,</span> feature_flag<span class="token punctuation">,</span> 
+         color<span class="token punctuation">,</span> debug<span class="token punctuation">,</span> hidden_option<span class="token punctuation">,</span> sizes<span class="token punctuation">,</span> threshold<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token triple-quoted-string string">"""
+    一个演示click用法的示例程序
+    """</span>
+    <span class="token comment"># 打印所有参数值用于演示</span>
+    click<span class="token punctuation">.</span>echo<span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"输入文件: </span><span class="token interpolation"><span class="token punctuation">&#123;</span>input_file<span class="token punctuation">&#125;</span></span><span class="token string">"</span></span><span class="token punctuation">)</span>
+    click<span class="token punctuation">.</span>echo<span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"输出文件: </span><span class="token interpolation"><span class="token punctuation">&#123;</span>output<span class="token punctuation">&#125;</span></span><span class="token string">"</span></span><span class="token punctuation">)</span>
+    click<span class="token punctuation">.</span>echo<span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"进程数: </span><span class="token interpolation"><span class="token punctuation">&#123;</span>processes<span class="token punctuation">&#125;</span></span><span class="token string">"</span></span><span class="token punctuation">)</span>
+    click<span class="token punctuation">.</span>echo<span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"详细模式: </span><span class="token interpolation"><span class="token punctuation">&#123;</span><span class="token string">'开启'</span> <span class="token keyword">if</span> verbose <span class="token keyword">else</span> <span class="token string">'关闭'</span><span class="token punctuation">&#125;</span></span><span class="token string">"</span></span><span class="token punctuation">)</span>
+    click<span class="token punctuation">.</span>echo<span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"功能开关: </span><span class="token interpolation"><span class="token punctuation">&#123;</span><span class="token string">'开启'</span> <span class="token keyword">if</span> feature_flag <span class="token keyword">else</span> <span class="token string">'关闭'</span><span class="token punctuation">&#125;</span></span><span class="token string">"</span></span><span class="token punctuation">)</span>
+    click<span class="token punctuation">.</span>echo<span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"颜色选择: </span><span class="token interpolation"><span class="token punctuation">&#123;</span>color<span class="token punctuation">&#125;</span></span><span class="token string">"</span></span><span class="token punctuation">)</span>
+    click<span class="token punctuation">.</span>echo<span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"调试模式: </span><span class="token interpolation"><span class="token punctuation">&#123;</span><span class="token string">'开启'</span> <span class="token keyword">if</span> debug <span class="token keyword">else</span> <span class="token string">'关闭'</span><span class="token punctuation">&#125;</span></span><span class="token string">"</span></span><span class="token punctuation">)</span>
+    click<span class="token punctuation">.</span>echo<span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"隐藏参数值: </span><span class="token interpolation"><span class="token punctuation">&#123;</span>hidden_option<span class="token punctuation">&#125;</span></span><span class="token string">"</span></span><span class="token punctuation">)</span>
+    click<span class="token punctuation">.</span>echo<span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"尺寸参数: </span><span class="token interpolation"><span class="token punctuation">&#123;</span>sizes<span class="token punctuation">&#125;</span></span><span class="token string">"</span></span><span class="token punctuation">)</span>
+    click<span class="token punctuation">.</span>echo<span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"阈值: </span><span class="token interpolation"><span class="token punctuation">&#123;</span>threshold<span class="token punctuation">&#125;</span></span><span class="token string">"</span></span><span class="token punctuation">)</span>
+
+    <span class="token comment"># 这里可以添加实际的业务逻辑...</span>
+
+<span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">'__main__'</span><span class="token punctuation">:</span>
+    main<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+
+<p>&nbsp;</p>
+<p><strong>优点：</strong></p>
+<ul>
+<li>采用装饰器，代码清楚易懂</li>
+<li>功能十分强大，prompt，彩色输出等</li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li>第三方库，需要额外下载</li>
+<li>内容较为复杂，学习成本高</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/python/" class="print-no-link">#python</a>
+      
+    </div>
+  
+</div>
+
+
+              
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/%E4%BD%BF%E7%94%A8python%E5%88%B6%E4%BD%9CCLI%E5%9F%BA%E7%A1%80_0/" title="使用python制作CLI基础_0">
+                        <span class="hidden-mobile">使用python制作CLI基础_0</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'spysyyrps/spysyyrps.github.io');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', '指正错误，分享知识，讨论问题！');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script  src="https://lib.baomitu.com/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js" ></script>
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
