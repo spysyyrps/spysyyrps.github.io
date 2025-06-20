@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.naughtyfox.top/SynFoC/</loc>
+    
+    <lastmod>2025-06-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://blog.naughtyfox.top/%E5%9F%BA%E7%A1%80%E7%88%AC%E8%99%AB%E6%B5%81%E7%A8%8B/</loc>
     
     <lastmod>2025-05-29</lastmod>
@@ -85,7 +94,7 @@
 
   <url>
     <loc>https://blog.naughtyfox.top/</loc>
-    <lastmod>2025-05-29</lastmod>
+    <lastmod>2025-06-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -93,49 +102,56 @@
   
   <url>
     <loc>https://blog.naughtyfox.top/tags/neo4j/</loc>
-    <lastmod>2025-05-29</lastmod>
+    <lastmod>2025-06-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.naughtyfox.top/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/</loc>
-    <lastmod>2025-05-29</lastmod>
+    <lastmod>2025-06-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.naughtyfox.top/tags/react/</loc>
-    <lastmod>2025-05-29</lastmod>
+    <lastmod>2025-06-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.naughtyfox.top/tags/typescript/</loc>
-    <lastmod>2025-05-29</lastmod>
+    <lastmod>2025-06-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.naughtyfox.top/tags/%E6%B8%B8%E6%88%8F/</loc>
-    <lastmod>2025-05-29</lastmod>
+    <lastmod>2025-06-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.naughtyfox.top/tags/ubuntu/</loc>
-    <lastmod>2025-05-29</lastmod>
+    <lastmod>2025-06-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://blog.naughtyfox.top/tags/python/</loc>
-    <lastmod>2025-05-29</lastmod>
+    <lastmod>2025-06-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://blog.naughtyfox.top/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%EF%BC%8C%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/</loc>
+    <lastmod>2025-06-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
