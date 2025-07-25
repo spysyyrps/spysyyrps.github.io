@@ -16,24 +16,32 @@
   <meta name="author" content="一蓑烟雨">
   <meta name="keywords" content="">
   
-    <meta name="description" content="简述使用toml文件打包纯python项目的基本步骤以及toml文件基础标签">
+    <meta name="description" content="简单介绍应用层前后端进行数据加密传输的方法，大致分为三类：对称加密，非对称加密，哈希加密。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="使用python制作CLI基础_0">
-<meta property="og:url" content="https://blog.naughtyfox.top/%E4%BD%BF%E7%94%A8python%E5%88%B6%E4%BD%9CCLI%E5%9F%BA%E7%A1%80_0/index.html">
+<meta property="og:title" content="应用层数据加密传输">
+<meta property="og:url" content="https://blog.naughtyfox.top/%E5%BA%94%E7%94%A8%E5%B1%82%E6%95%B0%E6%8D%AE%E5%8A%A0%E5%AF%86/index.html">
 <meta property="og:site_name" content="一蓑烟雨的博客">
-<meta property="og:description" content="简述使用toml文件打包纯python项目的基本步骤以及toml文件基础标签">
+<meta property="og:description" content="简单介绍应用层前后端进行数据加密传输的方法，大致分为三类：对称加密，非对称加密，哈希加密。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-02-01T16:00:00.000Z">
-<meta property="article:modified_time" content="2025-05-27T15:28:45.558Z">
+<meta property="og:image" content="https://picture.naughtyfox.top/2025/07/image-20250723144221218.png">
+<meta property="og:image" content="https://picture.naughtyfox.top/2025/07/image-20250723144547298.png">
+<meta property="og:image" content="https://picture.naughtyfox.top/2025/07/image-20250723152727994.png">
+<meta property="og:image" content="https://picx.zhimg.com/v2-52d8e0af84047f70a324a91e038cbbd9_1440w.jpg">
+<meta property="og:image" content="https://picture.naughtyfox.top/2025/07/image-20250723163008691.png">
+<meta property="article:published_time" content="2025-07-23T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-07-24T13:18:16.283Z">
 <meta property="article:author" content="一蓑烟雨">
-<meta property="article:tag" content="python">
+<meta property="article:tag" content="encrypt">
+<meta property="article:tag" content="RSA">
+<meta property="article:tag" content="SEA">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://picture.naughtyfox.top/2025/07/image-20250723144221218.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>使用python制作CLI基础_0 - 一蓑烟雨的博客</title>
+  <title>应用层数据加密传输 - 一蓑烟雨的博客</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -201,7 +209,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="使用python制作CLI基础_0"></span>
+            <span id="subtitle" data-typed-text="应用层数据加密传输"></span>
           
         </div>
 
@@ -212,8 +220,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-02-02 00:00" pubdate>
-          2025年2月2日 凌晨
+        <time datetime="2025-07-24 00:00" pubdate>
+          2025年7月24日 凌晨
         </time>
       </span>
     
@@ -224,7 +232,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.8k 字
+          1.6k 字
         
       </span>
     
@@ -280,12 +288,12 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">使用python制作CLI基础_0</h1>
+            <h1 id="seo-header">应用层数据加密传输</h1>
             
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2025年5月27日 晚上
+                    本文最后更新于：2025年7月24日 晚上
                   
                 
               </p>
@@ -293,102 +301,80 @@
             
               <div class="markdown-body">
                 
-                <p>主要学习使用python制作CLI两个主要方面的内容：</p>
+                <h2 id="一、对称加密"><a href="#一、对称加密" class="headerlink" title="一、对称加密"></a>一、对称加密</h2><h3 id="1-特点"><a href="#1-特点" class="headerlink" title="1.特点"></a>1.特点</h3><p>使用同一密钥进行加密和解密</p>
+<p><strong>优点：</strong> 每次加密与解密只需要一个密钥操作管理，简单效率高（这里的简单效率高是相对而言，较复杂的对称加密如果没有硬件支撑依旧会比较吃力）</p>
+<p><strong>缺点：</strong> 如果只用对称加密，服务端生成的密钥如何安全传递给客户端是一个较为困难的问题。同时一旦有一方密钥外泄，双方的加密解密都会失效。</p>
+<p><img src="https://picture.naughtyfox.top/2025/07/image-20250723144221218.png" srcset="/img/loading.gif" lazyload alt="image-20250723144221218"></p>
+<h3 id="2-常见算法"><a href="#2-常见算法" class="headerlink" title="2.常见算法"></a>2.常见算法</h3><h4 id="2-1-AES加密（Rijndael加密算法）"><a href="#2-1-AES加密（Rijndael加密算法）" class="headerlink" title="2.1 AES加密（Rijndael加密算法）"></a>2.1 AES加密（Rijndael加密算法）</h4><p><strong>加密过程：</strong> </p>
 <ol>
-<li>利用toml文件打包python项目 <strong>（本篇内容）</strong></li>
-<li>python中的命令行参数解析</li>
-</ol>
-<p>&nbsp;</p>
-<h2 id="一、项目结构"><a href="#一、项目结构" class="headerlink" title="一、项目结构"></a>一、项目结构</h2><figure><div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">mypackage
-├── pyproject.toml 
-|   # README.rst or README.md 
-|   # LICENCE
-└── mypackage
-    ├── __init__.py
-    ├── main.py (假设其中的main函数为入口函数，即为命令行使用时调用的函数)
-    └── ... (other Python files)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
-<p>以上是大致的python项目结构，结构并非固定，包含基础文件即可</p>
-<p><strong>toml</strong> 文件为安装打包所需的配置文件</p>
-<p><strong>README</strong> 文件主要描述该工具的基本信息等，供使用者与后续开发者阅读</p>
-<p>&nbsp;</p>
-<h2 id="二、流程简述"><a href="#二、流程简述" class="headerlink" title="二、流程简述"></a>二、流程简述</h2><ol>
-<li>创建一个python虚拟环境</li>
-<li>编写py文件实现预期的逻辑功能</li>
-<li>编写toml文件，记录依赖和入口函数等（后续介绍）</li>
-<li>编写说明文档</li>
-<li>运行 <code>pip install -e .</code></li>
-</ol>
-<blockquote>
-<p>将上 <code>-e</code> 不需要每次修改代码后重新安装，如果是确定最终版本也可以去掉，其全称为 <code>--editable</code> </p>
-<p>至此是本地安装为CLI的全部内容</p>
-<p>以下是需要分发或上传的额外步骤</p>
-</blockquote>
-<ol start="6">
-<li><p>使用 <strong>pip</strong> 安装 <strong>build</strong> <code>pip install --upgrade build</code> </p>
+<li><p>字节代换（SubBytes）</p>
 </li>
-<li><p>运行 <code>python -m build</code></p>
+<li><p>行移位（ShiftRows）</p>
+</li>
+<li><p>列混淆（MixColumns）</p>
+</li>
+<li><p>轮密钥加（AddRoundKey）</p>
 </li>
 </ol>
+<p>上述四步重复执行，重复次数取决于密钥长度，密钥长度支持128,192,256位</p>
+<h4 id="2-2-ChaCha20"><a href="#2-2-ChaCha20" class="headerlink" title="2.2 ChaCha20"></a>2.2 ChaCha20</h4><p><strong>原理：</strong> 一个128位的密钥和一个64位的初始向量生成一个256位的密钥流，通过该密钥流对数据进行按位XOR运算加密解密</p>
+<p><a target="_blank" rel="noopener" href="https://news.ycombinator.com/item?id=13364762">Hacker News中一个对比二者的帖子</a> 有人指出二者各自的特点：</p>
+<p><strong>ChaCha算法</strong></p>
+<p>本质上比 AES 更简单</p>
+<p>实现起来更容易</p>
+<p>作为一种 ARX 架构（加法 + 旋转 + 异或），不需要使用 S-box，因此不会留下缓存痕迹（有助于防止侧信道攻击）</p>
+<p>密钥设置几乎没有额外开销（“free key setup”——密钥初始化几乎无需额外代价）</p>
+<p><strong>AES算法</strong></p>
+<p>全球通用的加密标准</p>
+<p>在大多数平台都有硬件加速支持（这一点非常关键）</p>
+<p>一种传统的分组加密算法，拥有许多标准化的加密模式（尤其是大块模式、AEAD 模式等）</p>
 <blockquote>
-<p>运行该指令后将会生成一个 <code>dist</code> 文件夹并在其中生成 <code>tar.gz</code> 和 <code>.whl</code> 文件，可用于上传分发</p>
+<p>算法有很多，阅读一些博客发现每篇博客提到推荐的对称加密算法都是铁打的AES与流水的其他算法，而ChaCha20是询问许多大语言模型除了AES第二个推荐的，Hacker News和<a target="_blank" rel="noopener" href="https://www.reddit.com/r/crypto/comments/f7c2nv/chacha20_v_aes256/">reddit</a>都有帖子表明这个算法更轻量且不逊色于AES</p>
 </blockquote>
-<hr>
-<p>整个流程适用于所有符合 <a target="_blank" rel="noopener" href="https://peps.python.org/pep-0517/">PEP 517</a> 和 <a target="_blank" rel="noopener" href="https://peps.python.org/pep-0660/">PEP 660</a> 标准的构建后端，无论你toml文件中指定是 <strong>setuptools</strong> 还是 <strong>hatch</strong> 只要配置正确均可执行</p>
-<p>&nbsp;</p>
-<h2 id="三、编写toml文件"><a href="#三、编写toml文件" class="headerlink" title="三、编写toml文件"></a>三、编写toml文件</h2><figure><div class="code-wrapper"><pre class="line-numbers language-toml" data-language="toml"><code class="language-toml"><span class="token comment"># 项目元数据</span>
-<span class="token punctuation">[</span><span class="token table class-name">project</span><span class="token punctuation">]</span>
-<span class="token key property">name</span> <span class="token punctuation">=</span> <span class="token string">"my_project"</span>  <span class="token comment"># 项目名称</span>
-<span class="token key property">version</span> <span class="token punctuation">=</span> <span class="token string">"0.1.0"</span>    <span class="token comment"># 项目版本</span>
-<span class="token key property">description</span> <span class="token punctuation">=</span> <span class="token string">"A simple Python project"</span>  <span class="token comment"># 项目描述</span>
-<span class="token key property">authors</span> <span class="token punctuation">=</span> <span class="token punctuation">[</span>
-    <span class="token punctuation">&#123;</span> <span class="token key property">name</span> <span class="token punctuation">=</span> <span class="token string">"Your Name"</span><span class="token punctuation">,</span> <span class="token key property">email</span> <span class="token punctuation">=</span> <span class="token string">"your.email@example.com"</span> <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>  <span class="token comment"># 作者信息</span>
-<span class="token punctuation">]</span>
-<span class="token key property">license</span> <span class="token punctuation">=</span> <span class="token punctuation">&#123;</span> <span class="token key property">file</span> <span class="token punctuation">=</span> <span class="token string">"LICENSE"</span> <span class="token punctuation">&#125;</span>  <span class="token comment"># 许可证文件</span>
-<span class="token key property">readme</span> <span class="token punctuation">=</span> <span class="token string">"README.md"</span>  <span class="token comment"># 项目说明文件</span>
-<span class="token key property">requires-python</span> <span class="token punctuation">=</span> <span class="token string">">=3.8"</span>  <span class="token comment"># 支持的 Python 版本</span>
-<span class="token key property">classifiers</span> <span class="token punctuation">=</span> <span class="token punctuation">[</span>  <span class="token comment"># PyPI 分类标签</span>
-    <span class="token string">"Development Status :: 3 - Alpha"</span><span class="token punctuation">,</span>
-    <span class="token string">"Intended Audience :: Developers"</span><span class="token punctuation">,</span>
-    <span class="token string">"License :: OSI Approved :: MIT License"</span><span class="token punctuation">,</span>
-    <span class="token string">"Programming Language :: Python :: 3"</span><span class="token punctuation">,</span>
-    <span class="token string">"Programming Language :: Python :: 3.8"</span><span class="token punctuation">,</span>
-    <span class="token string">"Programming Language :: Python :: 3.9"</span><span class="token punctuation">,</span>
-    <span class="token string">"Programming Language :: Python :: 3.10"</span><span class="token punctuation">,</span>
-<span class="token punctuation">]</span>
+<h2 id="二、非对称加密"><a href="#二、非对称加密" class="headerlink" title="二、非对称加密"></a>二、非对称加密</h2><h3 id="1-特点-1"><a href="#1-特点-1" class="headerlink" title="1.特点"></a>1.特点</h3><p>公钥（Public Key）和私钥（Private Key），先使用一个公钥（public key）将明文数据进行加密，然后再使用一个私钥（private key）将加密后的密文进行解密</p>
+<p><strong>优点：</strong> 更加安全，负责解密的私钥可以不通过网络传输，消除了网络拦截密钥导致密文被破译的风险</p>
+<p><strong>缺点：</strong> 慢，比对称加密慢数百到数千倍</p>
+<p><img src="https://picture.naughtyfox.top/2025/07/image-20250723144547298.png" srcset="/img/loading.gif" lazyload alt="image-20250723144547298"></p>
+<p>由于其效率更低，非对称加密大多用来加密签名，对称加密的密钥等简短信息。</p>
+<h3 id="2-算法"><a href="#2-算法" class="headerlink" title="2.算法"></a>2.算法</h3><h4 id="2-1-RSA（很流行）"><a href="#2-1-RSA（很流行）" class="headerlink" title="2.1 RSA（很流行）"></a>2.1 RSA（很流行）</h4><p>基于素数运算生成公钥-密钥对</p>
+<ol>
+<li><p>选择两个大素数 p 和 q。</p>
+</li>
+<li><p>计算 n&#x3D;p×q。</p>
+</li>
+<li><p>计算 ϕ(n)&#x3D;(p−1)(q−1)。</p>
+</li>
+<li><p>选择一个整数 e，使得 1&lt;e&lt;ϕ(n) 且 e 与 ϕ(n) 互质。</p>
+</li>
+<li><p>计算 d，它是 e 模 ϕ(n) 的模乘法逆元。</p>
+</li>
+<li><p>公钥为 (e,n)，私钥为 (d,n)。</p>
+</li>
+</ol>
+<h4 id="2-2-ECC（椭圆曲线密码学）"><a href="#2-2-ECC（椭圆曲线密码学）" class="headerlink" title="2.2 ECC（椭圆曲线密码学）"></a>2.2 ECC（椭圆曲线密码学）</h4><p>基于椭圆曲线生成公钥-密钥对，比RSA开销少。</p>
+<p>该密码学下的Elliptic Curve Diffie-Hellman (ECDH)算法可以用于对称加密的密钥传播，简单流程是双方通过共享约定信息生成一个公钥-密钥对，然后将各自的公钥传递给对方，将获取的公钥与自己的私钥运算获得最终私钥。</p>
+<p>知乎上提到的较详细流程：</p>
+<img src="https://picture.naughtyfox.top/2025/07/image-20250723152727994.png" srcset="/img/loading.gif" lazyload alt="image-20250723152727994" style="zoom:67%;" />
 
-<span class="token comment"># 项目依赖</span>
-<span class="token key property">dependencies</span> <span class="token punctuation">=</span> <span class="token punctuation">[</span>  <span class="token comment"># 项目运行时依赖</span>
-    <span class="token string">"requests>=2.25.0"</span><span class="token punctuation">,</span>
-    <span class="token string">"numpy>=1.20.0"</span><span class="token punctuation">,</span>
-<span class="token punctuation">]</span>
+<blockquote>
+<p>由于开销大速度慢，非对称加密一般不作为数据传输加密，而是作为证书，签名，时间戳等，<strong>或配合对称加密组成混合加密保证密钥传输的安全</strong>。</p>
+</blockquote>
+<h2 id="三、哈希加密（key-derivation-function-，KDF）"><a href="#三、哈希加密（key-derivation-function-，KDF）" class="headerlink" title="三、哈希加密（key derivation function ，KDF）"></a>三、哈希加密（key derivation function ，KDF）</h2><h3 id="1-特点-2"><a href="#1-特点-2" class="headerlink" title="1.特点"></a>1.特点</h3><p>不可逆，多用于密码存储加密，签名，数据完整性认证</p>
+<h3 id="2-算法-1"><a href="#2-算法-1" class="headerlink" title="2.算法"></a>2.算法</h3><p><strong>Argon2</strong></p>
+<p><strong>Bcrypt</strong> </p>
+<p><strong>scrypt</strong> </p>
+<p>这类加密的算法呼声相较前两者统一了许多，基本都是推荐这三种算法。</p>
+<h2 id="四、实现"><a href="#四、实现" class="headerlink" title="四、实现"></a>四、实现</h2><blockquote>
+<p>主要查找收录了对称与非对称加密</p>
+</blockquote>
+<h3 id="通过AES-RSA加密"><a href="#通过AES-RSA加密" class="headerlink" title="通过AES+RSA加密"></a><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/670661091">通过AES+RSA加密</a></h3><p> 该文章提出后端为 <strong>SpringBoot</strong> 时的前后端实现AES+RSA加密，下图为逻辑流程</p>
+<img src="https://picx.zhimg.com/v2-52d8e0af84047f70a324a91e038cbbd9_1440w.jpg" srcset="/img/loading.gif" lazyload style="zoom:67%;" />
 
-<span class="token comment"># 可选依赖（额外功能）</span>
-<span class="token punctuation">[</span><span class="token table class-name">project.optional-dependencies</span><span class="token punctuation">]</span>
-<span class="token key property">dev</span> <span class="token punctuation">=</span> <span class="token punctuation">[</span>  <span class="token comment"># 开发环境依赖</span>
-    <span class="token string">"pytest>=6.0.0"</span><span class="token punctuation">,</span>
-    <span class="token string">"black>=21.0"</span><span class="token punctuation">,</span>
-<span class="token punctuation">]</span>
-<span class="token key property">docs</span> <span class="token punctuation">=</span> <span class="token punctuation">[</span>  <span class="token comment"># 文档生成依赖</span>
-    <span class="token string">"sphinx>=4.0.0"</span><span class="token punctuation">,</span>
-    <span class="token string">"sphinx-rtd-theme>=0.5.0"</span><span class="token punctuation">,</span>
-<span class="token punctuation">]</span>
+<h3 id="开源Spring-Boot-后端AES加密"><a href="#开源Spring-Boot-后端AES加密" class="headerlink" title="开源Spring Boot 后端AES加密"></a><a target="_blank" rel="noopener" href="https://github.com/maliangnansheng/aes-springboot?tab=readme-ov-file">开源Spring Boot 后端AES加密</a></h3><p>一个演示项目实现后端API的AES加密</p>
+<img src="https://picture.naughtyfox.top/2025/07/image-20250723163008691.png" srcset="/img/loading.gif" lazyload alt="image-20250723163008691" style="zoom: 50%;" />
 
-<span class="token comment"># 项目脚本（命令行工具）</span>
-<span class="token punctuation">[</span><span class="token table class-name">project.scripts</span><span class="token punctuation">]</span>
-<span class="token key property">my-cli</span> <span class="token punctuation">=</span> <span class="token string">"mypackage.main:main"</span>  <span class="token comment"># 命令行工具入口点</span>
-
-<span class="token comment"># 构建系统配置</span>
-<span class="token punctuation">[</span><span class="token table class-name">build-system</span><span class="token punctuation">]</span>
-<span class="token key property">requires</span> <span class="token punctuation">=</span> <span class="token punctuation">[</span><span class="token string">"setuptools>=61.0"</span><span class="token punctuation">,</span> <span class="token string">"wheel"</span><span class="token punctuation">]</span>  <span class="token comment"># 构建依赖</span>
-<span class="token key property">build-backend</span> <span class="token punctuation">=</span> <span class="token string">"setuptools.build_meta"</span>  <span class="token comment"># 构建后端</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
-<p>以上是一个toml文件的 <strong>基础</strong> 结构，当然还有许多其他的标签并未提及，例如你也可以在其中利用<code>[tool.pytest.ini_options]</code> 配置 <code>pytest</code> 的相关信息</p>
-<p>&nbsp;</p>
-<p>不同的构建后端还可以支持更加丰富的内容，例如 <strong>hatch</strong> 可以使用 <code>hatch new “myproject”</code> 命令初始化项目结构并自动生成toml文件部分内容</p>
-<p>最后获得的 <strong>tar.gz</strong> 与 <strong>.whl</strong> 文件可以使用 <code>pip install **.tar.gz/**.whl</code> 安装也可以用 <strong>twine</strong> 上传至 <strong>pypi</strong> </p>
-
+<h3 id="使用CryptoJS对Vue前端加密"><a href="#使用CryptoJS对Vue前端加密" class="headerlink" title="使用CryptoJS对Vue前端加密"></a><a target="_blank" rel="noopener" href="https://medium.com/@emine.yalman/vue-js-ile-g%C3%BCvenli-%C5%9Fifreleme-cryptojs-ve-axios-kullan%C4%B1m%C4%B1-71d157fce925">使用CryptoJS对Vue前端加密</a></h3><p>样例代码加密算法是HmacSHA1，这是一个哈希加密，第一个实现中也提到了 <strong>CryptoJS</strong> ，它应该有更多加密算法实现，可以参考这篇文件学习依赖设置以及基础使用。</p>
+<h3 id="开源的springboot加密解密依赖"><a href="#开源的springboot加密解密依赖" class="headerlink" title="开源的springboot加密解密依赖"></a><a target="_blank" rel="noopener" href="https://github.com/Licoy/encrypt-body-spring-boot-starter">开源的springboot加密解密依赖</a></h3><h3 id="ChaCha20-Poly1305的java实现样例"><a href="#ChaCha20-Poly1305的java实现样例" class="headerlink" title="ChaCha20-Poly1305的java实现样例"></a><a target="_blank" rel="noopener" href="https://github.com/metroish/ChaCha">ChaCha20-Poly1305的java实现样例</a></h3>
                 
               </div>
             
@@ -400,7 +386,11 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/python/" class="print-no-link">#python</a>
+        <a href="/tags/encrypt/" class="print-no-link">#encrypt</a>
+      
+        <a href="/tags/RSA/" class="print-no-link">#RSA</a>
+      
+        <a href="/tags/SEA/" class="print-no-link">#SEA</a>
       
     </div>
   
@@ -414,18 +404,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/%E4%BD%BF%E7%94%A8python%E5%88%B6%E4%BD%9CCLI%E5%9F%BA%E7%A1%80_1/" title="使用python制作CLI基础_1">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">使用python制作CLI基础_1</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/ubuntu%E6%90%AD%E5%BB%BA%E9%A5%A5%E8%8D%92%E4%B8%93%E7%94%A8%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="ubuntu搭建饥荒专用服务器教程">
-                        <span class="hidden-mobile">ubuntu搭建饥荒专用服务器教程</span>
+                      <a href="/sql%E8%AF%AD%E5%8F%A5%E4%BC%98%E5%8C%96/" title="sql语句优化">
+                        <span class="hidden-mobile">sql语句优化</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
