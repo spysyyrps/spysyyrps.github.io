@@ -20,7 +20,7 @@ https://blog.naughtyfox.top/tags/python/
 https://blog.naughtyfox.top/tags/%E6%B8%B8%E6%88%8F/
 https://blog.naughtyfox.top/tags/encrypt/
 https://blog.naughtyfox.top/tags/RSA/
-https://blog.naughtyfox.top/tags/SEA/
 https://blog.naughtyfox.top/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/
 https://blog.naughtyfox.top/tags/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0/
 https://blog.naughtyfox.top/tags/sql/
+https://blog.naughtyfox.top/tags/AES/
