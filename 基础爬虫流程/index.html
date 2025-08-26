@@ -293,22 +293,32 @@
             
               <div class="markdown-body">
                 
-                <h2 id="基本-package"><a href="#基本-package" class="headerlink" title="基本 package"></a>基本 package</h2><ul>
-<li><strong>urllib</strong>      python自带的package，可以实现基本的网页内容获取</li>
-<li><strong>requests</strong>   主要实现各种访问请求</li>
-<li><strong>bs4</strong>    主要用到其中的 <em>BeautifulSoup</em> 类来实现对内容的提取</li>
-<li><strong>re</strong>      使用正则表达式来实现对内容的提取</li>
-<li><strong>jieba</strong>    可以配合停用词表实现对文中字词的频次进行统计</li>
-<li><strong>lxml</strong>    可以在 <em>BeautifulSoup</em> 中使用作为html解析器，速度要比bs自带的要快。也可以使用其中的etree实现定位，解析，提取</li>
+                <h2 id="基本-package">基本 package</h2>
+<ul>
+<li><strong>urllib</strong>
+python自带的package，可以实现基本的网页内容获取</li>
+<li><strong>requests</strong> 主要实现各种访问请求</li>
+<li><strong>bs4</strong> 主要用到其中的 <em>BeautifulSoup</em>
+类来实现对内容的提取</li>
+<li><strong>re</strong> 使用正则表达式来实现对内容的提取</li>
+<li><strong>jieba</strong>
+可以配合停用词表实现对文中字词的频次进行统计</li>
+<li><strong>lxml</strong> 可以在 <em>BeautifulSoup</em>
+中使用作为html解析器，速度要比bs自带的要快。也可以使用其中的etree实现定位，解析，提取</li>
 </ul>
-<h2 id="基础爬虫的结构与过程"><a href="#基础爬虫的结构与过程" class="headerlink" title="基础爬虫的结构与过程"></a>基础爬虫的结构与过程</h2><h3 id="基础爬虫的基本流程"><a href="#基础爬虫的基本流程" class="headerlink" title="基础爬虫的基本流程"></a>基础爬虫的基本流程</h3><ol>
+<h2 id="基础爬虫的结构与过程">基础爬虫的结构与过程</h2>
+<h3 id="基础爬虫的基本流程">基础爬虫的基本流程</h3>
+<ol type="1">
 <li>确定url或其列表</li>
 <li>确定请求头hearders</li>
-<li>使用 <strong>urllib</strong>, <strong>requests</strong> 等实现对网页中html文件的获取</li>
-<li>使用 <strong>BeautifulSoup</strong>, <strong>re</strong> 等实现对目标内容的提取</li>
+<li>使用 <strong>urllib</strong>, <strong>requests</strong>
+等实现对网页中html文件的获取</li>
+<li>使用 <strong>BeautifulSoup</strong>, <strong>re</strong>
+等实现对目标内容的提取</li>
 <li>清洗，整理，存储</li>
 </ol>
-<h3 id="基础爬虫的代码大纲"><a href="#基础爬虫的代码大纲" class="headerlink" title="基础爬虫的代码大纲"></a>基础爬虫的代码大纲</h3><figure><div class="code-wrapper"><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> requests
+<h3 id="基础爬虫的代码大纲">基础爬虫的代码大纲</h3>
+<figure><div class="code-wrapper"><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> requests
 <span class="token keyword">from</span> bs4 <span class="token keyword">import</span> BeautifulSoup
 
 url <span class="token operator">=</span> <span class="token string">'https://www.baidu.com'</span>
@@ -344,19 +354,19 @@ request_headers <span class="token operator">=</span> <span class="token punctua
 
 <span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">'__main__'</span><span class="token punctuation">:</span>
     getHtmlText<span class="token punctuation">(</span>url<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
-<h2 id="爬虫进阶"><a href="#爬虫进阶" class="headerlink" title="爬虫进阶"></a>爬虫进阶</h2><ul>
-<li><strong>bs4</strong> ，<strong>re</strong> 等解析，定位，提取的工具的使用</li>
-<li>反反爬技术<ul>
+<h2 id="爬虫进阶">爬虫进阶</h2>
+<ul>
+<li><strong>bs4</strong> ，<strong>re</strong>
+等解析，定位，提取的工具的使用</li>
+<li>反反爬技术
+<ul>
 <li>ip代理（如果买要买socked）</li>
 <li>user-agent 池</li>
 <li>selenium, pyppeteer模拟浏览器</li>
 <li>其他</li>
-</ul>
-</li>
-</ul>
-<ul>
-<li><strong>requests-html</strong> (需要更改源码解决中文渲染乱码问题),将动态页面转变为静态</li>
+</ul></li>
+<li><strong>requests-html</strong>
+(需要更改源码解决中文渲染乱码问题),将动态页面转变为静态</li>
 <li>模拟浏览器也可以实现爬取动态网页</li>
 <li>利用 <strong>Scrapy</strong> 等爬虫框架进行更加系统的开发管理</li>
 </ul>
@@ -396,8 +406,8 @@ request_headers <span class="token operator">=</span> <span class="token punctua
                   <article class="post-next col-6">
                     
                     
-                      <a href="/typescript%E7%BB%84%E4%BB%B6%E4%B8%AD%E7%9A%84%E9%BB%98%E8%AE%A4%E5%B1%9E%E6%80%A7/" title="typescript组件中的默认属性">
-                        <span class="hidden-mobile">typescript组件中的默认属性</span>
+                      <a href="/hello-world/" title="Hello World">
+                        <span class="hidden-mobile">Hello World</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -489,6 +499,12 @@ request_headers <span class="token operator">=</span> <span class="token punctua
 
 
   
+
+
+  
+  
+
+
 
 
 
@@ -708,6 +724,49 @@ request_headers <span class="token operator">=</span> <span class="token punctua
 
 
   <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
 
   <script  src="/js/local-search.js" ></script>
 

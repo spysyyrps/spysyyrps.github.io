@@ -16,12 +16,12 @@
   <meta name="author" content="一蓑烟雨">
   <meta name="keywords" content="">
   
-    <meta name="description" content="&amp;nbsp; &amp;nbsp;  本文主要介绍neo4j的导入（import,load）和导出（export）,基本是基于csv和dump文件格式。将会介绍在终端和使用apoc利用Cypher语言两种情况如何实现导入导出,同时也会大致讲讲所需的csv文件的格式。并且所有的导入导出操作都是在终端或neo4j浏览器界面，并未使用编程语言。  &amp;nbsp; 我的版本配置：   操作系统	:ubuntu22.">
+    <meta name="description" content="本文主要介绍neo4j的导入（import,load）和导出（export）,基本是基于csv和dump文件格式。将会介绍在终端和使用apoc利用Cypher语言两种情况如何实现导入导出,同时也会大致讲讲所需的csv文件的格式。并且所有的导入导出操作都是在终端或neo4j浏览器界面，并未使用编程语言。    我的版本配置：   操作系统 :ubuntu22.04 ne">
 <meta property="og:type" content="article">
 <meta property="og:title" content="neo4j的导入与导出">
 <meta property="og:url" content="https://blog.naughtyfox.top/neo4j%E7%9A%84%E5%AF%BC%E5%85%A5%E4%B8%8E%E5%AF%BC%E5%87%BA/index.html">
 <meta property="og:site_name" content="一蓑烟雨的博客">
-<meta property="og:description" content="&amp;nbsp; &amp;nbsp;  本文主要介绍neo4j的导入（import,load）和导出（export）,基本是基于csv和dump文件格式。将会介绍在终端和使用apoc利用Cypher语言两种情况如何实现导入导出,同时也会大致讲讲所需的csv文件的格式。并且所有的导入导出操作都是在终端或neo4j浏览器界面，并未使用编程语言。  &amp;nbsp; 我的版本配置：   操作系统	:ubuntu22.">
+<meta property="og:description" content="本文主要介绍neo4j的导入（import,load）和导出（export）,基本是基于csv和dump文件格式。将会介绍在终端和使用apoc利用Cypher语言两种情况如何实现导入导出,同时也会大致讲讲所需的csv文件的格式。并且所有的导入导出操作都是在终端或neo4j浏览器界面，并未使用编程语言。    我的版本配置：   操作系统 :ubuntu22.04 ne">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://s2.loli.net/2023/08/09/vNZE4nUGx9Ck3Ba.png">
 <meta property="og:image" content="https://s2.loli.net/2023/08/09/ZR2kAgm3IWtoMwj.png">
@@ -248,7 +248,7 @@
         
         
         
-          82 分钟
+          81 分钟
         
       </span>
     
@@ -306,33 +306,42 @@
             
               <div class="markdown-body">
                 
-                <p>&nbsp;</p>
-<p>&nbsp;</p>
+                <p> </p>
+<p> </p>
 <blockquote>
 <p>本文主要介绍neo4j的导入（import,load）和导出（export）,基本是基于csv和dump文件格式。将会介绍在终端和使用apoc利用Cypher语言两种情况如何实现导入导出,同时也会大致讲讲所需的csv文件的格式。并且所有的导入导出操作都是在终端或neo4j浏览器界面，并未使用编程语言。</p>
 </blockquote>
-<p>&nbsp;</p>
+<p> </p>
 <p>我的版本配置：</p>
 <blockquote>
 <ul>
-<li><strong>操作系统</strong>	:<strong>ubuntu22.04</strong></li>
-<li><strong>neo4j</strong>	<strong>server</strong>:<strong>5.10.0社区版</strong></li>
-<li><strong>apoc-core</strong>	:<strong>5.10.1</strong>(这是个neo4j插件，之后会讲到)</li>
+<li><strong>操作系统</strong> :<strong>ubuntu22.04</strong></li>
+<li><strong>neo4j</strong>
+<strong>server</strong>:<strong>5.10.0社区版</strong></li>
+<li><strong>apoc-core</strong>
+:<strong>5.10.1</strong>(这是个neo4j插件，之后会讲到)</li>
 </ul>
 </blockquote>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<h2 id="1-终端下导入导出"><a href="#1-终端下导入导出" class="headerlink" title="1. 终端下导入导出"></a>1. 终端下导入导出</h2><p>（ubuntu ctrl +alt +T 打开终端）。</p>
-<p>与neo4j相关的命令基本是以<strong>neo4j</strong>,<strong>neo4j-admin</strong>或者<strong>neo4j-admin server</strong>开头，三者在后面添加 <code>-h</code>都可以查看其帮助文档。</p>
-<p><img src="https://s2.loli.net/2023/08/09/vNZE4nUGx9Ck3Ba.png" srcset="/img/loading.gif" lazyload></p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<h2 id="终端下导入导出">1. 终端下导入导出</h2>
+<p>（ubuntu ctrl +alt +T 打开终端）。</p>
+<p>与neo4j相关的命令基本是以<strong>neo4j</strong>,<strong>neo4j-admin</strong>或者<strong>neo4j-admin
+server</strong>开头，三者在后面添加
+<code>-h</code>都可以查看其帮助文档。</p>
+<p><img src="https://s2.loli.net/2023/08/09/vNZE4nUGx9Ck3Ba.png" srcset="/img/loading.gif" lazyload /></p>
 <p>而我们需要的命令就是<strong>neo4j-admin database</strong></p>
-<p>我们使用 <code>neo4j-admin database -h</code>来查看<strong>neo4j-admin database</strong>的使用方法。</p>
-<p><img src="https://s2.loli.net/2023/08/09/ZR2kAgm3IWtoMwj.png" srcset="/img/loading.gif" lazyload></p>
+<p>我们使用
+<code>neo4j-admin database -h</code>来查看<strong>neo4j-admin
+database</strong>的使用方法。</p>
+<p><img src="https://s2.loli.net/2023/08/09/ZR2kAgm3IWtoMwj.png" srcset="/img/loading.gif" lazyload /></p>
 <p>而我们要用的就是<strong>dump</strong>,<strong>load</strong>,<strong>import</strong></p>
-<p>&nbsp;</p>
-<h3 id="dump"><a href="#dump" class="headerlink" title="dump"></a><a target="_blank" rel="noopener" href="https://neo4j.com/docs/operations-manual/current/backup-restore/offline-backup/">dump</a></h3><figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 其中&lt;>是必填选项其余的[]是非必填</span>
+<p> </p>
+<h3 id="dump"><a
+target="_blank" rel="noopener" href="https://neo4j.com/docs/operations-manual/current/backup-restore/offline-backup/">dump</a></h3>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 其中&lt;>是必填选项其余的[]是非必填</span>
 <span class="token comment"># 可以使用neo4j-admin database dump -h查看各参数详细信息</span>
 <span class="token comment"># 效果是将neo4j的数据导出为一个dump文件，或者一个标准输出流进入类似load的命令</span>
 neo4j-admin database dump <span class="token punctuation">[</span>-h<span class="token punctuation">]</span> <span class="token punctuation">[</span>--expand-commands<span class="token punctuation">]</span>
@@ -346,17 +355,28 @@ neo4j-admin database dump <span class="token punctuation">[</span>-h<span class=
 <span class="token comment"># --to-path=&lt;path>： 指定输出文件夹地址。注意！path必须为文件夹地址</span>
 <span class="token comment"># --to-stdout: 让输出成为标准输出流而不是一个dump文件</span>
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
-<p>&nbsp;</p>
-<p>其中，如果你命令中既没有 <code>--to-path</code>也没有 <code>--to-stdout</code>，那么，它将会采用Configuration文件（<a target="_blank" rel="noopener" href="https://neo4j.com/docs/operations-manual/current/configuration/file-locations/">各操作系统下的neo4j默认文件地址</a>）中的 <code>server.directories.dumps.root</code>设置。</p>
+<p> </p>
+<p>其中，如果你命令中既没有 <code>--to-path</code>也没有
+<code>--to-stdout</code>，那么，它将会采用Configuration文件（<a
+target="_blank" rel="noopener" href="https://neo4j.com/docs/operations-manual/current/configuration/file-locations/">各操作系统下的neo4j默认文件地址</a>）中的
+<code>server.directories.dumps.root</code>设置。</p>
 <p>该设置值是一个文件路径，指dump文件存放的地址。</p>
-<p>如果是相对路径，则是以 <strong>neo4j主目录&#x2F;data&#x2F;<strong>为基准的相对路径。例如 <code>server.directories.dumps.root</code>的默认值就是</strong>dumps</strong>，即如果你命令中既没有 <code>--to-path</code>也没有 <code>--to-stdout</code>，该命令将会在 <strong>neo4j主目录&#x2F;data&#x2F;dumps&#x2F;</strong> 下生成一个dump文件。</p>
+<p>如果是相对路径，则是以
+<strong>neo4j主目录/data/</strong>为基准的相对路径。例如
+<code>server.directories.dumps.root</code>的默认值就是<strong>dumps</strong>，即如果你命令中既没有
+<code>--to-path</code>也没有 <code>--to-stdout</code>，该命令将会在
+<strong>neo4j主目录/data/dumps/</strong> 下生成一个dump文件。</p>
 <blockquote>
-<p><em>如果使用 <code>neo4j-admin database dump</code>来导出数据，要确保neo4j数据库处于stop状态</em></p>
+<p><em>如果使用
+<code>neo4j-admin database dump</code>来导出数据，要确保neo4j数据库处于stop状态</em></p>
 <p><em><code>neo4j status</code>查看当前neo4j运行状态</em></p>
 </blockquote>
-<p>&nbsp;</p>
-<h3 id="load"><a href="#load" class="headerlink" title="load"></a><a target="_blank" rel="noopener" href="https://neo4j.com/docs/operations-manual/current/backup-restore/restore-dump/">load</a></h3><p><strong>load</strong>方法主要就是将<strong>dump</strong>导出的 <em>dump文件</em> 或者 <em>标准输出流</em> 中的数据重新导入neo4j数据库中。所以，load+dump就可以实现neo4j的<strong>离线备份</strong>。</p>
+<p> </p>
+<h3 id="load"><a
+target="_blank" rel="noopener" href="https://neo4j.com/docs/operations-manual/current/backup-restore/restore-dump/">load</a></h3>
+<p><strong>load</strong>方法主要就是将<strong>dump</strong>导出的
+<em>dump文件</em> 或者 <em>标准输出流</em>
+中的数据重新导入neo4j数据库中。所以，load+dump就可以实现neo4j的<strong>离线备份</strong>。</p>
 <figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># load和dump的Options大同小异，</span>
 <span class="token comment"># 同样的，如果既没有--from-path，又没有--from-stdin，会采用server.directories.dumps.root</span>
 neo4j-admin database load <span class="token punctuation">[</span>-h<span class="token punctuation">]</span> <span class="token punctuation">[</span>--expand-commands<span class="token punctuation">]</span> <span class="token punctuation">[</span>--info<span class="token punctuation">]</span> <span class="token punctuation">[</span>--verbose<span class="token punctuation">]</span>
@@ -371,32 +391,38 @@ $ <span class="token function">sudo</span> neo4j-admin database load --from-path
 <span class="token comment"># 这里由于没选覆盖选项是新建一个数据库为intelligentmedicine.db</span>
 <span class="token comment"># 注意！path只要写到dump文件所在的文件夹就行，dump文件必须是&lt;databasename>.dump</span>
 <span class="token comment"># 这里就是 intelligentmedicine.db.dump</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
-<p>&nbsp;</p>
+<p> </p>
 <p><em>与dump有些不同的是，load支持neo4j在线和离线状态的导入（付费版），但是两种都有要注意的地方</em></p>
-<ol>
+<ol type="1">
 <li>如果你打算覆盖原有的数据库，即–overwrite-destination设置成了true，那么你<strong>一定</strong>要先<strong>stop</strong>再执行load语句。</li>
 <li>如果你打算新建一个数据库来存储你load的数据，那么无需离线，但是在<strong>load之后一定要create一个新的database</strong>。</li>
 <li><strong>社区版</strong>的neo4j不支持在线导入，只能关闭服务后导入（付费版没试，但是官方文档说load支持online，应该是指付费版）</li>
 <li><strong>社区版</strong>的load不支持<strong>增量导入</strong>，即要么覆盖要么新建数据库，不能在原有数据上加入。（付费版没试，不知道行不行）</li>
 </ol>
 <blockquote>
-<p><a target="_blank" rel="noopener" href="https://neo4j.com/docs/cypher-manual/current/administration/databases/">neo4j创建数据库官方文档</a></p>
-<p>ps: 社区版即免费的neo4j是<strong>只允许一个database</strong>，但是我们可以通过修改配置文件来实现<strong>多个</strong>database共存。但是也有缺点，每次切换数据库要restart，并且修改配置文件（这个简单，就加个#，删个#）。如果有空会分享一下。</p>
+<p><a
+target="_blank" rel="noopener" href="https://neo4j.com/docs/cypher-manual/current/administration/databases/">neo4j创建数据库官方文档</a></p>
+<p>ps:
+社区版即免费的neo4j是<strong>只允许一个database</strong>，但是我们可以通过修改配置文件来实现<strong>多个</strong>database共存。但是也有缺点，每次切换数据库要restart，并且修改配置文件（这个简单，就加个#，删个#）。如果有空会分享一下。</p>
 </blockquote>
-<p>&nbsp;</p>
-<h3 id="import"><a href="#import" class="headerlink" title="import"></a><a target="_blank" rel="noopener" href="https://neo4j.com/docs/operations-manual/current/tutorial/neo4j-admin-import/">import</a></h3><blockquote>
-<p><em>The import command is used for loading large amounts of data from CSV files and supports full and incremental import into a running or stopped Neo4j DBMS.</em></p>
+<p> </p>
+<h3 id="import"><a
+target="_blank" rel="noopener" href="https://neo4j.com/docs/operations-manual/current/tutorial/neo4j-admin-import/">import</a></h3>
+<blockquote>
+<p><em>The import command is used for loading large amounts of data from
+CSV files and supports full and incremental import into a running or
+stopped Neo4j DBMS.</em></p>
 <p>上述是官方原话，但是测试发现社区版import只支持全量导入（full）并且只能离线，可能付费才能增量与在线导入。</p>
 </blockquote>
 <figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># Usage: neo4j-admin database import [-h] [COMMAND]</span>
 
 <span class="token comment"># example</span>
 $ <span class="token function">sudo</span> neo4j-admin database <span class="token function">import</span> full <span class="token parameter variable">--verbose</span> --overwrite-destination<span class="token operator">=</span>true <span class="token parameter variable">--nodes</span> /home/mmy/forimport_movie_nodes.csv  <span class="token parameter variable">--nodes</span> /home/mmy/forimport_person_nodes.csv  <span class="token parameter variable">--relationships</span> /home/mmy/forimport_rels.csv  test.db<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
-<p> &nbsp;</p>
-<h4 id="csv格式"><a href="#csv格式" class="headerlink" title="csv格式"></a>csv格式</h4><p>import命令本身并没有什么好说的，我们来聊聊导入所需的csv文件格式。</p>
-<h5 id="a-存储nodes的csv文件"><a href="#a-存储nodes的csv文件" class="headerlink" title="a.存储nodes的csv文件"></a>a.存储nodes的csv文件</h5><p><strong>表头（header）</strong></p>
+<p> </p>
+<h4 id="csv格式">csv格式</h4>
+<p>import命令本身并没有什么好说的，我们来聊聊导入所需的csv文件格式。</p>
+<h5 id="a.存储nodes的csv文件">a.存储nodes的csv文件</h5>
+<p><strong>表头（header）</strong></p>
 <ul>
 <li>表头格式&lt;name&gt;:&lt;field_type&gt;</li>
 <li>label在表头并非必须，但是id一定要有</li>
@@ -410,12 +436,14 @@ $ <span class="token function">sudo</span> neo4j-admin database <span class="tok
 <th>:LABEL</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td></td>
 <td></td>
 <td></td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <ul>
 <li>但是如果是增量或者批量导入，规则就有点复杂。<strong>主键的属性必须是标签与属性的结合</strong></li>
 </ul>
@@ -427,17 +455,20 @@ $ <span class="token function">sudo</span> neo4j-admin database <span class="tok
 <th>email:STRING</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td></td>
 <td></td>
 <td></td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>在这里，<strong>uuid</strong>和n<strong>ame共同做主键</strong>区分节点，并且指定节点导入的<strong>label</strong>为<strong>Person</strong></p>
 <p><strong>这一措施，主要是防止增量导入和批量导入时创建多个重复节点。</strong></p>
-<p>&nbsp;</p>
-<h5 id="b-存储relationship的csv文件"><a href="#b-存储relationship的csv文件" class="headerlink" title="b.存储relationship的csv文件"></a>b.存储relationship的csv文件</h5><p><strong>表头</strong></p>
-<p>存储关系的表头必须包含**:START_ID<strong>，</strong>:END_ID<strong>和</strong>:TYPE<strong>。其中前两个分别对应着关系的</strong>起始实体<strong>和</strong>结束实体<strong>的</strong>:ID<strong>，这就是为什么实体id是必须的。而</strong>:TYPE**是指明这个关系的类型。</p>
+<p> </p>
+<h5 id="b.存储relationship的csv文件">b.存储relationship的csv文件</h5>
+<p><strong>表头</strong></p>
+<p>存储关系的表头必须包含<strong>:START_ID</strong>，<strong>:END_ID</strong>和<strong>:TYPE</strong>。其中前两个分别对应着关系的<strong>起始实体</strong>和<strong>结束实体</strong>的<strong>:ID</strong>，这就是为什么实体id是必须的。而<strong>:TYPE</strong>是指明这个关系的类型。</p>
 <p>当然，关系也可以有属性，下图便是给关系增加了一个<strong>role</strong>属性</p>
 <table>
 <thead>
@@ -448,32 +479,45 @@ $ <span class="token function">sudo</span> neo4j-admin database <span class="tok
 <th>role</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td></td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
-</tbody></table>
-<p>&nbsp;</p>
+</tbody>
+</table>
+<p> </p>
 <blockquote>
-<p><strong>总结</strong>：在社区版，如果使用终端的方法，我们都无法实现在线操作与增量导入。而官方其实还有一种方法，使用Cypher命令load csv可以实现在线导入数据，csv文件地址可以是url形式。(<a target="_blank" rel="noopener" href="https://neo4j.com/developer/guide-import-csv/)%E5%A4%A7%E5%AE%B6%E5%8F%AF%E4%BB%A5%E8%87%AA%E8%A1%8C%E6%9F%A5%E7%9C%8B%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%EF%BC%8C%E6%9C%89%E6%A0%B7%E4%BE%8B%E5%8D%81%E5%88%86%E8%AF%A6%E7%BB%86%E3%80%82">https://neo4j.com/developer/guide-import-csv/)大家可以自行查看官方文档，有样例十分详细。</a></p>
+<p><strong>总结</strong>：在社区版，如果使用终端的方法，我们都无法实现在线操作与增量导入。而官方其实还有一种方法，使用Cypher命令load
+csv可以实现在线导入数据，csv文件地址可以是url形式。(https://neo4j.com/developer/guide-import-csv/)大家可以自行查看官方文档，有样例十分详细。</p>
 </blockquote>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<h2 id="2-利用apoc插件在线导出"><a href="#2-利用apoc插件在线导出" class="headerlink" title="2. 利用apoc插件在线导出"></a>2. 利用apoc插件在线导出</h2><hr>
+<p> </p>
+<p> </p>
+<h2 id="利用apoc插件在线导出">2. 利用apoc插件在线导出</h2>
+<hr />
 <p><a target="_blank" rel="noopener" href="https://neo4j.com/docs/apoc/current/">apoc-core</a></p>
 <p><a target="_blank" rel="noopener" href="https://neo4j.com/labs/apoc/5/">apoc-extended</a></p>
-<p><a target="_blank" rel="noopener" href="https://neo4j.com/docs/apoc/current/export/">apoc_export</a></p>
-<p>apoc在neo4j 5.0之后分为apoc-core和apoc-extended两部分。前者是neo4j官方支持，后者由社区维护。</p>
+<p><a
+target="_blank" rel="noopener" href="https://neo4j.com/docs/apoc/current/export/">apoc_export</a></p>
+<p>apoc在neo4j
+5.0之后分为apoc-core和apoc-extended两部分。前者是neo4j官方支持，后者由社区维护。</p>
 <p>而由于apoc-extended最新只有5.9版本，作者neo4j为5.10.x，所以下文只使用了apoc-core。而extended在导入导出方面增加了可使用exel导入导出，可以导入html格式的数据，多样化导入csv文件。</p>
 <p>apoc本质是一个插件，其内容十分丰富，远不止导入导出数据那么简单，大家如有需要可以查看上方的官方文档。</p>
-<p>&nbsp;</p>
-<h3 id="2-1-apoc的安装与配置"><a href="#2-1-apoc的安装与配置" class="headerlink" title="2.1 apoc的安装与配置"></a>2.1 apoc的安装与配置</h3><p>apoc默认状态下并未安装，所以我们要先安装。</p>
-<h4 id="apoc-core的安装"><a href="#apoc-core的安装" class="headerlink" title="apoc-core的安装"></a>apoc-core的安装</h4><p>这个十分简单，在**$NEO4J_HOME&#x2F;labs**文件夹（NEO4J_HOME表示neo4j主目录）中，你会找到一个jar文件。</p>
-<p><img src="https://s2.loli.net/2023/08/09/RACvOsangpDluyX.png" srcset="/img/loading.gif" lazyload alt="image-20230808103615755"></p>
-<p>将这个文件复制到**$NEO4J_HOME&#x2F;plugins<strong>文件夹下，</strong>apoc-core**就算安装好了！</p>
-<h4 id="apoc-core配置"><a href="#apoc-core配置" class="headerlink" title="apoc-core配置"></a>apoc-core配置</h4><p>a.首先，找到你的neo4j配置文件<strong>neo4j.conf</strong>，neo4j各文件在各操作系统的地址官方文档给出了，链接在前文。</p>
+<p> </p>
+<h3 id="apoc的安装与配置">2.1 apoc的安装与配置</h3>
+<p>apoc默认状态下并未安装，所以我们要先安装。</p>
+<h4 id="apoc-core的安装">apoc-core的安装</h4>
+<p>这个十分简单，在<strong>$NEO4J_HOME/labs</strong>文件夹（NEO4J_HOME表示neo4j主目录）中，你会找到一个jar文件。</p>
+<figure>
+<img src="https://s2.loli.net/2023/08/09/RACvOsangpDluyX.png" srcset="/img/loading.gif" lazyload
+alt="image-20230808103615755" />
+<figcaption aria-hidden="true">image-20230808103615755</figcaption>
+</figure>
+<p>将这个文件复制到<strong>$NEO4J_HOME/plugins</strong>文件夹下，<strong>apoc-core</strong>就算安装好了！</p>
+<h4 id="apoc-core配置">apoc-core配置</h4>
+<p>a.首先，找到你的neo4j配置文件<strong>neo4j.conf</strong>，neo4j各文件在各操作系统的地址官方文档给出了，链接在前文。</p>
 <figure><div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none"># 寻找并修改以下设置，推荐复制粘贴原有的然后去掉注释的#，再修改，方便之后还原默认设置
 
 
@@ -481,7 +525,6 @@ $ <span class="token function">sudo</span> neo4j-admin database <span class="tok
 dbms.security.procedures.unrestricted&#x3D;apoc.*,algo.*
 # 将apoc的全部都加入allowlist
 dbms.security.procedures.allowlist&#x3D;apoc.*,apoc.coll.*,apoc.load.*,gds.*<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
 <p>b.之后在neo4j.conf同文件夹下创建一个apoc.conf文件，这个是apoc的配置文件，是要自己手动创建的。</p>
 <figure><div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none"># 加入下面三条设置
 
@@ -491,14 +534,17 @@ apoc.export.file.enabled&#x3D;true
 apoc.import.file.enabled&#x3D;true
 # 指明是否使用 neo4j.conf 指定的相关（导入导出涉及的）目录(默认就是 true)
 apoc.import.file_use_neo4j_config&#x3D;true<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
-<p>&nbsp;</p>
+<p> </p>
 <p>好了，接下来我们就可以使用apoc-core来导入导出了。</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<h3 id="2-2-导出为csv文件"><a href="#2-2-导出为csv文件" class="headerlink" title="2.2 导出为csv文件"></a>2.2 导出为csv文件</h3><p><strong>注意</strong>：这次启动方式<strong>不是neo4j start</strong>而是<strong>neo4j console</strong>，而只有这种启动才能顺利使用apoc</p>
+<p> </p>
+<p> </p>
+<h3 id="导出为csv文件">2.2 导出为csv文件</h3>
+<p><strong>注意</strong>：这次启动方式<strong>不是neo4j
+start</strong>而是<strong>neo4j
+console</strong>，而只有这种启动才能顺利使用apoc</p>
 <p>neo4j官方只能导出数据为dump或stream，而apoc让我们有了更多选择。</p>
-<p><a target="_blank" rel="noopener" href="https://neo4j.com/docs/apoc/current/export/csv/">apoc.export.csv</a></p>
+<p><a
+target="_blank" rel="noopener" href="https://neo4j.com/docs/apoc/current/export/csv/">apoc.export.csv</a></p>
 <figure><div class="code-wrapper"><pre class="line-numbers language-cypher" data-language="cypher"><code class="language-cypher"><span class="token keyword">CALL</span> apoc<span class="token punctuation">.</span>export<span class="token punctuation">.</span><span class="token keyword">csv</span><span class="token punctuation">.</span><span class="token keyword">all</span><span class="token punctuation">(</span><span class="token string">"movies.csv"</span><span class="token punctuation">,</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
 <span class="token comment">// 短短一句，就可将你的全部nodes和relationships导出成一个csv文件</span>
 <span class="token comment">// 而由于我们在apoc.conf文件中第三条设置为TRUE，所以导出的文件将位于noe4j的import文件夹下</span>
@@ -535,39 +581,47 @@ apoc.import.file_use_neo4j_config&#x3D;true<span aria-hidden="true" class="line-
 <span class="token comment">//这是一个与之前不同的方法，在这里我们传入的不是nodes或relationships，而是一个语句，这样子看上去简单多了</span>
                 
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
 <p>大家或许注意到了，上述许多语句{}中的内容不是stream:true就是空的，其实，这里面可以设置很多配置</p>
 <p>如下所示：</p>
-<p><img src="https://s2.loli.net/2023/08/09/unIXg3w9VOToxEN.png" srcset="/img/loading.gif" lazyload alt="image-20230808204348546"></p>
+<figure>
+<img src="https://s2.loli.net/2023/08/09/unIXg3w9VOToxEN.png" srcset="/img/loading.gif" lazyload
+alt="image-20230808204348546" />
+<figcaption aria-hidden="true">image-20230808204348546</figcaption>
+</figure>
 <p><strong>但是</strong>，其中的<strong>bulkImport</strong>设置只有在all和graph情况下才能生效：</p>
-<p><img src="https://s2.loli.net/2023/08/09/pvPhyGdFDw8fBoT.png" srcset="/img/loading.gif" lazyload alt="image-20230808204725076"></p>
-<p>&nbsp;</p>
-<h3 id="2-3导出为json文件"><a href="#2-3导出为json文件" class="headerlink" title="2.3导出为json文件"></a>2.3导出为json文件</h3><figure><div class="code-wrapper"><pre class="line-numbers language-cypher" data-language="cypher"><code class="language-cypher"><span class="token comment">// 基本与csv相同</span>
+<figure>
+<img src="https://s2.loli.net/2023/08/09/pvPhyGdFDw8fBoT.png" srcset="/img/loading.gif" lazyload
+alt="image-20230808204725076" />
+<figcaption aria-hidden="true">image-20230808204725076</figcaption>
+</figure>
+<p> </p>
+<h3 id="导出为json文件">2.3导出为json文件</h3>
+<figure><div class="code-wrapper"><pre class="line-numbers language-cypher" data-language="cypher"><code class="language-cypher"><span class="token comment">// 基本与csv相同</span>
 <span class="token keyword">CALL</span> apoc<span class="token punctuation">.</span>export<span class="token punctuation">.</span>json<span class="token punctuation">.</span><span class="token keyword">all</span><span class="token punctuation">(</span><span class="token string">"all.json"</span><span class="token punctuation">,</span><span class="token punctuation">&#123;</span>useTypes<span class="token operator">:</span><span class="token boolean">true</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
 
 <span class="token comment">// useTypes参数表明输出时是否表明type类型是node还是relationship</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
 <figure><div class="code-wrapper"><pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token comment">// out</span>
 <span class="token punctuation">&#123;</span><span class="token property">"type"</span><span class="token operator">:</span><span class="token string">"node"</span><span class="token punctuation">,</span><span class="token property">"id"</span><span class="token operator">:</span><span class="token string">"0"</span><span class="token punctuation">,</span><span class="token property">"labels"</span><span class="token operator">:</span><span class="token punctuation">[</span><span class="token string">"User"</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token property">"properties"</span><span class="token operator">:</span><span class="token punctuation">&#123;</span><span class="token property">"born"</span><span class="token operator">:</span><span class="token string">"2015-07-04T19:32:24"</span><span class="token punctuation">,</span><span class="token property">"name"</span><span class="token operator">:</span><span class="token string">"Adam"</span><span class="token punctuation">,</span><span class="token property">"place"</span><span class="token operator">:</span><span class="token punctuation">&#123;</span><span class="token property">"crs"</span><span class="token operator">:</span><span class="token string">"wgs-84"</span><span class="token punctuation">,</span><span class="token property">"latitude"</span><span class="token operator">:</span><span class="token number">13.1</span><span class="token punctuation">,</span><span class="token property">"longitude"</span><span class="token operator">:</span><span class="token number">33.46789</span><span class="token punctuation">,</span><span class="token property">"height"</span><span class="token operator">:</span><span class="token null keyword">null</span><span class="token punctuation">&#125;</span><span class="token punctuation">,</span><span class="token property">"age"</span><span class="token operator">:</span><span class="token number">42</span><span class="token punctuation">,</span><span class="token property">"male"</span><span class="token operator">:</span><span class="token boolean">true</span><span class="token punctuation">,</span><span class="token property">"kids"</span><span class="token operator">:</span><span class="token punctuation">[</span><span class="token string">"Sam"</span><span class="token punctuation">,</span><span class="token string">"Anna"</span><span class="token punctuation">,</span><span class="token string">"Grace"</span><span class="token punctuation">]</span><span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span>
 <span class="token punctuation">&#123;</span><span class="token property">"type"</span><span class="token operator">:</span><span class="token string">"node"</span><span class="token punctuation">,</span><span class="token property">"id"</span><span class="token operator">:</span><span class="token string">"1"</span><span class="token punctuation">,</span><span class="token property">"labels"</span><span class="token operator">:</span><span class="token punctuation">[</span><span class="token string">"User"</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token property">"properties"</span><span class="token operator">:</span><span class="token punctuation">&#123;</span><span class="token property">"name"</span><span class="token operator">:</span><span class="token string">"Jim"</span><span class="token punctuation">,</span><span class="token property">"age"</span><span class="token operator">:</span><span class="token number">42</span><span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span>
 <span class="token punctuation">&#123;</span><span class="token property">"type"</span><span class="token operator">:</span><span class="token string">"node"</span><span class="token punctuation">,</span><span class="token property">"id"</span><span class="token operator">:</span><span class="token string">"2"</span><span class="token punctuation">,</span><span class="token property">"labels"</span><span class="token operator">:</span><span class="token punctuation">[</span><span class="token string">"User"</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token property">"properties"</span><span class="token operator">:</span><span class="token punctuation">&#123;</span><span class="token property">"age"</span><span class="token operator">:</span><span class="token number">12</span><span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span>
 <span class="token punctuation">&#123;</span><span class="token property">"id"</span><span class="token operator">:</span><span class="token string">"0"</span><span class="token punctuation">,</span><span class="token property">"type"</span><span class="token operator">:</span><span class="token string">"relationship"</span><span class="token punctuation">,</span><span class="token property">"label"</span><span class="token operator">:</span><span class="token string">"KNOWS"</span><span class="token punctuation">,</span><span class="token property">"properties"</span><span class="token operator">:</span><span class="token punctuation">&#123;</span><span class="token property">"bffSince"</span><span class="token operator">:</span><span class="token string">"P5M1DT12H"</span><span class="token punctuation">,</span><span class="token property">"since"</span><span class="token operator">:</span><span class="token number">1993</span><span class="token punctuation">&#125;</span><span class="token punctuation">,</span><span class="token property">"start"</span><span class="token operator">:</span><span class="token punctuation">&#123;</span><span class="token property">"id"</span><span class="token operator">:</span><span class="token string">"0"</span><span class="token punctuation">,</span><span class="token property">"labels"</span><span class="token operator">:</span><span class="token punctuation">[</span><span class="token string">"User"</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token property">"properties"</span><span class="token operator">:</span><span class="token punctuation">&#123;</span><span class="token property">"born"</span><span class="token operator">:</span><span class="token string">"2015-07-04T19:32:24"</span><span class="token punctuation">,</span><span class="token property">"name"</span><span class="token operator">:</span><span class="token string">"Adam"</span><span class="token punctuation">,</span><span class="token property">"place"</span><span class="token operator">:</span><span class="token punctuation">&#123;</span><span class="token property">"crs"</span><span class="token operator">:</span><span class="token string">"wgs-84"</span><span class="token punctuation">,</span><span class="token property">"latitude"</span><span class="token operator">:</span><span class="token number">13.1</span><span class="token punctuation">,</span><span class="token property">"longitude"</span><span class="token operator">:</span><span class="token number">33.46789</span><span class="token punctuation">,</span><span class="token property">"height"</span><span class="token operator">:</span><span class="token null keyword">null</span><span class="token punctuation">&#125;</span><span class="token punctuation">,</span><span class="token property">"age"</span><span class="token operator">:</span><span class="token number">42</span><span class="token punctuation">,</span><span class="token property">"male"</span><span class="token operator">:</span><span class="token boolean">true</span><span class="token punctuation">,</span><span class="token property">"kids"</span><span class="token operator">:</span><span class="token punctuation">[</span><span class="token string">"Sam"</span><span class="token punctuation">,</span><span class="token string">"Anna"</span><span class="token punctuation">,</span><span class="token string">"Grace"</span><span class="token punctuation">]</span><span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span><span class="token punctuation">,</span><span class="token property">"end"</span><span class="token operator">:</span><span class="token punctuation">&#123;</span><span class="token property">"id"</span><span class="token operator">:</span><span class="token string">"1"</span><span class="token punctuation">,</span><span class="token property">"labels"</span><span class="token operator">:</span><span class="token punctuation">[</span><span class="token string">"User"</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token property">"properties"</span><span class="token operator">:</span><span class="token punctuation">&#123;</span><span class="token property">"name"</span><span class="token operator">:</span><span class="token string">"Jim"</span><span class="token punctuation">,</span><span class="token property">"age"</span><span class="token operator">:</span><span class="token number">42</span><span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
-<p>&nbsp;</p>
-<h3 id="2-4导出为Cypher语句"><a href="#2-4导出为Cypher语句" class="headerlink" title="2.4导出为Cypher语句"></a>2.4导出为Cypher语句</h3><figure><div class="code-wrapper"><pre class="line-numbers language-cypher" data-language="cypher"><code class="language-cypher"><span class="token keyword">CALL</span> apoc<span class="token punctuation">.</span>export<span class="token punctuation">.</span>cypher<span class="token punctuation">.</span><span class="token function">schema</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<p> </p>
+<h3 id="导出为cypher语句">2.4导出为Cypher语句</h3>
+<figure><div class="code-wrapper"><pre class="line-numbers language-cypher" data-language="cypher"><code class="language-cypher"><span class="token keyword">CALL</span> apoc<span class="token punctuation">.</span>export<span class="token punctuation">.</span>cypher<span class="token punctuation">.</span><span class="token function">schema</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 <span class="token keyword">YIELD</span> format<span class="token punctuation">,</span> time<span class="token punctuation">,</span> cypherStatements
 <span class="token keyword">RETURN</span> format<span class="token punctuation">,</span> time<span class="token punctuation">,</span> cypherStatements<span class="token punctuation">;</span>
 
 <span class="token comment">// 也与csv大同小异，多了一个schema，这个就支持导出索引以及所有的限制条件的建立，而不仅仅是一些数据</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
-<p>&nbsp;</p>
-<h3 id="2-5导出为graphml文件"><a href="#2-5导出为graphml文件" class="headerlink" title="2.5导出为graphml文件"></a>2.5导出为graphml文件</h3><blockquote>
-<p><em>The export GraphML procedures export data into a format that’s used by other tools like Gephi and CytoScape to read graph data.</em></p>
+<p> </p>
+<h3 id="导出为graphml文件">2.5导出为graphml文件</h3>
+<blockquote>
+<p><em>The export GraphML procedures export data into a format that’s
+used by other tools like Gephi and CytoScape to read graph
+data.</em></p>
 <p>主要是导出给Gephi 使用</p>
 </blockquote>
 <figure><div class="code-wrapper"><pre class="line-numbers language-cypher" data-language="cypher"><code class="language-cypher"><span class="token comment">// example</span>
 <span class="token keyword">call</span> apoc<span class="token punctuation">.</span>export<span class="token punctuation">.</span>graphml<span class="token punctuation">.</span><span class="token function">query</span><span class="token punctuation">(</span><span class="token string">'MATCH (start:Foo)-[:KNOWS]->(:Bar) RETURN start'</span><span class="token punctuation">,</span> <span class="token string">'queryNodesFoo.graphml'</span><span class="token punctuation">,</span> <span class="token punctuation">&#123;</span>useTypes<span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>        <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></div></figure>
-
 <figure><div class="code-wrapper"><pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token comment">&lt;!-- out --></span>
 <span class="token prolog">&lt;?xml version='1.0' encoding='UTF-8'?></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>graphml</span> <span class="token attr-name">xmlns</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://graphml.graphdrawing.org/xmlns<span class="token punctuation">"</span></span> <span class="token attr-name"><span class="token namespace">xmlns:</span>xsi</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://www.w3.org/2001/XMLSchema-instance<span class="token punctuation">"</span></span> <span class="token attr-name"><span class="token namespace">xsi:</span>schemaLocation</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
@@ -581,41 +635,51 @@ apoc.import.file_use_neo4j_config&#x3D;true<span aria-hidden="true" class="line-
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>node</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>n5<span class="token punctuation">"</span></span> <span class="token attr-name">labels</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>:Foo<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>data</span> <span class="token attr-name">key</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>labels<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>:Foo<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>data</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>data</span> <span class="token attr-name">key</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>name<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>aaa<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>data</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>node</span><span class="token punctuation">></span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>graph</span><span class="token punctuation">></span></span>
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>graphml</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
-<p>&nbsp;</p>
-<p>&nbsp;</p>
+<p> </p>
+<p> </p>
 <blockquote>
-<p>apoc-extended 的导入还支持导入excel文件，但是不能是最新的5.10版本的neo4j。</p>
+<p>apoc-extended
+的导入还支持导入excel文件，但是不能是最新的5.10版本的neo4j。</p>
 </blockquote>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<h2 id="3-利用apoc在线导入"><a href="#3-利用apoc在线导入" class="headerlink" title="3.利用apoc在线导入"></a>3.利用apoc在线导入</h2><hr>
+<p> </p>
+<p> </p>
+<p> </p>
+<h2 id="利用apoc在线导入">3.利用apoc在线导入</h2>
+<hr />
 <p><a target="_blank" rel="noopener" href="https://neo4j.com/docs/apoc/current/">apoc-core</a></p>
 <p><a target="_blank" rel="noopener" href="https://neo4j.com/labs/apoc/5/">apoc-extended</a></p>
-<h3 id="3-1-从Web-APIs导入"><a href="#3-1-从Web-APIs导入" class="headerlink" title="3.1 从Web-APIs导入"></a>3.1 从Web-APIs导入</h3><blockquote>
-<p><em>As <code>apoc.import.file.use_neo4j_config</code> is enabled, the procedures check whether file system access is allowed and possibly constrained to a specific directory by reading the two configuration parameters <code>dbms.security.allow_csv_import_from_file_urls</code> and <code>server.directories.import</code> respectively. If you want to remove these constraints please set <code>apoc.import.file.use_neo4j_config=false</code></em></p>
+<h3 id="从web-apis导入">3.1 从Web-APIs导入</h3>
+<blockquote>
+<p><em>As <code>apoc.import.file.use_neo4j_config</code> is enabled, the
+procedures check whether file system access is allowed and possibly
+constrained to a specific directory by reading the two configuration
+parameters <code>dbms.security.allow_csv_import_from_file_urls</code>
+and <code>server.directories.import</code> respectively. If you want to
+remove these constraints please set
+<code>apoc.import.file.use_neo4j_config=false</code></em></p>
 </blockquote>
-<p>如果 <code>apoc.import.file.use_neo4j_config</code>设置为true，文件写入可能会有所限制。可以设为false，但是要注意安全性。</p>
+<p>如果
+<code>apoc.import.file.use_neo4j_config</code>设置为true，文件写入可能会有所限制。可以设为false，但是要注意安全性。</p>
 <figure><div class="code-wrapper"><pre class="line-numbers language-cypher" data-language="cypher"><code class="language-cypher"><span class="token comment">// example，可以用url导入数据</span>
 <span class="token keyword">CALL</span> apoc<span class="token punctuation">.</span><span class="token keyword">load</span><span class="token punctuation">.</span><span class="token function">xml</span><span class="token punctuation">(</span><span class="token string">'http://example.com/test.xml'</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token string">'xPath'</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span>config<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token keyword">YIELD</span> value <span class="token keyword">as</span> doc <span class="token keyword">CREATE</span> <span class="token punctuation">(</span>p<span class="token operator">:</span><span class="token class-name">Person</span><span class="token punctuation">)</span> <span class="token keyword">SET</span> p<span class="token punctuation">.</span>name <span class="token operator">=</span> doc<span class="token punctuation">.</span>name
   
 <span class="token comment">// 还可以从google cloud storage导入数据导入数据，但是要另外加一堆插件</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
-<p>&nbsp;</p>
-<h3 id="3-2-load-csv文件"><a href="#3-2-load-csv文件" class="headerlink" title="3.2 load csv文件"></a>3.2 load csv文件</h3><p>这是需安装apoc-extended，比较实用，提一下。</p>
+<p> </p>
+<h3 id="load-csv文件">3.2 load csv文件</h3>
+<p>这是需安装apoc-extended，比较实用，提一下。</p>
 <blockquote>
 <ul>
 <li>provide a line number</li>
 <li>provide both a map and a list representation of each line</li>
 <li>automatic data conversion (including split into arrays)</li>
 <li>option to keep the original string formatted values</li>
-<li>ignoring fields (makes it easier to assign a full line as properties)</li>
+<li>ignoring fields (makes it easier to assign a full line as
+properties)</li>
 <li>headerless files</li>
 <li>replacing certain values with null</li>
 </ul>
 </blockquote>
-<p> 上述便是apoc在load csv方面相对官方方法的改进</p>
+<p>上述便是apoc在load csv方面相对官方方法的改进</p>
 <figure><div class="code-wrapper"><pre class="line-numbers language-cypher" data-language="cypher"><code class="language-cypher"><span class="token keyword">CALL</span> apoc<span class="token punctuation">.</span><span class="token keyword">load</span><span class="token punctuation">.</span><span class="token keyword">csv</span><span class="token punctuation">(</span><span class="token string">'test.csv'</span><span class="token punctuation">)</span>
 <span class="token keyword">YIELD</span> lineNo<span class="token punctuation">,</span> map<span class="token punctuation">,</span> list
 <span class="token keyword">RETURN</span> <span class="token operator">*</span><span class="token punctuation">;</span>
@@ -625,9 +689,12 @@ apoc.import.file_use_neo4j_config&#x3D;true<span aria-hidden="true" class="line-
 <span class="token keyword">CALL</span> apoc<span class="token punctuation">.</span><span class="token keyword">load</span><span class="token punctuation">.</span><span class="token keyword">csv</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span>url<span class="token punctuation">&#125;</span><span class="token punctuation">)</span> <span class="token keyword">yield</span> map <span class="token keyword">as</span> row <span class="token keyword">return</span> row
 <span class="token keyword">CREATE</span> <span class="token punctuation">(</span>p<span class="token operator">:</span><span class="token class-name">Person</span><span class="token punctuation">)</span> <span class="token keyword">SET</span> p <span class="token operator">=</span> row
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
 <p>多种配置任你选择：</p>
-<p><img src="https://s2.loli.net/2023/08/09/Ln6vM7k2oIEURwm.png" srcset="/img/loading.gif" lazyload alt="image-20230809102037522"></p>
+<figure>
+<img src="https://s2.loli.net/2023/08/09/Ln6vM7k2oIEURwm.png" srcset="/img/loading.gif" lazyload
+alt="image-20230809102037522" />
+<figcaption aria-hidden="true">image-20230809102037522</figcaption>
+</figure>
 <figure><div class="code-wrapper"><pre class="line-numbers language-cypher" data-language="cypher"><code class="language-cypher"><span class="token keyword">CALL</span> apoc<span class="token punctuation">.</span><span class="token keyword">load</span><span class="token punctuation">.</span><span class="token keyword">csv</span><span class="token punctuation">(</span><span class="token string">'test.csv'</span><span class="token punctuation">,</span> <span class="token punctuation">&#123;</span><span class="token keyword">skip</span><span class="token operator">:</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token keyword">limit</span><span class="token operator">:</span><span class="token number">1</span><span class="token punctuation">,</span> header<span class="token operator">:</span><span class="token boolean">true</span><span class="token punctuation">,</span> ignore<span class="token operator">:</span><span class="token punctuation">[</span><span class="token string">'name'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
    mapping<span class="token operator">:</span><span class="token punctuation">&#123;</span>
      age<span class="token operator">:</span> <span class="token punctuation">&#123;</span>type<span class="token operator">:</span><span class="token string">'int'</span><span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
@@ -637,24 +704,40 @@ apoc.import.file_use_neo4j_config&#x3D;true<span aria-hidden="true" class="line-
 <span class="token keyword">YIELD</span> lineNo<span class="token punctuation">,</span> map<span class="token punctuation">,</span> list
 <span class="token keyword">RETURN</span> <span class="token operator">*</span><span class="token punctuation">;</span>
 <span class="token comment">// 其中地一个设置是针对文件的，第二个是针对读入的map</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
-<p>&nbsp;</p>
-<h3 id="3-3-导入excel文件"><a href="#3-3-导入excel文件" class="headerlink" title="3.3 导入excel文件"></a>3.3 导入excel文件</h3><p>这个是在安装apoc-extended基础下的，因为比较常用了，稍微提一下。但是因为支持该功能的文件太大了，所以apoc将其分离出去了，你需另外下载支持文件安装到plugins文件夹下。</p>
+<p> </p>
+<h3 id="导入excel文件">3.3 导入excel文件</h3>
+<p>这个是在安装apoc-extended基础下的，因为比较常用了，稍微提一下。但是因为支持该功能的文件太大了，所以apoc将其分离出去了，你需另外下载支持文件安装到plugins文件夹下。</p>
 <blockquote>
-<p>For loading XLS we’re using the Apache POI library, which works well with old and new Excel formats, but is quite large. That’s why we decided not to include it into the apoc jar, but make it an optional dependency.</p>
-<p>These dependencies are included in <a target="_blank" rel="noopener" href="https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/5.9.0/apoc-xls-dependencies-5.9.0-all.jar">apoc-xls-dependencies-5.9.0-all.jar</a>, which can be downloaded from the <a target="_blank" rel="noopener" href="https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/tag/5.9.0">releases page</a>. Once that file is downloaded, it should be placed in the <code>plugins</code> directory and the Neo4j Server restarted.</p>
-<p><strong>Alternatively</strong>, you can download these jars from Maven Repository (putting them into <code>plugins</code> directory as well):</p>
+<p>For loading XLS we’re using the Apache POI library, which works well
+with old and new Excel formats, but is quite large. That’s why we
+decided not to include it into the apoc jar, but make it an optional
+dependency.</p>
+<p>These dependencies are included in <a
+target="_blank" rel="noopener" href="https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/5.9.0/apoc-xls-dependencies-5.9.0-all.jar">apoc-xls-dependencies-5.9.0-all.jar</a>,
+which can be downloaded from the <a
+target="_blank" rel="noopener" href="https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/tag/5.9.0">releases
+page</a>. Once that file is downloaded, it should be placed in the
+<code>plugins</code> directory and the Neo4j Server restarted.</p>
+<p><strong>Alternatively</strong>, you can download these jars from
+Maven Repository (putting them into <code>plugins</code> directory as
+well):</p>
 <p>For XLS files:</p>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://repo1.maven.org/maven2/org/apache/poi/poi/5.1.0/poi-5.1.0.jar">poi-5.1.0.jar</a></li>
+<li><a
+target="_blank" rel="noopener" href="https://repo1.maven.org/maven2/org/apache/poi/poi/5.1.0/poi-5.1.0.jar">poi-5.1.0.jar</a></li>
 </ul>
 <p>Additional for XLSX files:</p>
 <ul>
-<li><a target="_blank" rel="noopener" href="https://repo1.maven.org/maven2/org/apache/commons/commons-collections4/4.4/commons-collections4-4.4.jar">commons-collections4-4.4.jar</a></li>
-<li><a target="_blank" rel="noopener" href="https://repo1.maven.org/maven2/org/apache/poi/poi-ooxml/5.1.0/poi-ooxml-5.1.0.jar">poi-ooxml-5.1.0.jar</a></li>
-<li><a target="_blank" rel="noopener" href="https://repo1.maven.org/maven2/org/apache/poi/poi-ooxml-lite/5.1.0/poi-ooxml-lite-5.1.0.jar">poi-ooxml-lite-5.1.0.jar</a></li>
-<li><a target="_blank" rel="noopener" href="https://repo1.maven.org/maven2/org/apache/xmlbeans/xmlbeans/5.0.2/xmlbeans-5.0.2.jar">xmlbeans-5.0.2.jar</a></li>
-<li><a target="_blank" rel="noopener" href="https://repo1.maven.org/maven2/com/github/virtuald/curvesapi/1.06/curvesapi-1.06.jar">curvesapi-1.06.jar</a></li>
+<li><a
+target="_blank" rel="noopener" href="https://repo1.maven.org/maven2/org/apache/commons/commons-collections4/4.4/commons-collections4-4.4.jar">commons-collections4-4.4.jar</a></li>
+<li><a
+target="_blank" rel="noopener" href="https://repo1.maven.org/maven2/org/apache/poi/poi-ooxml/5.1.0/poi-ooxml-5.1.0.jar">poi-ooxml-5.1.0.jar</a></li>
+<li><a
+target="_blank" rel="noopener" href="https://repo1.maven.org/maven2/org/apache/poi/poi-ooxml-lite/5.1.0/poi-ooxml-lite-5.1.0.jar">poi-ooxml-lite-5.1.0.jar</a></li>
+<li><a
+target="_blank" rel="noopener" href="https://repo1.maven.org/maven2/org/apache/xmlbeans/xmlbeans/5.0.2/xmlbeans-5.0.2.jar">xmlbeans-5.0.2.jar</a></li>
+<li><a
+target="_blank" rel="noopener" href="https://repo1.maven.org/maven2/com/github/virtuald/curvesapi/1.06/curvesapi-1.06.jar">curvesapi-1.06.jar</a></li>
 </ul>
 </blockquote>
 <figure><div class="code-wrapper"><pre class="line-numbers language-cypher" data-language="cypher"><code class="language-cypher"><span class="token comment">// 同样简单明了</span>
@@ -664,16 +747,22 @@ apoc.import.file_use_neo4j_config&#x3D;true<span aria-hidden="true" class="line-
 <span class="token keyword">CALL</span> apoc<span class="token punctuation">.</span><span class="token keyword">load</span><span class="token punctuation">.</span><span class="token function">xls</span><span class="token punctuation">(</span><span class="token string">'file:///path/to/file.xls'</span><span class="token punctuation">,</span><span class="token string">'Full'</span><span class="token punctuation">,</span><span class="token punctuation">&#123;</span>mapping<span class="token operator">:</span><span class="token punctuation">&#123;</span>Integer<span class="token operator">:</span><span class="token punctuation">&#123;</span>type<span class="token operator">:</span><span class="token string">'int'</span><span class="token punctuation">&#125;</span><span class="token punctuation">,</span> Array<span class="token operator">:</span><span class="token punctuation">&#123;</span>type<span class="token operator">:</span><span class="token string">'int'</span><span class="token punctuation">,</span>array<span class="token operator">:</span><span class="token boolean">true</span><span class="token punctuation">,</span>arraySep<span class="token operator">:</span><span class="token string">';'</span><span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
                                                                
 <span class="token comment">// 至于导入后再怎么处理，其实就和导入csv后处理一样，官方文档看一下load csv相关文档即可</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
 <p>config格式如下：</p>
-<p><img src="https://s2.loli.net/2023/08/09/XZM1UFAmkbGdew7.png" srcset="/img/loading.gif" lazyload alt="image-20230809103254865"></p>
-<p>&nbsp;</p>
-<h3 id="3-4-import-csv文件"><a href="#3-4-import-csv文件" class="headerlink" title="3.4 import csv文件"></a>3.4 import csv文件</h3><p>在apoc中，<strong>load</strong>和<strong>import</strong>其实是有一定区别的。</p>
+<figure>
+<img src="https://s2.loli.net/2023/08/09/XZM1UFAmkbGdew7.png" srcset="/img/loading.gif" lazyload
+alt="image-20230809103254865" />
+<figcaption aria-hidden="true">image-20230809103254865</figcaption>
+</figure>
+<p> </p>
+<h3 id="import-csv文件">3.4 import csv文件</h3>
+<p>在apoc中，<strong>load</strong>和<strong>import</strong>其实是有一定区别的。</p>
 <p><strong>load</strong>是导入neo4j类似缓存中，可以做后续操作后再导入neo4j数据库中（当然，也可以不导入）</p>
 <p><strong>import</strong>是运行后就将数据存储入数据库中。</p>
-<p>&nbsp;</p>
-<p>而在apoc-core官方文档中提到：只要是满足apoc的csv文件格式规则的，就可以使用 <code>apoc.import.csv</code>来导入数据，但是对于大型数据，他们更推荐官方的import方式。（就是上文提到的终端下的 <code>neo4j-admin database import</code>）</p>
-<p>&nbsp;</p>
+<p> </p>
+<p>而在apoc-core官方文档中提到：只要是满足apoc的csv文件格式规则的，就可以使用
+<code>apoc.import.csv</code>来导入数据，但是对于大型数据，他们更推荐官方的import方式。（就是上文提到的终端下的
+<code>neo4j-admin database import</code>）</p>
+<p> </p>
 <figure><div class="code-wrapper"><pre class="line-numbers language-cypher" data-language="cypher"><code class="language-cypher"><span class="token comment">// apoc.import.csv(&lt;nodes>, &lt;relationships>, &lt;config>)</span>
 
 <span class="token comment">// 其中nodes和relationships都是以list，即[]的形式传入</span>
@@ -693,11 +782,15 @@ apoc.import.file_use_neo4j_config&#x3D;true<span aria-hidden="true" class="line-
   <span class="token punctuation">[</span><span class="token punctuation">&#123;</span>fileName<span class="token operator">:</span> <span class="token string">'file:/knows.csv'</span><span class="token punctuation">,</span> type<span class="token operator">:</span> <span class="token string">'KNOWS'</span><span class="token punctuation">&#125;</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
   <span class="token punctuation">&#123;</span>delimiter<span class="token operator">:</span> <span class="token string">'|'</span><span class="token punctuation">,</span> arrayDelimiter<span class="token operator">:</span> <span class="token string">','</span><span class="token punctuation">,</span> stringIds<span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">&#125;</span>
 <span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
 <p>config中可选配置如下：</p>
-<p><img src="https://s2.loli.net/2023/08/20/eAjxtrqD2yCGz68.png" srcset="/img/loading.gif" lazyload alt="image-20230812113109487"></p>
-<p>&nbsp;</p>
-<h3 id="3-5-导入json文件"><a href="#3-5-导入json文件" class="headerlink" title="3.5 导入json文件"></a>3.5 导入json文件</h3><ul>
+<figure>
+<img src="https://s2.loli.net/2023/08/20/eAjxtrqD2yCGz68.png" srcset="/img/loading.gif" lazyload
+alt="image-20230812113109487" />
+<figcaption aria-hidden="true">image-20230812113109487</figcaption>
+</figure>
+<p> </p>
+<h3 id="导入json文件">3.5 导入json文件</h3>
+<ul>
 <li><strong>apoc.load.json()</strong></li>
 </ul>
 <figure><div class="code-wrapper"><pre class="line-numbers language-cypher" data-language="cypher"><code class="language-cypher">apoc<span class="token punctuation">.</span><span class="token keyword">load</span><span class="token punctuation">.</span><span class="token function">json</span><span class="token punctuation">(</span>urlOrKeyOrBinary <span class="token operator">:</span><span class="token operator">:</span> ANY?<span class="token punctuation">,</span> path <span class="token operator">=</span>  <span class="token operator">:</span><span class="token operator">:</span> STRING?<span class="token punctuation">,</span> config <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span> <span class="token operator">:</span><span class="token operator">:</span> MAP?<span class="token punctuation">)</span> <span class="token operator">:</span><span class="token operator">:</span> <span class="token punctuation">(</span>value <span class="token operator">:</span><span class="token operator">:</span> MAP?<span class="token punctuation">)</span>
@@ -713,9 +806,12 @@ apoc.import.file_use_neo4j_config&#x3D;true<span aria-hidden="true" class="line-
 <span class="token keyword">UNWIND</span> value<span class="token punctuation">.</span>children <span class="token keyword">AS</span> child
 <span class="token keyword">MERGE</span> <span class="token punctuation">(</span>c<span class="token operator">:</span><span class="token class-name">Person</span> <span class="token punctuation">&#123;</span>name<span class="token operator">:</span> child<span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
 <span class="token keyword">MERGE</span> <span class="token punctuation">(</span>c<span class="token punctuation">)</span><span class="token operator">-</span><span class="token punctuation">[</span><span class="token operator">:</span><span class="token relationship property">CHILD_OF</span><span class="token punctuation">]</span><span class="token operator">-></span><span class="token punctuation">(</span>p<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
 <p>config:</p>
-<p><img src="https://s2.loli.net/2023/08/20/KzAPO42uxgt8l3y.png" srcset="/img/loading.gif" lazyload alt="image-20230815205853386"></p>
+<figure>
+<img src="https://s2.loli.net/2023/08/20/KzAPO42uxgt8l3y.png" srcset="/img/loading.gif" lazyload
+alt="image-20230815205853386" />
+<figcaption aria-hidden="true">image-20230815205853386</figcaption>
+</figure>
 <ul>
 <li><strong>apoc.import.json()</strong></li>
 </ul>
@@ -724,30 +820,41 @@ apoc.import.file_use_neo4j_config&#x3D;true<span aria-hidden="true" class="line-
 <span class="token comment">// import的作用就是将数据导入</span>
 <span class="token comment">// 而通过观察import的signature我们可以发现，它不接受path参数，</span>
 <span class="token comment">// 这意味着import只能整个文件导入，那么这个文件要求保持一定格式规范，最好是通过apoc导出的json文件</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
 <p>导入的json文件样例:</p>
 <figure><div class="code-wrapper"><pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span><span class="token property">"type"</span><span class="token operator">:</span><span class="token string">"node"</span><span class="token punctuation">,</span><span class="token property">"id"</span><span class="token operator">:</span><span class="token string">"0"</span><span class="token punctuation">,</span><span class="token property">"labels"</span><span class="token operator">:</span><span class="token punctuation">[</span><span class="token string">"User"</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token property">"properties"</span><span class="token operator">:</span><span class="token punctuation">&#123;</span><span class="token property">"born"</span><span class="token operator">:</span><span class="token string">"2015-07-04T19:32:24"</span><span class="token punctuation">,</span><span class="token property">"name"</span><span class="token operator">:</span><span class="token string">"Adam"</span><span class="token punctuation">,</span><span class="token property">"place"</span><span class="token operator">:</span><span class="token punctuation">&#123;</span><span class="token property">"crs"</span><span class="token operator">:</span><span class="token string">"wgs-84"</span><span class="token punctuation">,</span><span class="token property">"latitude"</span><span class="token operator">:</span><span class="token number">13.1</span><span class="token punctuation">,</span><span class="token property">"longitude"</span><span class="token operator">:</span><span class="token number">33.46789</span><span class="token punctuation">,</span><span class="token property">"height"</span><span class="token operator">:</span><span class="token null keyword">null</span><span class="token punctuation">&#125;</span><span class="token punctuation">,</span><span class="token property">"age"</span><span class="token operator">:</span><span class="token number">42</span><span class="token punctuation">,</span><span class="token property">"male"</span><span class="token operator">:</span><span class="token boolean">true</span><span class="token punctuation">,</span><span class="token property">"kids"</span><span class="token operator">:</span><span class="token punctuation">[</span><span class="token string">"Sam"</span><span class="token punctuation">,</span><span class="token string">"Anna"</span><span class="token punctuation">,</span><span class="token string">"Grace"</span><span class="token punctuation">]</span><span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span>
 <span class="token punctuation">&#123;</span><span class="token property">"type"</span><span class="token operator">:</span><span class="token string">"node"</span><span class="token punctuation">,</span><span class="token property">"id"</span><span class="token operator">:</span><span class="token string">"1"</span><span class="token punctuation">,</span><span class="token property">"labels"</span><span class="token operator">:</span><span class="token punctuation">[</span><span class="token string">"User"</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token property">"properties"</span><span class="token operator">:</span><span class="token punctuation">&#123;</span><span class="token property">"name"</span><span class="token operator">:</span><span class="token string">"Jim"</span><span class="token punctuation">,</span><span class="token property">"age"</span><span class="token operator">:</span><span class="token number">42</span><span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span>
 <span class="token punctuation">&#123;</span><span class="token property">"type"</span><span class="token operator">:</span><span class="token string">"node"</span><span class="token punctuation">,</span><span class="token property">"id"</span><span class="token operator">:</span><span class="token string">"2"</span><span class="token punctuation">,</span><span class="token property">"labels"</span><span class="token operator">:</span><span class="token punctuation">[</span><span class="token string">"User"</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token property">"properties"</span><span class="token operator">:</span><span class="token punctuation">&#123;</span><span class="token property">"age"</span><span class="token operator">:</span><span class="token number">12</span><span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span>
 <span class="token punctuation">&#123;</span><span class="token property">"id"</span><span class="token operator">:</span><span class="token string">"0"</span><span class="token punctuation">,</span><span class="token property">"type"</span><span class="token operator">:</span><span class="token string">"relationship"</span><span class="token punctuation">,</span><span class="token property">"label"</span><span class="token operator">:</span><span class="token string">"KNOWS"</span><span class="token punctuation">,</span><span class="token property">"properties"</span><span class="token operator">:</span><span class="token punctuation">&#123;</span><span class="token property">"bffSince"</span><span class="token operator">:</span><span class="token string">"P5M1DT12H"</span><span class="token punctuation">,</span><span class="token property">"since"</span><span class="token operator">:</span><span class="token number">1993</span><span class="token punctuation">&#125;</span><span class="token punctuation">,</span><span class="token property">"start"</span><span class="token operator">:</span><span class="token punctuation">&#123;</span><span class="token property">"id"</span><span class="token operator">:</span><span class="token string">"0"</span><span class="token punctuation">,</span><span class="token property">"labels"</span><span class="token operator">:</span><span class="token punctuation">[</span><span class="token string">"User"</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token property">"properties"</span><span class="token operator">:</span><span class="token punctuation">&#123;</span><span class="token property">"born"</span><span class="token operator">:</span><span class="token string">"2015-07-04T19:32:24"</span><span class="token punctuation">,</span><span class="token property">"name"</span><span class="token operator">:</span><span class="token string">"Adam"</span><span class="token punctuation">,</span><span class="token property">"place"</span><span class="token operator">:</span><span class="token punctuation">&#123;</span><span class="token property">"crs"</span><span class="token operator">:</span><span class="token string">"wgs-84"</span><span class="token punctuation">,</span><span class="token property">"latitude"</span><span class="token operator">:</span><span class="token number">13.1</span><span class="token punctuation">,</span><span class="token property">"longitude"</span><span class="token operator">:</span><span class="token number">33.46789</span><span class="token punctuation">,</span><span class="token property">"height"</span><span class="token operator">:</span><span class="token null keyword">null</span><span class="token punctuation">&#125;</span><span class="token punctuation">,</span><span class="token property">"age"</span><span class="token operator">:</span><span class="token number">42</span><span class="token punctuation">,</span><span class="token property">"male"</span><span class="token operator">:</span><span class="token boolean">true</span><span class="token punctuation">,</span><span class="token property">"kids"</span><span class="token operator">:</span><span class="token punctuation">[</span><span class="token string">"Sam"</span><span class="token punctuation">,</span><span class="token string">"Anna"</span><span class="token punctuation">,</span><span class="token string">"Grace"</span><span class="token punctuation">]</span><span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span><span class="token punctuation">,</span><span class="token property">"end"</span><span class="token operator">:</span><span class="token punctuation">&#123;</span><span class="token property">"id"</span><span class="token operator">:</span><span class="token string">"1"</span><span class="token punctuation">,</span><span class="token property">"labels"</span><span class="token operator">:</span><span class="token punctuation">[</span><span class="token string">"User"</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token property">"properties"</span><span class="token operator">:</span><span class="token punctuation">&#123;</span><span class="token property">"name"</span><span class="token operator">:</span><span class="token string">"Jim"</span><span class="token punctuation">,</span><span class="token property">"age"</span><span class="token operator">:</span><span class="token number">42</span><span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
 <p>config：</p>
-<p><img src="https://s2.loli.net/2023/08/20/kazcpEDhY3Iu69P.png" srcset="/img/loading.gif" lazyload alt="image-20230819083810885"></p>
-<p><img src="https://s2.loli.net/2023/08/20/Pgyr457X1MLF86Y.png" srcset="/img/loading.gif" lazyload alt="image-20230819083839427"></p>
-<p>&nbsp;</p>
+<figure>
+<img src="https://s2.loli.net/2023/08/20/kazcpEDhY3Iu69P.png" srcset="/img/loading.gif" lazyload
+alt="image-20230819083810885" />
+<figcaption aria-hidden="true">image-20230819083810885</figcaption>
+</figure>
+<figure>
+<img src="https://s2.loli.net/2023/08/20/Pgyr457X1MLF86Y.png" srcset="/img/loading.gif" lazyload
+alt="image-20230819083839427" />
+<figcaption aria-hidden="true">image-20230819083839427</figcaption>
+</figure>
+<p> </p>
 <p>apoc-core还支持导入<strong>xml</strong>文件和<strong>graphml</strong>，与前面的json等基本一致，这里就不介绍了，大家可以看一下官方文档。</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<h2 id="4-复制数据库秘籍——复制文件夹大法"><a href="#4-复制数据库秘籍——复制文件夹大法" class="headerlink" title="4. 复制数据库秘籍——复制文件夹大法"></a>4. 复制数据库秘籍——复制文件夹大法</h2><p>当我们要将海量的数据从一个neo4j数据库导入另一台计算机的neo4j数据库时，如果采用上述的办法，或许要等非常长的时间。此时我们就可以直接复制文件。</p>
+<p> </p>
+<p> </p>
+<p> </p>
+<h2 id="复制数据库秘籍复制文件夹大法">4.
+复制数据库秘籍——复制文件夹大法</h2>
+<p>当我们要将海量的数据从一个neo4j数据库导入另一台计算机的neo4j数据库时，如果采用上述的办法，或许要等非常长的时间。此时我们就可以直接复制文件。</p>
 <p>具体步骤如下：</p>
-<ol>
+<ol type="1">
 <li>假设我们<strong>被复制</strong>的数据库的名字为<strong>Data.db</strong>。</li>
-<li>打开需要复制数据的电脑（即数据源）的 <strong>neo4j主目录&#x2F;data&#x2F;</strong> ，在其目录下有两个文件夹，<strong>databases</strong>和<strong>transactions</strong>。在这两个数据夹下各有一个<strong>Data.db</strong>文件夹，这就是neo4j的<strong>Data.db</strong>数据库存储的数据。</li>
-<li>拷贝这两个文件夹到需要导入的电脑，放置在同样的目录下。<em><strong>注意！</strong></em>一定要放在同样的目录下，由于两个文件夹是同名的，所以注意别放错了地方。</li>
+<li>打开需要复制数据的电脑（即数据源）的
+<strong>neo4j主目录/data/</strong>
+，在其目录下有两个文件夹，<strong>databases</strong>和<strong>transactions</strong>。在这两个数据夹下各有一个<strong>Data.db</strong>文件夹，这就是neo4j的<strong>Data.db</strong>数据库存储的数据。</li>
+<li>拷贝这两个文件夹到需要导入的电脑，放置在同样的目录下。<strong><em>注意！</em></strong>一定要放在同样的目录下，由于两个文件夹是同名的，所以注意别放错了地方。</li>
 <li>新建database，我推荐是和<strong>被复制</strong>的数据库同名，即<strong>Data.db</strong>。这个我个人试过，肯定没问题。你也可以试试建一个<strong>myData.db</strong>，然后把那两个文件夹重命名为<strong>myData.db</strong>。</li>
 </ol>
-<p>提示：可能会在复制粘贴文件夹时提示无权限修改或权限不足一类的，linux操作系统可以在终端中使用 <code>sudo mv -i 所需复制的文件 目的地</code></p>
+<p>提示：可能会在复制粘贴文件夹时提示无权限修改或权限不足一类的，linux操作系统可以在终端中使用
+<code>sudo mv -i 所需复制的文件 目的地</code></p>
 
                 
               </div>
@@ -879,6 +986,12 @@ apoc.import.file_use_neo4j_config&#x3D;true<span aria-hidden="true" class="line-
 
 
   
+
+
+  
+  
+
+
 
 
 
@@ -1098,6 +1211,49 @@ apoc.import.file_use_neo4j_config&#x3D;true<span aria-hidden="true" class="line-
 
 
   <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
 
   <script  src="/js/local-search.js" ></script>
 

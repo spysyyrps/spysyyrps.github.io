@@ -16,12 +16,12 @@
   <meta name="author" content="一蓑烟雨">
   <meta name="keywords" content="">
   
-    <meta name="description" content="&amp;nbsp;  游戏：饥荒联机版（Steam） 测试服务器：Ubuntu22.04 2核2G内存 3M带宽（京东云） 本次搭建是在完全纯净的ubuntu22.04系统上进行的，所以如果您保持一致，按照步骤即可搭建。 本文主要讲解搭建饥荒服务器，为了文章不臃肿，如何ssh连接远程服务器请自行前往浏览器或者b站学习，一般都有十分方便的软件。 本文中有不少链接，如果您对某一部分（例如steamcmd或者">
+    <meta name="description" content="游戏：饥荒联机版（Steam） 测试服务器：Ubuntu22.04 2核2G内存 3M带宽（京东云） 本次搭建是在完全纯净的ubuntu22.04系统上进行的，所以如果您保持一致，按照步骤即可搭建。 本文主要讲解搭建饥荒服务器，为了文章不臃肿，如何ssh连接远程服务器请自行前往浏览器或者b站学习，一般都有十分方便的软件。 本文中有不少链接，如果您对某一部分（例如steamcmd或">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ubuntu搭建饥荒专用服务器教程">
 <meta property="og:url" content="https://blog.naughtyfox.top/ubuntu%E6%90%AD%E5%BB%BA%E9%A5%A5%E8%8D%92%E4%B8%93%E7%94%A8%E6%9C%8D%E5%8A%A1%E5%99%A8/index.html">
 <meta property="og:site_name" content="一蓑烟雨的博客">
-<meta property="og:description" content="&amp;nbsp;  游戏：饥荒联机版（Steam） 测试服务器：Ubuntu22.04 2核2G内存 3M带宽（京东云） 本次搭建是在完全纯净的ubuntu22.04系统上进行的，所以如果您保持一致，按照步骤即可搭建。 本文主要讲解搭建饥荒服务器，为了文章不臃肿，如何ssh连接远程服务器请自行前往浏览器或者b站学习，一般都有十分方便的软件。 本文中有不少链接，如果您对某一部分（例如steamcmd或者">
+<meta property="og:description" content="游戏：饥荒联机版（Steam） 测试服务器：Ubuntu22.04 2核2G内存 3M带宽（京东云） 本次搭建是在完全纯净的ubuntu22.04系统上进行的，所以如果您保持一致，按照步骤即可搭建。 本文主要讲解搭建饥荒服务器，为了文章不臃肿，如何ssh连接远程服务器请自行前往浏览器或者b站学习，一般都有十分方便的软件。 本文中有不少链接，如果您对某一部分（例如steamcmd或">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://s2.loli.net/2024/06/16/BeHwJFo1kXscL8R.png">
 <meta property="og:image" content="https://s2.loli.net/2024/06/16/NZ4FoVL7zXkMlqx.png">
@@ -230,7 +230,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          7k 字
+          7.1k 字
         
       </span>
     
@@ -299,7 +299,7 @@
             
               <div class="markdown-body">
                 
-                <p>&nbsp;</p>
+                <p> </p>
 <blockquote>
 <p>游戏：饥荒联机版（Steam）</p>
 <p>测试服务器：Ubuntu22.04 2核2G内存 3M带宽（京东云）</p>
@@ -308,17 +308,28 @@
 <p>本文中有不少链接，如果您对某一部分（例如steamcmd或者tmux）困惑或者感兴趣可以点击跳转，但是可能由于版本老旧存在问题，<strong>请勿盲目相信任何文章</strong>，例如steamcmd链接内容全面但是在安装方面<strong>lib32gcc1</strong>已经弃用但是文章未更新。</p>
 <p>！！由于steamcmd目前需要32位依赖，本次搭建需要添加i386架构，如果服务器用于重要业务，请谨慎操作！！</p>
 </blockquote>
-<p>&nbsp;</p>
-<h2 id="一、服务器配置"><a href="#一、服务器配置" class="headerlink" title="一、服务器配置"></a>一、服务器配置</h2><blockquote>
-<p>由于我只测试了 <strong>2核2G内存3M带宽</strong> 服务器配置，所以在配置选择方面我主要是根据在本服务器上的体验和其他教程博客得到的估计总结，如果您想知道您需求下的准确配置，可以私信询问b站的各位饥荒区up主。</p>
+<p> </p>
+<h2 id="一服务器配置">一、服务器配置</h2>
+<blockquote>
+<p>由于我只测试了 <strong>2核2G内存3M带宽</strong>
+服务器配置，所以在配置选择方面我主要是根据在本服务器上的体验和其他教程博客得到的估计总结，如果您想知道您需求下的准确配置，可以私信询问b站的各位饥荒区up主。</p>
 </blockquote>
-<p>我采用 <strong>2核2G内存3M带宽</strong> 配置，地面大小为中，洞穴大小为中，添加了八个史诗血量，Show Me，全球定位等辅助型mod，未添加大型内容方面的mod。</p>
-<p>当服务器中人数为3人时，服务器性能显示大多为黄色，有时为绿色，网络大多数时候均为绿色，偶尔有一人为黄色，整体体验有时会有点点小卡顿，但是并不特别影响游戏体验。3人时内存使用率为**80%<strong>，cpu使用率为</strong>60%**。</p>
-<p>但是本次测试只运行到第一个冬季初，后期可能内存占用率等会上升。因此，对于想要不添加许多大型mod或者只有五六人的小型服务器，推荐配置 <strong>2核4G内存</strong> （618京东云价格在250左右一年）。</p>
-<h2 id="二、搭建"><a href="#二、搭建" class="headerlink" title="二、搭建"></a>二、搭建</h2><h3 id="1-安装-steamcmd"><a href="#1-安装-steamcmd" class="headerlink" title="1.安装 steamcmd"></a>1.安装 steamcmd</h3><blockquote>
-<p><strong><a target="_blank" rel="noopener" href="https://developer.valvesoftware.com/wiki/SteamCMD:zh-cn#Linux_Game_Server_Managers">steamcmd</a></strong> 是一个命令行版本的 Steam 客户端。它的主要用途是在一个命令行界面的 Steam 客户端上安装及更新各种可用的专用服务端。</p>
+<p>我采用 <strong>2核2G内存3M带宽</strong>
+配置，地面大小为中，洞穴大小为中，添加了八个史诗血量，Show
+Me，全球定位等辅助型mod，未添加大型内容方面的mod。</p>
+<p>当服务器中人数为3人时，服务器性能显示大多为黄色，有时为绿色，网络大多数时候均为绿色，偶尔有一人为黄色，整体体验有时会有点点小卡顿，但是并不特别影响游戏体验。3人时内存使用率为<strong>80%</strong>，cpu使用率为<strong>60%</strong>。</p>
+<p>但是本次测试只运行到第一个冬季初，后期可能内存占用率等会上升。因此，对于想要不添加许多大型mod或者只有五六人的小型服务器，推荐配置
+<strong>2核4G内存</strong> （618京东云价格在250左右一年）。</p>
+<h2 id="二搭建">二、搭建</h2>
+<h3 id="安装-steamcmd">1.安装 steamcmd</h3>
+<blockquote>
+<p><strong><a
+target="_blank" rel="noopener" href="https://developer.valvesoftware.com/wiki/SteamCMD:zh-cn#Linux_Game_Server_Managers">steamcmd</a></strong>
+是一个命令行版本的 Steam 客户端。它的主要用途是在一个命令行界面的 Steam
+客户端上安装及更新各种可用的专用服务端。</p>
 </blockquote>
-<p>通过ssh连接服务器后，在服务器终端以root身份执行以下命令（# 带头的都是注释，不是要执行的命令）：</p>
+<p>通过ssh连接服务器后，在服务器终端以root身份执行以下命令（#
+带头的都是注释，不是要执行的命令）：</p>
 <figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"> <span class="token function">sudo</span> add-apt-repository multiverse
  <span class="token function">sudo</span> dpkg --add-architecture i386
  <span class="token function">sudo</span> <span class="token function">apt</span> update
@@ -334,10 +345,16 @@
 
 /usr/games/steamcmd
 <span class="token comment"># 这会花费一段时间安装</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
 <p>出现以下内容便说明安装好了</p>
-<p><img src="https://s2.loli.net/2024/06/16/BeHwJFo1kXscL8R.png" srcset="/img/loading.gif" lazyload alt="image-20240616114059249"></p>
-<h3 id="2-安装-dontstarvetogether-dedicated-server"><a href="#2-安装-dontstarvetogether-dedicated-server" class="headerlink" title="2.安装 dontstarvetogether_dedicated_server"></a>2.安装 dontstarvetogether_dedicated_server</h3><p>在steamcmd中运行以下命令，如果您已经退出，在终端执行 <code>steamcmd</code> 即可进入：</p>
+<figure>
+<img src="https://s2.loli.net/2024/06/16/BeHwJFo1kXscL8R.png" srcset="/img/loading.gif" lazyload
+alt="image-20240616114059249" />
+<figcaption aria-hidden="true">image-20240616114059249</figcaption>
+</figure>
+<h3 id="安装-dontstarvetogether_dedicated_server">2.安装
+dontstarvetogether_dedicated_server</h3>
+<p>在steamcmd中运行以下命令，如果您已经退出，在终端执行
+<code>steamcmd</code> 即可进入：</p>
 <figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">login anonymous
 <span class="token comment"># 此为匿名登录，可能会因为网络问题出现失败（国内裸连steam抽风是正常的），你可以在服务器上设置代理，也可以多试几次（我试了两次就登上了）</span>
 
@@ -352,34 +369,46 @@ app_update <span class="token number">343050</span> validate
 quit
 <span class="token comment"># 安装完成后退出steamcmd</span>
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
 <p>目前饥荒服务器底层部分安装完毕，相当于打好了地基</p>
-<h3 id="3-导入地图配置"><a href="#3-导入地图配置" class="headerlink" title="3.导入地图配置"></a>3.导入地图配置</h3><ol>
+<h3 id="导入地图配置">3.导入地图配置</h3>
+<ol type="1">
 <li>在创建游戏创建一个新世界（配置什么的按你正常玩来）</li>
 </ol>
-<p>&nbsp;</p>
-<ol start="2">
-<li>在成功进入游戏后退出，在文件管理系统中找到该地图存档的文件夹，如果这个存档是第一个创建的文件夹名就是 <strong>Cluster_1</strong> ，第二个就是 <strong>Cluster_2</strong> ，以此类推。</li>
+<p> </p>
+<ol start="2" type="1">
+<li>在成功进入游戏后退出，在文件管理系统中找到该地图存档的文件夹，如果这个存档是第一个创建的文件夹名就是
+<strong>Cluster_1</strong> ，第二个就是 <strong>Cluster_2</strong>
+，以此类推。</li>
 </ol>
-<p>如果你的电脑有全局搜索工具，搜对应的文件夹名称即可，我的是ubuntu系统，文件夹在 <code>~/.kelei/DoNotStarveTogether/1231618362/</code> 下</p>
-<p><img src="https://s2.loli.net/2024/06/16/NZ4FoVL7zXkMlqx.png" srcset="/img/loading.gif" lazyload alt="image-20240616125015816"></p>
-<ol start="3">
-<li>将找到的 <strong>Cluster_n</strong> 这个文件夹通过 <strong>SFTP</strong> 等方法上传至服务器</li>
+<p>如果你的电脑有全局搜索工具，搜对应的文件夹名称即可，我的是ubuntu系统，文件夹在
+<code>~/.kelei/DoNotStarveTogether/1231618362/</code> 下</p>
+<figure>
+<img src="https://s2.loli.net/2024/06/16/NZ4FoVL7zXkMlqx.png" srcset="/img/loading.gif" lazyload
+alt="image-20240616125015816" />
+<figcaption aria-hidden="true">image-20240616125015816</figcaption>
+</figure>
+<ol start="3" type="1">
+<li>将找到的 <strong>Cluster_n</strong> 这个文件夹通过
+<strong>SFTP</strong> 等方法上传至服务器</li>
 </ol>
 <figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">mkdir</span> <span class="token parameter variable">-p</span> ~/.klei/DoNotStarveTogether
 <span class="token comment"># 创建~/.klei/DoNotStarveTogether文件夹</span>
 
 <span class="token function">cp</span> <span class="token parameter variable">-R</span> Cluster_1/ ~/.klei/DoNotStarveTogether
 <span class="token comment"># 将上传的Cluster_1文件夹拷贝一份到~/.klei/DoNotStarveTogether文件夹下</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
-
-
-<ol start="3">
-<li>在饥荒游戏主界面点击左下角的 <strong>帐号</strong> ，进入 <strong>Klei Account</strong> 界面后点击上方栏中的 <strong>游戏</strong></li>
+<ol start="3" type="1">
+<li>在饥荒游戏主界面点击左下角的 <strong>帐号</strong> ，进入
+<strong>Klei Account</strong> 界面后点击上方栏中的
+<strong>游戏</strong></li>
 </ol>
-<p><img src="https://s2.loli.net/2024/06/16/5DdJU3qxfeSWP4m.png" srcset="/img/loading.gif" lazyload alt="image-20240616125709025"></p>
-<p>点击 <strong>《饥荒：联机版》的游戏服务器</strong> 按钮，复制服务器的序列号（如果没有请先添加新服务器）</p>
-<ol start="5">
+<figure>
+<img src="https://s2.loli.net/2024/06/16/5DdJU3qxfeSWP4m.png" srcset="/img/loading.gif" lazyload
+alt="image-20240616125709025" />
+<figcaption aria-hidden="true">image-20240616125709025</figcaption>
+</figure>
+<p>点击 <strong>《饥荒：联机版》的游戏服务器</strong>
+按钮，复制服务器的序列号（如果没有请先添加新服务器）</p>
+<ol start="5" type="1">
 <li>添加序列号</li>
 </ol>
 <figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">cd</span> ~/.klei/DoNotStarveTogether/Cluster_1
@@ -395,9 +424,8 @@ quit
 
 <span class="token comment"># 至此，你的第一行应该是一串序列号</span>
 <span class="token comment"># 键盘输入 :wq 这三个字符然后回车，保存文件并退出至终端</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
 <p>ps：如果序列号是从玩家a复制的，那么<strong>玩家a</strong>就默认是<strong>管理员</strong></p>
-<ol start="6">
+<ol start="6" type="1">
 <li>编写执行脚本</li>
 </ol>
 <figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">cd</span>
@@ -405,14 +433,17 @@ quit
 
 <span class="token function">vim</span> start.sh
 <span class="token comment"># 创建并编辑start.sh文件</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
-<p>以下是 <strong>start.sh</strong> 文件中的内容，您要注意的只是最前面的四个赋值语句</p>
+<p>以下是 <strong>start.sh</strong>
+文件中的内容，您要注意的只是最前面的四个赋值语句</p>
 <p><strong>steamcmd_dir</strong> steamcmd可执行文件所在的位置</p>
-<p><strong>install_dir</strong> 安装dontstarvetogether_dedicated_server的位置</p>
+<p><strong>install_dir</strong>
+安装dontstarvetogether_dedicated_server的位置</p>
 <p><strong>cluster_name</strong> 保存地图内容的文件夹名</p>
-<p><strong>dontstarve_dir</strong> 保存地图内容的文件夹的保存位置，即 <strong>parent_path</strong> </p>
+<p><strong>dontstarve_dir</strong> 保存地图内容的文件夹的保存位置，即
+<strong>parent_path</strong></p>
 <blockquote>
-<p>如果不知道位置，可以用 <code>find / -name &quot;file_or_dir_name&quot;</code> 搜索</p>
+<p>如果不知道位置，可以用 <code>find / -name "file_or_dir_name"</code>
+搜索</p>
 </blockquote>
 <figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shebang important">#!/bin/bash</span>
 
@@ -453,19 +484,20 @@ check_for_file <span class="token string">"<span class="token variable">$install
 
 <span class="token string">"<span class="token variable">$&#123;run_shared<span class="token punctuation">[</span>@<span class="token punctuation">]</span>&#125;</span>"</span> Caves <span class="token operator">|</span> <span class="token function">sed</span> <span class="token string">'s/^/Caves: /'</span> <span class="token operator">&amp;</span>
 <span class="token string">"<span class="token variable">$&#123;run_shared<span class="token punctuation">[</span>@<span class="token punctuation">]</span>&#125;</span>"</span> Master <span class="token operator">|</span> <span class="token function">sed</span> <span class="token string">'s/^/Master: /'</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
 <p>保存退出后执行</p>
 <figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">chmod</span> <span class="token parameter variable">-R</span> <span class="token number">777</span> /root/.local/share/Steam/steamcmd/dontstarvetogether_dedicated_server
 <span class="token function">sudo</span> <span class="token function">chmod</span> <span class="token number">777</span> start.sh
 <span class="token comment"># 更改文件权限</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre></div></figure>
-
-
-
-<p>此时，你若在终端执行 <code>./start.sh</code> ，即运行 <strong>start.sh</strong> 脚本，待加载完毕，你就可以在大厅搜索到你的房间了！！！！</p>
+<p>此时，你若在终端执行 <code>./start.sh</code> ，即运行
+<strong>start.sh</strong>
+脚本，待加载完毕，你就可以在大厅搜索到你的房间了！！！！</p>
 <p><strong>但是</strong>，还是不够的，因为你会发现房间是纯净档，mod不见了？！并且当你关闭ssh连接，运行的脚本会被强制中断！！服务器将断开连接！！</p>
 <p>同时，如何添加管理员？如何设置白名单？如何禁止投票？</p>
 <p>别急，都会在后文讲到</p>
-<h2 id="三、添加mod"><a href="#三、添加mod" class="headerlink" title="三、添加mod"></a>三、添加mod</h2><p>如果你创建时勾选了mod,在 <strong>Cluster_n</strong> 文件夹（就是上文上传的那个文件夹）的 <strong>Master</strong> 文件夹下有个 <strong>modoverrides.lua</strong> 文件，其中内容类似：</p>
+<h2 id="三添加mod">三、添加mod</h2>
+<p>如果你创建时勾选了mod,在 <strong>Cluster_n</strong>
+文件夹（就是上文上传的那个文件夹）的 <strong>Master</strong>
+文件夹下有个 <strong>modoverrides.lua</strong> 文件，其中内容类似：</p>
 <figure><div class="code-wrapper"><pre class="line-numbers language-lua" data-language="lua"><code class="language-lua"><span class="token keyword">return</span> <span class="token punctuation">&#123;</span>
   <span class="token punctuation">[</span><span class="token string">"workshop-1185229307"</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token punctuation">&#123;</span>
     <span class="token punctuation">[</span><span class="token string">"configuration_options"</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token punctuation">&#123;</span>
@@ -489,8 +521,9 @@ check_for_file <span class="token string">"<span class="token variable">$install
     <span class="token punctuation">[</span><span class="token string">"enabled"</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token keyword">true</span> 
   <span class="token punctuation">&#125;</span>
 <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
-<p>这个是你勾选的mod的配置文件，例如第一个 <strong>workshop-1185229307</strong> ，实际就是史诗血量mod，而 <strong>1185229307</strong> 就是该mod的ID号。</p>
+<p>这个是你勾选的mod的配置文件，例如第一个
+<strong>workshop-1185229307</strong> ，实际就是史诗血量mod，而
+<strong>1185229307</strong> 就是该mod的ID号。</p>
 <p><strong>接下来</strong> ，将进行添加mod操作：</p>
 <figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 首先，如果你还在运行start.sh脚本，请 Ctrl+c 中止</span>
 <span class="token builtin class-name">cd</span> /root/.local/share/Steam/steamcmd/dontstarvetogether_dedicated_server/mods
@@ -498,22 +531,27 @@ check_for_file <span class="token string">"<span class="token variable">$install
 <span class="token function">vim</span> dedicated_server_mods_setup.lua
 <span class="token comment"># 此时打住，先别动</span>
 <span class="token comment"># 阅读文件中的注释就知道，我们需要ServerModSetup或ServerModCollectionSetup函数来初始化我们的mod,即告诉服务器应该下载哪些mod,前者用于初始化单个mod,后者用于合集</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
 <p>接下来，打开你本地电脑的记事本，新建一个txt文件，对照着你的modoverrides.lua内容，一行一个ServerModSetup函数，函数内为mod的ID号。</p>
 <p>比如我上文的lua内容，我的txt文件内容应该为：</p>
 <figure><div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">ServerModSetup(&quot;1185229307&quot;)
 ServerModSetup(&quot;1418746242&quot;)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></div></figure>
-
 <p>lua中有两个mod,我勾选了两个mod,那么这就是两个ServerModSetup函数。</p>
 <p><strong>接着</strong>，复制txt文件内容，粘贴至刚刚打开的dedicated_server_mods_setup.lua文件</p>
 <p>形如：</p>
-<p><img src="https://s2.loli.net/2024/06/16/PvAmNjRlWqE6dzb.png" srcset="/img/loading.gif" lazyload alt="image-20240616165324100"></p>
+<figure>
+<img src="https://s2.loli.net/2024/06/16/PvAmNjRlWqE6dzb.png" srcset="/img/loading.gif" lazyload
+alt="image-20240616165324100" />
+<figcaption aria-hidden="true">image-20240616165324100</figcaption>
+</figure>
 <p>接着同样的，按 <strong>:wq 回车</strong> 保存退出</p>
 <p>此时，若再去运行start.sh脚本，等待加载（由于要下载mod这次加载时间会较长），大厅搜索发现房间的mod加上了！</p>
 <blockquote>
 <p>如果出现显示mod只有部分，那是因为下载mod失败（依旧是网络问题。。），重新运行脚本即可（一次不行就多几次），下载好了以后运行就不用这么麻烦了。</p>
 </blockquote>
-<h2 id="四、后台运行"><a href="#四、后台运行" class="headerlink" title="四、后台运行"></a>四、后台运行</h2><p>还有一个困扰，如果我们关闭ssh连接，由于终端被关闭，运行在终端的start.sh脚本也被杀死，服务器强行退出。但是我们总不能一直连着ssh吧？为此，我们可以采用 <strong>tmux</strong> 这一命令行工具实现脚本的后台运行。（只要能后台运行即可，tmux使用方便，所以用它）</p>
+<h2 id="四后台运行">四、后台运行</h2>
+<p>还有一个困扰，如果我们关闭ssh连接，由于终端被关闭，运行在终端的start.sh脚本也被杀死，服务器强行退出。但是我们总不能一直连着ssh吧？为此，我们可以采用
+<strong>tmux</strong>
+这一命令行工具实现脚本的后台运行。（只要能后台运行即可，tmux使用方便，所以用它）</p>
 <figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">apt</span> update
 <span class="token function">sudo</span> <span class="token function">apt</span> <span class="token function">install</span> tmux
 <span class="token comment"># 如果未安装先安装tmux</span>
@@ -525,14 +563,19 @@ tmux new <span class="token parameter variable">-s</span> game_server
 <span class="token comment"># 在该终端下启动start.sh脚本</span>
 <span class="token comment"># 检查没有问题后先按 ctrl+b 后按 d 退出这个终端（实际上是隐藏，它依旧在运行）</span>
 <span class="token comment"># 此时，你若断开ssh连接，服务器依旧运行！</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
-<p><a target="_blank" rel="noopener" href="https://www.ruanyifeng.com/blog/2019/10/tmux.html">tmux更多内容</a></p>
-<h2 id="五、额外配置"><a href="#五、额外配置" class="headerlink" title="五、额外配置"></a>五、额外配置</h2><blockquote>
+<p><a
+target="_blank" rel="noopener" href="https://www.ruanyifeng.com/blog/2019/10/tmux.html">tmux更多内容</a></p>
+<h2 id="五额外配置">五、额外配置</h2>
+<blockquote>
 <p>更改以下配置最好先终止脚本，关闭服务器</p>
 </blockquote>
-<h3 id="1-用户Id"><a href="#1-用户Id" class="headerlink" title="1.用户Id"></a>1.用户Id</h3><p>在配置之前，我们先了解如何获得<strong>Klei用户ID</strong></p>
-<p>在饥荒联机版游戏中，点击左下角 <strong>帐号</strong> ，点击 弹出窗口上方 <strong>用户信息</strong> ，你就可以看到你的 <strong>Klei用户ID</strong> 了</p>
-<h3 id="2-管理员"><a href="#2-管理员" class="headerlink" title="2.管理员"></a>2.管理员</h3><figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">cd</span> ~/.klei/DoNotStarveTogether/Cluster_1
+<h3 id="用户id">1.用户Id</h3>
+<p>在配置之前，我们先了解如何获得<strong>Klei用户ID</strong></p>
+<p>在饥荒联机版游戏中，点击左下角 <strong>帐号</strong> ，点击
+弹出窗口上方 <strong>用户信息</strong> ，你就可以看到你的
+<strong>Klei用户ID</strong> 了</p>
+<h3 id="管理员">2.管理员</h3>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">cd</span> ~/.klei/DoNotStarveTogether/Cluster_1
 <span class="token comment"># 来到Cluster_1文件夹</span>
 
 <span class="token function">vim</span> adminlist.txt
@@ -541,9 +584,10 @@ tmux new <span class="token parameter variable">-s</span> game_server
 <span class="token comment"># 将所有管理员的Klei用户ID粘贴进去，一行一个</span>
 
 <span class="token comment"># 保存退出</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
-<h3 id="3-白名单"><a href="#3-白名单" class="headerlink" title="3.白名单"></a>3.白名单</h3><p>我开了一个服务器，有6个位置，但是每次我自己都挤不进去，这时就需要<strong>白名单</strong>了</p>
-<p>打开 <strong>Cluster_n</strong> 下的 <strong>cluster.ini</strong> 文件，这个就是该档的基础配置文件，内容大致如下：</p>
+<h3 id="白名单">3.白名单</h3>
+<p>我开了一个服务器，有6个位置，但是每次我自己都挤不进去，这时就需要<strong>白名单</strong>了</p>
+<p>打开 <strong>Cluster_n</strong> 下的 <strong>cluster.ini</strong>
+文件，这个就是该档的基础配置文件，内容大致如下：</p>
 <figure><div class="code-wrapper"><pre class="line-numbers language-ini" data-language="ini"><code class="language-ini"><span class="token section"><span class="token punctuation">[</span><span class="token section-name selector">GAMEPLAY</span><span class="token punctuation">]</span></span>
 <span class="token key attr-name">game_mode</span> <span class="token punctuation">=</span> <span class="token value attr-value">survival //endless无尽模式 survival生存 wilderness荒野</span>
 <span class="token key attr-name">max_players</span> <span class="token punctuation">=</span> <span class="token value attr-value">6 //人数</span>
@@ -568,22 +612,24 @@ tmux new <span class="token parameter variable">-s</span> game_server
 <span class="token key attr-name">master_ip</span> <span class="token punctuation">=</span> <span class="token value attr-value">127.0.0.1 //分层世界主世界地址,默认即可</span>
 <span class="token key attr-name">master_port</span> <span class="token punctuation">=</span> <span class="token value attr-value">10889 //分层世界连接端口,可根据你有几个世界修改</span>
 <span class="token key attr-name">cluster_key</span> <span class="token punctuation">=</span> <span class="token value attr-value">supersecretkey //分层世界相互连接的密码,这个一定得改,改成自己的</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
 <p>在 <strong>NETWORK</strong> 部分加入以下内容：</p>
 <figure><div class="code-wrapper"><pre class="line-numbers language-ini" data-language="ini"><code class="language-ini"><span class="token key attr-name">whitelist_slots</span><span class="token punctuation">=</span> <span class="token value attr-value">1 //白名单功能 设置成2 就是留2个位置，3就是留3个位置</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div></figure>
-
-<p>保存退出后，创建 <strong>whitelist.txt</strong> 文件，和管理员一样，你想给谁预留位置就一人一行他的科雷Id。</p>
-<h3 id="4-禁止投票"><a href="#4-禁止投票" class="headerlink" title="4.禁止投票"></a>4.禁止投票</h3><p>在 <strong>cluster.ini</strong> 文件的 <strong>GAMEPLAY</strong> 部分添加：</p>
+<p>保存退出后，创建 <strong>whitelist.txt</strong>
+文件，和管理员一样，你想给谁预留位置就一人一行他的科雷Id。</p>
+<h3 id="禁止投票">4.禁止投票</h3>
+<p>在 <strong>cluster.ini</strong> 文件的 <strong>GAMEPLAY</strong>
+部分添加：</p>
 <figure><div class="code-wrapper"><pre class="line-numbers language-ini" data-language="ini"><code class="language-ini"><span class="token key attr-name">vote_enabled</span> <span class="token punctuation">=</span> <span class="token value attr-value">false //投票功能,true开,false关</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div></figure>
-
-<p>&nbsp;</p>
-<p>&nbsp;</p>
+<p> </p>
+<p> </p>
 <p>至此，便是Ubuntu服务器搭建饥荒联机服务器的全部内容了，祝大家游戏愉快，欢迎指正和补充讨论！</p>
-<p>&nbsp;</p>
+<p> </p>
 <blockquote>
 <p>参考文章：</p>
-<p><a target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/forum/topic/0204144946165984055?fid=0101592429757310384">教你用Ubuntu快速搭建饥荒服务器</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.xiongtianqi.cn/thread-301238-1-1.html">饥荒服务器配置</a></p>
+<p><a
+target="_blank" rel="noopener" href="https://developer.huawei.com/consumer/cn/forum/topic/0204144946165984055?fid=0101592429757310384">教你用Ubuntu快速搭建饥荒服务器</a></p>
+<p><a
+target="_blank" rel="noopener" href="https://www.xiongtianqi.cn/thread-301238-1-1.html">饥荒服务器配置</a></p>
 </blockquote>
 
                 
@@ -716,6 +762,12 @@ tmux new <span class="token parameter variable">-s</span> game_server
 
 
   
+
+
+  
+  
+
+
 
 
 
@@ -935,6 +987,49 @@ tmux new <span class="token parameter variable">-s</span> game_server
 
 
   <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
 
   <script  src="/js/local-search.js" ></script>
 

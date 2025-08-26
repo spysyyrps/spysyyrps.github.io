@@ -224,7 +224,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          6.1k 字
+          6k 字
         
       </span>
     
@@ -235,7 +235,7 @@
         
         
         
-          35 分钟
+          34 分钟
         
       </span>
     
@@ -294,11 +294,11 @@
               <div class="markdown-body">
                 
                 <p>主要学习使用python制作CLI两个主要方面的内容：</p>
-<ol>
-<li>利用toml文件打包python项目 </li>
+<ol type="1">
+<li>利用toml文件打包python项目</li>
 <li>python中的命令行参数解析 <strong>（本篇内容）</strong></li>
 </ol>
-<p>&nbsp;</p>
+<p> </p>
 <p>本文主要介绍三种较为流行的命令行解析方式，分别为：</p>
 <ul>
 <li><code>sys.argv</code></li>
@@ -306,21 +306,23 @@
 <li><code>click</code></li>
 </ul>
 <p>三者各有优劣且已经能够满足绝大部分人的需要</p>
-<p>以下内容均假设python项目已经被打包为名为 <strong>mycli</strong> 的命令行</p>
-<p>&nbsp;</p>
-<h2 id="一、sys-argv"><a href="#一、sys-argv" class="headerlink" title="一、sys.argv"></a>一、sys.argv</h2><p><strong>sys</strong> 库是python自带的一个库，不需要额外安装</p>
+<p>以下内容均假设python项目已经被打包为名为 <strong>mycli</strong>
+的命令行</p>
+<p> </p>
+<h2 id="一sys.argv">一、sys.argv</h2>
+<p><strong>sys</strong> 库是python自带的一个库，不需要额外安装</p>
 <figure><div class="code-wrapper"><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> sys
 args <span class="token operator">=</span> sys<span class="token punctuation">.</span>argv
 
 <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Argument List:"</span><span class="token punctuation">,</span> <span class="token builtin">str</span><span class="token punctuation">(</span>args<span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
 <p>在上述代码的前提下，假设我们在终端输入是</p>
-<p><code>mycli input.txt -o test.txt --verbose</code> </p>
+<p><code>mycli input.txt -o test.txt --verbose</code></p>
 <p>代码的输出结果即为</p>
-<p><code>[&quot;mycli&quot;, &quot;input.txt&quot;, &quot;-o&quot;, &quot;test.txt&quot;, &quot;--verbose&quot;]</code></p>
-<p><strong>sys.argv</strong> 即为获取终端命令行的全部输入并且采用 <code>split</code> 使用空格分割为list</p>
-<p>&nbsp;</p>
-<p><strong>优点：</strong> </p>
+<p><code>["mycli", "input.txt", "-o", "test.txt", "--verbose"]</code></p>
+<p><strong>sys.argv</strong> 即为获取终端命令行的全部输入并且采用
+<code>split</code> 使用空格分割为list</p>
+<p> </p>
+<p><strong>优点：</strong></p>
 <ul>
 <li>简洁方便，不需要太多代码即可解析获取参数</li>
 <li>不用额外安装</li>
@@ -328,13 +330,16 @@ args <span class="token operator">=</span> sys<span class="token punctuation">.<
 <p><strong>缺点：</strong></p>
 <ul>
 <li>参数以list形式解析获取，代码后续处理会较为复杂，需要重新挑选类型检查等</li>
-<li>返回的每个元素固定是 <strong>str</strong> ，可能需要强制类型转换</li>
+<li>返回的每个元素固定是 <strong>str</strong>
+，可能需要强制类型转换</li>
 <li>功能较少，没有默认值设置等能力</li>
 </ul>
-<p>&nbsp;</p>
-<h2 id="二、argparse"><a href="#二、argparse" class="headerlink" title="二、argparse"></a>二、argparse</h2><p><code>argparse</code> 是十分实用且流行的用于解析命令行参数的包</p>
+<p> </p>
+<h2 id="二argparse">二、argparse</h2>
+<p><code>argparse</code> 是十分实用且流行的用于解析命令行参数的包</p>
 <p>它的功能十分强大，可以设置默认值也可以进行类型转化与判断</p>
-<p>同时，利用它，还可以实现 <code>git clone</code> 一样的子命令的功能</p>
+<p>同时，利用它，还可以实现 <code>git clone</code>
+一样的子命令的功能</p>
 <figure><div class="code-wrapper"><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> argparse
 
 <span class="token keyword">def</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
@@ -456,18 +461,22 @@ args <span class="token operator">=</span> sys<span class="token punctuation">.<
 
 <span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">"__main__"</span><span class="token punctuation">:</span>
     main<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
 <p>以上样例代码包含了 <code>argparse</code> 比较常用的各种参数情形</p>
-<p>并且，当你输入 <code>--help</code> 或者 <code>-h</code> 时，它还会自动根据 <strong>help</strong> 的相关内容生成帮助文档显示在终端</p>
-<p>从上述代码可以看出，<code>argparse</code> 功能十分强大，已经基本满足了开发者的需求</p>
+<p>并且，当你输入 <code>--help</code> 或者 <code>-h</code>
+时，它还会自动根据 <strong>help</strong>
+的相关内容生成帮助文档显示在终端</p>
+<p>从上述代码可以看出，<code>argparse</code>
+功能十分强大，已经基本满足了开发者的需求</p>
 <p><code>argparse</code> 解析参数的步骤也十分清晰</p>
-<ol>
+<ol type="1">
 <li>使用 <code>argparse.ArgumentParser</code> 创建解析器</li>
-<li>利用 <code>add_argument</code> , <code>add_subparsers</code> ,<code>add_parser</code> 等命令对解析器进行添加参数，子命令集合，子命令等操作</li>
+<li>利用 <code>add_argument</code> , <code>add_subparsers</code>
+,<code>add_parser</code>
+等命令对解析器进行添加参数，子命令集合，子命令等操作</li>
 <li>解析器调用 <code>parser_args</code> 进行解析</li>
 <li>解析结果通过与之前添加的参数名字一一对应进行调用</li>
 </ol>
-<p>&nbsp;</p>
+<p> </p>
 <p><strong>优点：</strong></p>
 <ul>
 <li>自带，无需额外下载</li>
@@ -477,14 +486,21 @@ args <span class="token operator">=</span> sys<span class="token punctuation">.<
 <ul>
 <li>对于嵌套命令实现还是比较混乱与复杂</li>
 </ul>
-<p>&nbsp;</p>
-<h2 id="三、click"><a href="#三、click" class="headerlink" title="三、click"></a>三、<a target="_blank" rel="noopener" href="https://click.palletsprojects.com/en/stable/#documentation">click</a></h2><p>其实 <code>argparse</code> 已经是满足绝大部分人的需求了，代码方面也并不复杂。</p>
-<p>而 <code>click</code> 则是更加强大的用于制作命令行的工具，它不仅通过装饰器使得代码更加易懂，还支持彩色输出，prompt，文件类型检查等其他功能。</p>
-<p>但与此同时，更强大的功能也就带来了更加昂贵的学习成本，所幸 <code>click</code> 的官方文档十分条理清晰，<strong>下文只是极其简单的小引子，更多功能学习请参考官方文档</strong>。</p>
+<p> </p>
+<h2 id="三click">三、<a
+target="_blank" rel="noopener" href="https://click.palletsprojects.com/en/stable/#documentation">click</a></h2>
+<p>其实 <code>argparse</code>
+已经是满足绝大部分人的需求了，代码方面也并不复杂。</p>
+<p>而 <code>click</code>
+则是更加强大的用于制作命令行的工具，它不仅通过装饰器使得代码更加易懂，还支持彩色输出，prompt，文件类型检查等其他功能。</p>
+<p>但与此同时，更强大的功能也就带来了更加昂贵的学习成本，所幸
+<code>click</code>
+的官方文档十分条理清晰，<strong>下文只是极其简单的小引子，更多功能学习请参考官方文档</strong>。</p>
 <blockquote>
 <p>与前两者不同，click 是第三方库因此使用前需要pip install安装</p>
 </blockquote>
-<h3 id="1-无参数命令"><a href="#1-无参数命令" class="headerlink" title="1.无参数命令"></a>1.无参数命令</h3><figure><div class="code-wrapper"><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> click
+<h3 id="无参数命令">1.无参数命令</h3>
+<figure><div class="code-wrapper"><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> click
 
 <span class="token decorator annotation punctuation">@click<span class="token punctuation">.</span>command</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 <span class="token keyword">def</span> <span class="token function">hello</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
@@ -492,10 +508,13 @@ args <span class="token operator">=</span> sys<span class="token punctuation">.<
     
 <span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">'__main__'</span><span class="token punctuation">:</span>
     hello<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
-<p>此时当我们调用 <code>mycli</code> ，假设设置程序入口为 <code>hello()</code> </p>
+<p>此时当我们调用 <code>mycli</code> ，假设设置程序入口为
+<code>hello()</code></p>
 <p>终端应该输出 <code>Hello World！</code></p>
-<h3 id="2-嵌套命令"><a href="#2-嵌套命令" class="headerlink" title="2.嵌套命令"></a>2.嵌套命令</h3><h4 id="2-1-采用add-command与自定义子命令名称"><a href="#2-1-采用add-command与自定义子命令名称" class="headerlink" title="2.1 采用add_command与自定义子命令名称"></a>2.1 采用add_command与自定义子命令名称</h4><figure><div class="code-wrapper"><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token decorator annotation punctuation">@click<span class="token punctuation">.</span>group</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<h3 id="嵌套命令">2.嵌套命令</h3>
+<h4 id="采用add_command与自定义子命令名称">2.1
+采用add_command与自定义子命令名称</h4>
+<figure><div class="code-wrapper"><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token decorator annotation punctuation">@click<span class="token punctuation">.</span>group</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 <span class="token keyword">def</span> <span class="token function">cli</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
     click<span class="token punctuation">.</span>echo<span class="token punctuation">(</span><span class="token string">"Welcome!"</span><span class="token punctuation">)</span>
 
@@ -509,8 +528,8 @@ args <span class="token operator">=</span> sys<span class="token punctuation">.<
 
 cli<span class="token punctuation">.</span>add_command<span class="token punctuation">(</span>initdb<span class="token punctuation">)</span>
 cli<span class="token punctuation">.</span>add_command<span class="token punctuation">(</span>dropdb<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
-<p>此时当我们调用 <code>mycli</code> ，假设程序入口为 <code>cli()</code> </p>
+<p>此时当我们调用 <code>mycli</code> ，假设程序入口为
+<code>cli()</code></p>
 <table>
 <thead>
 <tr>
@@ -518,7 +537,8 @@ cli<span class="token punctuation">.</span>add_command<span class="token punctua
 <th>终端输出</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>mycli</td>
 <td>click自动生成的help界面</td>
 </tr>
@@ -530,10 +550,18 @@ cli<span class="token punctuation">.</span>add_command<span class="token punctua
 <td>mycli drop</td>
 <td>Welcome！<br />Dropped the database</td>
 </tr>
-</tbody></table>
-<p>在此情况下，可以先写子命令的实现函数再指定父命令入口，即 <code>initDb</code> 或者 <code>dropdb</code> 函数可以定义在 <code>cli</code> 函数之前</p>
-<h4 id="2-2-不使用add-command与激活父命令"><a href="#2-2-不使用add-command与激活父命令" class="headerlink" title="2.2 不使用add_command与激活父命令"></a>2.2 不使用add_command与激活父命令</h4><p>在 2.1 的代码情况下，我们发现只输入 <code>mycli</code> 是只会显示help界面，哪怕里面有逻辑操作</p>
-<p>这是 <strong>click</strong> 的默认设置，但有时我们也希望只输入父命令时进行一些操作，我们可以通过设置 <strong>invoke_without_command&#x3D;True</strong> </p>
+</tbody>
+</table>
+<p>在此情况下，可以先写子命令的实现函数再指定父命令入口，即
+<code>initDb</code> 或者 <code>dropdb</code> 函数可以定义在
+<code>cli</code> 函数之前</p>
+<h4 id="不使用add_command与激活父命令">2.2
+不使用add_command与激活父命令</h4>
+<p>在 2.1 的代码情况下，我们发现只输入 <code>mycli</code>
+是只会显示help界面，哪怕里面有逻辑操作</p>
+<p>这是 <strong>click</strong>
+的默认设置，但有时我们也希望只输入父命令时进行一些操作，我们可以通过设置
+<strong>invoke_without_command=True</strong></p>
 <figure><div class="code-wrapper"><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> click
 
 <span class="token decorator annotation punctuation">@click<span class="token punctuation">.</span>group</span><span class="token punctuation">(</span>invoke_without_command<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span> <span class="token comment"># 在此设置下父命令单独输入也会执行该函数内容</span>
@@ -553,7 +581,6 @@ cli<span class="token punctuation">.</span>add_command<span class="token punctua
 <span class="token keyword">def</span> <span class="token function">end</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
     <span class="token triple-quoted-string string">"""End something."""</span>
     click<span class="token punctuation">.</span>echo<span class="token punctuation">(</span><span class="token string">"Ended the process"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
 <table>
 <thead>
 <tr>
@@ -561,7 +588,8 @@ cli<span class="token punctuation">.</span>add_command<span class="token punctua
 <th>终端输出</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>mycli</td>
 <td>Running default behavior of mycli</td>
 </tr>
@@ -573,8 +601,10 @@ cli<span class="token punctuation">.</span>add_command<span class="token punctua
 <td>mycli end</td>
 <td>Ended the process</td>
 </tr>
-</tbody></table>
-<h3 id="3-添加参数"><a href="#3-添加参数" class="headerlink" title="3.添加参数"></a>3.添加参数</h3><figure><div class="code-wrapper"><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> click
+</tbody>
+</table>
+<h3 id="添加参数">3.添加参数</h3>
+<figure><div class="code-wrapper"><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> click
 
 <span class="token decorator annotation punctuation">@click<span class="token punctuation">.</span>command</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 <span class="token decorator annotation punctuation">@click<span class="token punctuation">.</span>argument</span><span class="token punctuation">(</span><span class="token string">'input_file'</span><span class="token punctuation">,</span> <span class="token builtin">type</span><span class="token operator">=</span>click<span class="token punctuation">.</span>Path<span class="token punctuation">(</span>exists<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span class="token punctuation">)</span>  <span class="token comment"># 位置参数，必须存在该文件</span>
@@ -620,8 +650,7 @@ cli<span class="token punctuation">.</span>add_command<span class="token punctua
 
 <span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">'__main__'</span><span class="token punctuation">:</span>
     main<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
-
-<p>&nbsp;</p>
+<p> </p>
 <p><strong>优点：</strong></p>
 <ul>
 <li>采用装饰器，代码清楚易懂</li>
@@ -658,9 +687,9 @@ cli<span class="token punctuation">.</span>add_command<span class="token punctua
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/hello-world/" title="Hello World">
+                      <a href="/typescript%E7%BB%84%E4%BB%B6%E4%B8%AD%E7%9A%84%E9%BB%98%E8%AE%A4%E5%B1%9E%E6%80%A7/" title="typescript组件中的默认属性">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Hello World</span>
+                        <span class="hidden-mobile">typescript组件中的默认属性</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -761,6 +790,12 @@ cli<span class="token punctuation">.</span>add_command<span class="token punctua
 
 
   
+
+
+  
+  
+
+
 
 
 
@@ -980,6 +1015,49 @@ cli<span class="token punctuation">.</span>add_command<span class="token punctua
 
 
   <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
 
   <script  src="/js/local-search.js" ></script>
 
