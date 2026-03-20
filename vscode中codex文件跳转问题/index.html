@@ -24,7 +24,7 @@
 <meta property="og:description" content="在 VS Code 里使用 Codex 时，我遇到过一个很恼人的问题：当助手引用本地文件时，点击链接并不会直接打开对应文件，而是莫名其妙跳到浏览器。本文介绍尝试用AGENTS.md解决这个问题">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-03-17T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-03-18T09:15:21.527Z">
+<meta property="article:modified_time" content="2026-03-20T03:04:47.888Z">
 <meta property="article:author" content="一蓑烟雨">
 <meta property="article:tag" content="codex">
 <meta property="article:tag" content="vscode">
@@ -225,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.9k 字
+          2k 字
         
       </span>
     
@@ -236,7 +236,7 @@
         
         
         
-          11 分钟
+          12 分钟
         
       </span>
     
@@ -286,7 +286,7 @@
               <p class="note note-info">
                 
                   
-                    本文最后更新于：2026年3月18日 下午
+                    本文最后更新于：2026年3月20日 上午
                   
                 
               </p>
@@ -372,6 +372,17 @@ Markdown 链接”。</p>
 <p>而 <code>AGENTS.md</code>
 的作用，是把输出格式约束住，避免走那条有问题的路径。</p>
 <p>换句话说，它不是修好了扩展，而是避开了扩展最容易出错的那条分支。</p>
+<h2 id="关于回撤功能的提示">关于回撤功能的提示</h2>
+<p>vscode中使用codex插件，如果是本地项目，在agent修改后回撤可能会出现回撤失败的错误。</p>
+<p>对于回撤失败问题，点击左侧栏的形如“分支”的按钮，通常在第三个</p>
+<figure>
+<img
+src="https://picture.naughtyfox.top/2026/03/image-20260320110232468.png" srcset="/img/loading.gif" lazyload
+alt="image-20260320110232468" />
+<figcaption aria-hidden="true">image-20260320110232468</figcaption>
+</figure>
+<p>然后点击 <strong>初始化仓库</strong>
+，这样该文件夹下的所有改动都会被记录，此后也可以对codex正常回撤了</p>
 
                 
               </div>
