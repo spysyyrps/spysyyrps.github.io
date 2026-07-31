@@ -24,7 +24,7 @@
 <meta property="og:description" content="本文介绍循环冗余检验码（CRC）：先梳理发送方补 0、模 2 除法求余、接收方整除校验的完整流程，再转入 GF(2) 多项式视角，解释模 2 除法的数学本质与「加上余数反而能整除」的原理；最后围绕生成多项式展开探讨——本原多项式为何具备最优双比特检错能力、(x+1) 因子如何覆盖所有奇数个错误、以及生成多项式普遍携带 +1 项背后的取舍。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-07-30T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-07-31T01:42:43.720Z">
+<meta property="article:modified_time" content="2026-07-31T02:11:34.564Z">
 <meta property="article:author" content="一蓑烟雨">
 <meta property="article:tag" content="CRC">
 <meta name="twitter:card" content="summary_large_image">
@@ -224,7 +224,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          5.6k 字
+          5.3k 字
         
       </span>
     
@@ -235,7 +235,7 @@
         
         
         
-          32 分钟
+          30 分钟
         
       </span>
     
@@ -295,15 +295,19 @@
                 
                 <h2 id="一前言">一、前言</h2>
 <p>本文将会介绍检错中常用的 <strong>循环冗余检验码（Cyclic redundancy
-check，CRC）</strong> 除了CRC基础流程，本文将会探讨以下几个问题： -
-CRC背后涉及哪些数学原理？ - 为什么 “加” 余数可以 “被整除”？ -
-为什么说任何长度为 n 的突发错误都可以被 多项式次数 ≥ n 且 常数项 （<span
-class="math inline"><em>x</em><sup>0</sup></span>） 的系数非零 CRC
-多项式检测? - 什么是 <strong>本原多项式（primitive polynomial）</strong>
-？为什么同等次数下，本原多项式检验<strong>二比特错误</strong>能力更强？
-- 为什么生成多项式基本都有一个 <strong>+1</strong> 项？ -
-为什么有些生成多项式喜欢采用 <span
-class="math inline">$(x+1)\times本原多项式$</span> ？</p>
+check，CRC）</strong> 除了CRC基础流程，本文将会探讨以下几个问题：</p>
+<ul>
+<li>CRC背后涉及哪些数学原理？</li>
+<li>为什么 “加” 余数可以 “被整除”？</li>
+<li>为什么说任何长度为 n 的突发错误都可以被 多项式次数 ≥ n 且 常数项
+（<span class="math inline"><em>x</em><sup>0</sup></span>） 的系数非零
+CRC 多项式检测?</li>
+<li>什么是 <strong>本原多项式（primitive polynomial）</strong>
+？为什么同等次数下，本原多项式检验<strong>二比特错误</strong>能力更强？</li>
+<li>为什么生成多项式基本都有一个 <strong>+1</strong> 项？</li>
+<li>为什么有些生成多项式喜欢采用 <span
+class="math inline">$(x+1)\times本原多项式$</span> ？</li>
+</ul>
 <p>如果有误欢迎探讨指正</p>
 <h2 id="二crc-流程">二、CRC 流程</h2>
 <p>发送方与接收方事先约定好一个位长为 <span
@@ -405,11 +409,19 @@ class="math inline"><em>T</em><sup>′</sup> = 101001001</span>，除以
 <blockquote>
 <p>若传输中发生比特翻转，<span
 class="math inline"><em>T</em><sup>′</sup></span> 通常不再是 <span
-class="math inline"><em>G</em></span> 的倍数，余数非 0，差错即被检出。
-## 三、GF(2)上的多项式 CRC的运算实际上是基于GF(2)的运算 将视角从
-<strong>实数域</strong> 转向 <strong>伽罗瓦域 (GF(2))</strong>
-能帮助你更好理解CRC 此节可能帮助你更好理解 - 加法即减法 - 模二除法 -
-拼接余数实现整除</p>
+class="math inline"><em>G</em></span> 的倍数，余数非
+0，差错即被检出。</p>
+</blockquote>
+<h2 id="三gf2上的多项式">三、GF(2)上的多项式</h2>
+<blockquote>
+<p>CRC的运算实际上是基于GF(2)的运算 将视角从 <strong>实数域</strong>
+转向 <strong>伽罗瓦域 (GF(2))</strong> 能帮助你更好理解CRC
+此节可能帮助你更好理解</p>
+<ul>
+<li>加法即减法</li>
+<li>模二除法</li>
+<li>拼接余数实现整除</li>
+</ul>
 </blockquote>
 <h3 id="伽罗瓦域-gf2">3.1 伽罗瓦域 GF(2)</h3>
 <p>GF(2) 下的世界只有 <strong>0 和 1</strong> 。 为了避免计算结果超出
@@ -424,8 +436,10 @@ GF(2) 下的减法，<span class="math inline"><em>a</em> − <em>b</em></sp
 ，即加上另一个数的相反数，而由于GF(2)中相反数等于自身，因此 <span
 class="math inline"><em>a</em> − <em>b</em></span> 等价于 <span
 class="math inline"><em>a</em> + <em>b</em></span> 。这就是为什么 “加法”
-即 “减法” ### 3.2 模二除法 我们可以借助 <strong>长除法</strong> 理解
-<strong>模二除法</strong> 下图是 1111000 与 1101 之间的模二除法 <img
+即 “减法”</p>
+<h3 id="模二除法">3.2 模二除法</h3>
+<p>我们可以借助 <strong>长除法</strong> 理解 <strong>模二除法</strong>
+下图是 1111000 与 1101 之间的模二除法 <img
 src="https://picture.naughtyfox.top/2026/07/Pasted%20image%2020260729110044.png" srcset="/img/loading.gif" lazyload
 alt="Pasted image 20260729110044|528" />
 GF(2)下的长除法与平时接触的基本一致：前端对齐，试商（只有0或者1因此更加简单），作差求余，降位后移
@@ -434,8 +448,9 @@ GF(2)下的长除法与平时接触的基本一致：前端对齐，试商（只
 后我们就可以很好理解上图中展示的模二除法过程 <strong>作差</strong>
 等同于 <strong>求和</strong> ，而GF(2)下的 <strong>求和</strong> 等同于
 <strong>异或</strong> ，因此，长除法中的 <strong>作差求余</strong>
-结果等同于 <strong>按位异或</strong> ### 3.3 多项式
-多项式可以帮助我们从另一个角度理解 <strong>模二除法</strong>
+结果等同于 <strong>按位异或</strong></p>
+<h3 id="多项式">3.3 多项式</h3>
+<p>多项式可以帮助我们从另一个角度理解 <strong>模二除法</strong>
 多项式表达式： <span class="math display">$$f(x) = \sum_{k=0}^{n} a_k
 x^k$$</span> <strong>如果将系数 <span
 class="math inline"><em>a</em><sub><em>k</em></sub></span> 限制在
@@ -455,19 +470,8 @@ a(x)\,b(x) &amp;= (x^3 + x + 1)(x^3 + x^2 + 1) \\
 &amp;= (x^6+x^5+x^3) + (x^4+x^3+x) + (x^3+x^2+1)
 \end{aligned}
 $$</span></p>
-<p><span class="math display">$$
-\begin{array}{cccccccc}
-  &amp; x^6 &amp; +x^5 &amp;        &amp; +x^3
-&amp;        &amp;       &amp;      \\
-+ &amp;     &amp;      &amp; +x^4  &amp; +x^3 &amp;        &amp;
-+x    &amp;      \\
-+ &amp;     &amp;      &amp;        &amp; +x^3 &amp;
-+x^2   &amp;       &amp; +1   \\
-\hline
-= &amp; x^6 &amp; +x^5 &amp; +x^4  &amp; +x^3 &amp; +x^2   &amp;
-+x    &amp; +1
-\end{array}
-$$</span></p>
+$$
+<p>$$</p>
 <p><span
 class="math display"><em>a</em>(<em>x</em>) <em>b</em>(<em>x</em>) = <em>x</em><sup>6</sup> + <em>x</em><sup>5</sup> + <em>x</em><sup>4</sup> + <em>x</em><sup>3</sup> + <em>x</em><sup>2</sup> + <em>x</em> + 1 ↔︎ 1111111<sub>2</sub></span>
 注意，三个 <span class="math inline"><em>x</em><sup>3</sup></span>
@@ -491,24 +495,29 @@ class="math inline"><em>d</em>(<em>x</em>) = <em>x</em><sup>6</sup> + <e
 对应的二进制串 <span class="math inline">1111000<sub>2</sub></span> 正是
 3.2 节图示模二除法的被除数 <span
 class="math inline"><em>a</em>(<em>x</em>), <em>b</em>(<em>x</em>), <em>c</em>(<em>x</em>)</span>
-正好分别对应图中的 <strong>商，除数与余数</strong> ### 3.4 探讨 #### a.
-为什么CRC要末端补n个0
-当CRC的生成多项式（即除数二进制串对应的多项式）最高次为n时，会在数据末尾补n个0。这些冗余位是单独用于存放余数，这样能在不破坏原始数据的前提下加上余数。而
+正好分别对应图中的 <strong>商，除数与余数</strong></p>
+<h3 id="探讨">3.4 探讨</h3>
+<h4 id="a.-为什么crc要末端补n个0">a. 为什么CRC要末端补n个0</h4>
+<p>当CRC的生成多项式（即除数二进制串对应的多项式）最高次为n时，会在数据末尾补n个0。这些冗余位是单独用于存放余数，这样能在不破坏原始数据的前提下加上余数。而
 <strong>n次生成多项式对应的二进制串长度为n+1，在GF(2)下，余数长度一定小于除数长度</strong>
-，因此，n位冗余足以存放n次生成多项式对应的各种余数可能。 #### b.
-为什么加上余数接收方可以整除
-初见CRC很有可能会对被除数加上余数，反而会使得结果可以整除感到困惑。想要整除，不应该是将被除数减去余数吗？
+，因此，n位冗余足以存放n次生成多项式对应的各种余数可能。</p>
+<h4 id="b.-为什么加上余数接收方可以整除">b.
+为什么加上余数接收方可以整除</h4>
+<p>初见CRC很有可能会对被除数加上余数，反而会使得结果可以整除感到困惑。想要整除，不应该是将被除数减去余数吗？
 那是因为CRC是基于GF(2)，而不是我们常用的实数域。
 从前文我们可以了解，在GF(2)中，<strong>加法就是减法</strong>
-，所以加上余数实际上就是减去余数 ## 四、生成多项式
-生成多项式可以随意设计吗？
+，所以加上余数实际上就是减去余数</p>
+<h2 id="四生成多项式">四、生成多项式</h2>
+<p>生成多项式可以随意设计吗？
 什么是本原多项式，为什么说它具备最好的双比特检错能力？
 为什么几乎所有生成多项式都有一个 <strong>+1</strong> 项？
 为什么说生成多项式具有 (x+1)
 因式就可以检查出所有错误比特数为奇数的情况？ …
-接下来本节将会探讨与生成多项式相关的一些问题 ### 4.1 背景
-我们先补充一些定义和细节，方便后续内容理解 #### 4.1.1 错误码E(x)
-CRC主要是用于检测数据传输过程中，由于各种干扰或不稳定导致的
+接下来本节将会探讨与生成多项式相关的一些问题</p>
+<h3 id="背景">4.1 背景</h3>
+<p>我们先补充一些定义和细节，方便后续内容理解</p>
+<h4 id="错误码ex">4.1.1 错误码E(x)</h4>
+<p>CRC主要是用于检测数据传输过程中，由于各种干扰或不稳定导致的
 <strong>比特位跳变（1-&gt;0,0-&gt;1）</strong> 假设传输内容为
 <strong>M(x)</strong> ，发生错误的过程可以描述为： <span
 class="math display"><em>M</em><sup>′</sup>(<em>X</em>) = <em>M</em>(<em>X</em>) + <em>E</em>(<em>X</em>)</span>
@@ -518,35 +527,49 @@ class="math display"><em>M</em><sup>′</sup>(<em>X</em>) = <em>M</em>(<em>X
 <strong>生成多项式G(x)</strong> 整除时，M‘(x) 也就能被 G(x)
 整除，这意味着接收方认为没有发生错误，将会产生漏检！</em>
 因此，错误能否被顺利检出，重点在于 <strong>E(x) 能否被 G(x)
-整除</strong> #### 4.1.2 本原多项式(primitive polynomial) &gt; 主要介绍
-GF(2) 下的本原多项式内容</p>
+整除</strong></p>
+<h4 id="本原多项式primitive-polynomial">4.1.2 本原多项式(primitive
+polynomial)</h4>
+<blockquote>
+<p>主要介绍 GF(2) 下的本原多项式内容</p>
+</blockquote>
 <p><strong>阶的定义：</strong> 给定一个多项式 G(x) ,对于形如 <span
 class="math inline">$F(x)=x^k+1,k\in正整数集$</span>
 的多项式。对于最小的 <code>k</code>
 能使得F(x)可以被G(x)整除，那么称G(x)的<strong>阶</strong>为k。
-本原多项式具有的性质： - 不可约，不具有除本身与1外的子因式 -
-对于n次的本原多项式，其阶为同次下的最大值：<span
-class="math inline">2<sup><em>n</em></sup> − 1</span> -
-除一二次外，本原多项式并非唯一，一般而言次数越高，该次数下的本原多项式越多
-&gt; 考虑篇幅与内容，本原多项式的更多具体内容与证明不在此说明了 ### 4.2
-单比特错误检测
-<strong>任何至少包含两个非零系数项的多项式，都可以检测所有单比特错误</strong>
+本原多项式具有的性质：</p>
+<ul>
+<li>不可约，不具有除本身与1外的子因式</li>
+<li>对于n次的本原多项式，其阶为同次下的最大值：<span
+class="math inline">2<sup><em>n</em></sup> − 1</span></li>
+<li>除一二次外，本原多项式并非唯一，一般而言次数越高，该次数下的本原多项式越多</li>
+</ul>
+<blockquote>
+<p>考虑篇幅与内容，本原多项式的更多具体内容与证明不在此说明了</p>
+</blockquote>
+<h3 id="单比特错误检测">4.2 单比特错误检测</h3>
+<p><strong>任何至少包含两个非零系数项的多项式，都可以检测所有单比特错误</strong>
 如前文所述，能否检测错误，主要看 E(x) 能否被 G(x) 整除
 单比特错误情况下，E(x) 为形如 <span
 class="math inline">$x^k,k\in非负整数集$</span> 的多项式，只具备 <span
 class="math inline"><em>x</em><sup><em>i</em></sup></span>
-形式的因式，显然无法被至少包含两个非零系数项的多项式整除 ### 4.3
-双比特错误检测 &gt; 此处仅关注多项生成多项式，不考虑 <span
+形式的因式，显然无法被至少包含两个非零系数项的多项式整除</p>
+<h3 id="双比特错误检测">4.3 双比特错误检测</h3>
+<blockquote>
+<p>此处仅关注多项生成多项式，不考虑 <span
 class="math inline"><em>G</em>(<em>x</em>) = <em>x</em><sup><em>k</em></sup>, <em>k</em> ∈ ℤ<sub> ≥ 0</sub></span>
 的情况，此情况下显然有极大概率漏检</p>
-<p><strong>当两个比特错误之间的距离小于生成多项式的阶数时，所有此类双比特错误都将被检测到</strong>
-&gt; <a
+</blockquote>
+<p><strong>当两个比特错误之间的距离小于生成多项式的阶数时，所有此类双比特错误都将被检测到</strong></p>
+<blockquote>
+<p><a
 target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Mathematics_of_cyclic_redundancy_checks">维基百科</a>对此的描述为
 <em>All two bit errors separated by a distance less than the <a
 target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Order_(group_theory)"
 title="Order (group theory)">order</a> of the primitive polynomial which
 is a factor of the generator polynomial will be detected.</em>
 个人认为有点不够准确全面</p>
+</blockquote>
 <p>双比特错误可以描述如下： <span
 class="math display"><em>E</em>(<em>x</em>) = <em>x</em><sup><em>m</em></sup> + <em>x</em><sup><em>n</em></sup> = <em>x</em><sup><em>n</em></sup> (<em>x</em><sup><em>m</em> − <em>n</em></sup> + 1),  <em>m</em> &gt; <em>n</em> ≥ 0</span>
 <span class="math inline"><em>x</em><sup><em>n</em></sup></span>
@@ -560,9 +583,9 @@ class="math inline"><em>x</em><sup><em>i</em></sup> + 1, <em>i</em> ∈�
 因此当错误比特距离 <code>m-n</code>
 小于阶时，E(x)一定无法被G(x)整除，错误一定会被检测到 而
 <strong>本原多项式</strong>
-具有同次下最高的阶，因而<strong>具备同次下最好的双比特检错能力，相同冗余位数下最优的双比特检错能力</strong>
-### 4.4 奇数个错误比特
-本原多项式的确具备优秀的双比特检错能力，<strong>但是许多CRC生成多项式都不会直接采用本原多项式，而是倾向于
+具有同次下最高的阶，因而<strong>具备同次下最好的双比特检错能力，相同冗余位数下最优的双比特检错能力</strong></p>
+<h3 id="奇数个错误比特">4.4 奇数个错误比特</h3>
+<p>本原多项式的确具备优秀的双比特检错能力，<strong>但是许多CRC生成多项式都不会直接采用本原多项式，而是倾向于
 <span
 class="math inline">(<em>x</em> + 1)(<em>本</em><em>原</em><em>多</em><em>项</em><em>式</em>)</span></strong>
 而这么做的理由是： <strong>所有奇数个比特错误都能被含有 <code>x+1</code>
@@ -576,8 +599,9 @@ class="math inline"><em>x</em> = 1</span>
 而当有奇数个错误比特时，E(x)存在奇数个项，E(1) 为奇数个1相加，必然等于1
 所以 <span class="math inline"><em>x</em> = 1</span> 一定不是 E(x)
 的根，E(x) 一定不具备 <code>x+1</code> 的因子，E(x) 一定无法被具有
-<code>x+1</code> 因子的 G(x) 整除，错误一定会被检出 ### 4.5
-错误长度与G(x)次数 <strong>错误长度：</strong>
+<code>x+1</code> 因子的 G(x) 整除，错误一定会被检出</p>
+<h3 id="错误长度与gx次数">4.5 错误长度与G(x)次数</h3>
+<p><strong>错误长度：</strong>
 第一个错误比特与最后一个错误比特的距离长度 <strong>若次数为n的 G(x) 具备
 <span class="math inline"><em>x</em><sup>0</sup></span>
 项，那么所有错误长度小于等于 n 的突发错误都能被检测</strong> <em>因为
@@ -592,9 +616,10 @@ class="math inline"><em>x</em><sup><em>i</em></sup></span> 与 G(x)
 ，高次多项式不可能是低次多项式的因式，所以 B(x) 一定不能被 G(x) 整除
 <strong>但是，</strong> 如果 G(x) 具备 x 因子，那么就会由于与 E(x) 中的
 <span class="math inline"><em>x</em><sup><em>i</em></sup></span>
-因子相约分，发生降次，导致考虑 B(x) 时次数小于 n，可能发生整除 ### 4.6
-<span class="math inline"><em>X</em><sup>0</sup></span> 项
-最后探讨为什么很多生成表达式 G(x) 都会携带 <span
+因子相约分，发生降次，导致考虑 B(x) 时次数小于 n，可能发生整除</p>
+<h3 id="x0-项">4.6 <span
+class="math inline"><em>X</em><sup>0</sup></span> 项</h3>
+<p>最后探讨为什么很多生成表达式 G(x) 都会携带 <span
 class="math inline"><em>x</em><sup>0</sup></span> 项，即 +1 项
 <strong>简而言之，去除生成多项式对应二进制串末尾的0，并不会影响检错能力，反而可以减少冗余</strong>
 对于一个没有 <span class="math inline"><em>x</em><sup>0</sup></span>
@@ -611,12 +636,14 @@ class="math inline">101<sub>2</sub></span> 会漏检 G(x) 可以额外检查出
 其实，回看第二节CRC的流程我们可以发现，G(x) 能额外检出的区域正好是
 <strong>冗余位</strong> ，但是我们真正关心的是 <strong>数据位</strong>
 。添加额外的0，需要更多的冗余位后，获得的提升不过是可以额外查出一些发生在无关紧要地方的错误。
-因此，使用 G(x) 完全不如 D(x) 划算 &gt; 我发现不少大学课件从
-<strong>生成多项式的定义与性质</strong>
+因此，使用 G(x) 完全不如 D(x) 划算</p>
+<blockquote>
+<p>我发现不少大学课件从 <strong>生成多项式的定义与性质</strong>
 角度，证明为什么生成多项式必须携带 <span
 class="math inline"><em>x</em><sup>0</sup></span> 项，例如 <a
 target="_blank" rel="noopener" href="https://web.ntpu.edu.tw/%7Eyshan/cyclic_code.pdf">国立台北大学相关课件</a>
 ，在第三页进行了简短证明。感兴趣的可以看一下</p>
+</blockquote>
 
                 
               </div>
