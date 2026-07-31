@@ -333,9 +333,9 @@ encryption）</h2>
 </ul></li>
 <li><strong>步骤 5：计算私钥指数 <code>d</code></strong> 计算
 <code>e</code> 关于模 <code>φ(n)</code> 的<strong>模反元素
-<code>d</code></strong>。即找到整数 <code>d</code> 满足：
-<code>e * d ≡ 1 (mod φ(n))</code> 这等价于
-<code>e * d = k * φ(n) + 1</code> (其中 <code>k</code>
+<code>d</code></strong>。即找到整数 <code>d</code> 满足：<br />
+<code>e * d ≡ 1 (mod φ(n))</code><br />
+这等价于 <code>e * d = k * φ(n) + 1</code> (其中 <code>k</code>
 是某个整数)。</li>
 <li><strong>密钥对:</strong>
 <ul>
@@ -349,8 +349,8 @@ encryption）</h2>
 <ul>
 <li>将明文消息转换为一个整数 <code>m</code>，满足
 <code>0 ≤ m &lt; n</code> (如果消息很长，需要分块处理)。</li>
-<li>使用公钥 <code>(n, e)</code> 计算密文 <code>c</code>： <strong>c ≡
-m<sup>e</sup> (mod n)</strong></li>
+<li>使用公钥 <code>(n, e)</code> 计算密文 <code>c</code>：<br />
+<strong>c ≡ m<sup>e</sup> (mod n)</strong></li>
 <li><strong>数学逻辑:</strong> 这里利用了模幂运算的容易性。即使
 <code>m</code> 和 <code>e</code> 很大，计算 <strong><em>m<sup>e</sup>
 mod n</em></strong> 也有高效算法（如快速幂算法）。</li>
@@ -364,26 +364,29 @@ mod n</em></strong> 也有高效算法（如快速幂算法）。</li>
 <h3 id="加密解密后数据不变证明">4.加密解密后数据不变证明</h3>
 <p><strong>数学逻辑（核心证明）:</strong> 我们需要证明
 <code>m' = m</code>。</p>
-<p>首先，通过明文的获取公式我们可以得知： <span class="math display">$$
+<p>首先，通过明文的获取公式我们可以得知：<br />
+<span class="math display">\[
 \begin{aligned}
-m' \equiv c^d \pmod{n}
+m&#39; \equiv c^d \pmod{n}
 \end{aligned}
-$$</span></p>
-<p>将加密公式代入得到： <span class="math display">$$
+\]</span></p>
+<p>将加密公式代入得到：<br />
+<span class="math display">\[
 \begin{aligned}
-m' \equiv c^d \equiv (m^e)^d \equiv m^{ed} \pmod{n}
+m&#39; \equiv c^d \equiv (m^e)^d \equiv m^{ed} \pmod{n}
 \end{aligned}
-$$</span></p>
+\]</span></p>
 <p>根据密钥生成步骤 5，我们知道 <code>e*d ≡ 1 (mod φ(n))</code>，即
-<code>e*d = k * φ(n) + 1</code> (其中 <code>k</code> 是某个整数)。所以：
-<span class="math display">$$
+<code>e*d = k * φ(n) + 1</code> (其中 <code>k</code>
+是某个整数)。所以：<br />
+<span class="math display">\[
 \begin{aligned}
-m' &amp;\equiv m^{k \cdot \varphi(n) + 1} \pmod{n} \\
-m' &amp;\equiv (m^{\varphi(n)})^k \cdot m \pmod{n} \\
-m' &amp;\equiv (1)^k \cdot m \pmod{n} \\
-m' &amp;\equiv m \pmod{n}
+m&#39; &amp;\equiv m^{k \cdot \varphi(n) + 1} \pmod{n} \\
+m&#39; &amp;\equiv (m^{\varphi(n)})^k \cdot m \pmod{n} \\
+m&#39; &amp;\equiv (1)^k \cdot m \pmod{n} \\
+m&#39; &amp;\equiv m \pmod{n}
 \end{aligned}
-$$</span></p>
+\]</span></p>
 <p>又因为 <code>0 ≤ m &lt; n</code> 且 <code>0 ≤ m' &lt; n</code> ，所以
 <code>m = m'</code></p>
 <blockquote>
